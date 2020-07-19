@@ -7,6 +7,7 @@ set tabstop=4
 set shiftwidth=4
 set softtabstop=4
 set expandtab
+set incsearch
 set smartindent
 set nowrap
 set smartcase
@@ -24,14 +25,19 @@ highlight ColorColumn ctermbg=0 guibg=lightgrey
 call plug#begin('~/.vim/plugged')
 Plug 'vim-utils/vim-man'
 Plug 'mbbill/undotree'
-Plug 'sheerun/vim-polyglot'
 Plug 'gruvbox-community/gruvbox'
-Plug 'ycm-core/YouCompleteMe'
 Plug 'tpope/vim-fugitive'
 Plug 'preservim/nerdtree'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'sheerun/vim-polyglot'
+Plug 'git@github.com:ycm-core/YouCompleteMe.git'
+Plug 'yggdroot/indentline'
+Plug 'mattn/emmet-vim'
 call plug#end()
+
+" --- vim indentline settings.
+let g:indentLine_char = '│'
 
 " --- vim go (polyglot) settings.
 let g:go_highlight_build_constraints = 1
@@ -54,6 +60,10 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
 set laststatus=2
+
+" vim emmet setting
+let g:user_emmet_mode = 'n' " only enable normal mode functions.
+let g:user_emmet_leader_key = ','
 
 colorscheme gruvbox
 set background=dark
