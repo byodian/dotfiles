@@ -171,10 +171,17 @@ vim 编辑器中执行 git 命令
 2. 开始菜单中启动 **XLaunch**
 3. 使用默认选项，一路点击 **下一步** ，确保选择 **Clipboard** 选项
 4. 安装结束 **XLaunch** 时，保存配置文件 **config.xlaunch**，并且启动。
-5. 在 WSL 系统的 `~/.bashrc` 文件中添加 `DISPLAY=localhost:0.0`，并且在终端运行 `source ~/.bashrc`
-6. 确保 Vim 有剪贴板的支持。终端运行 `vim --version |grep clipboard` ，结果应该是  **+clipboard** ，如而不是 **-clipboard**。或者在 vim 编辑器中运行命令 `:echo has("clipboard")` ，若结果是 `0` ，表示 vim 没有剪贴板的支持。
-7. 如果没有剪贴版支持，你需要安装剪贴板支持，在终端运行 `sudo apt install vim-gtk`
-8. 现在你就可以使用 `*p`、`*y` 命令进入 Windows 系统的剪贴板了。或者通过添加 `set clipboard=unnamed` 到 **~/.vimrc** 文件中，设置为默认。
+5. 在 WSL 系统的 `~/.bashrc` 文件中添加如下代码，并且在终端运行 `source ~/.bashrc`    
+  ```bash    
+  export DISPLAY="`grep nameserver /etc/resolv.conf | sed 's/nameserver //'`:0"
+  ```
+6. 终端运行下面的命令可以查看当前环境的 IP 地址
+  ```bash
+  echo $DISPLAY
+  ```
+7. 确保 Vim 有剪贴板的支持。终端运行 `vim --version |grep clipboard` ，结果应该是  **+clipboard** ，如而不是 **-clipboard**。或者在 vim 编辑器中运行命令 `:echo has("clipboard")` ，若结果是 `0` ，表示 vim 没有剪贴板的支持。
+8. 如果没有剪贴版支持，你需要安装剪贴板支持，在终端运行 `sudo apt install vim-gtk`
+9. 现在你就可以使用 `*p`、`*y` 命令进入 Windows 系统的剪贴板了。或者通过添加 `set clipboard=unnamed` 到 **~/.vimrc** 文件中，设置为默认。
 
 ## 参考
 
