@@ -3,9 +3,9 @@ set nocompatible
 syntax on
 set noerrorbells
 set nu
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
 set expandtab
 set incsearch
 set smartindent
@@ -17,7 +17,7 @@ set undodir=~/.vim/undodir
 set undofile
 set incsearch
 
-set clipboard=unnamed
+set clipboard=unnamedplus
 
 set colorcolumn=80
 highlight ColorColumn ctermbg=0 guibg=lightgrey
@@ -34,6 +34,8 @@ Plug 'sheerun/vim-polyglot'
 Plug 'git@github.com:ycm-core/YouCompleteMe.git'
 Plug 'yggdroot/indentline'
 Plug 'mattn/emmet-vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 call plug#end()
 
 " --- vim indentline settings.
@@ -62,8 +64,8 @@ let g:airline#extensions#tabline#left_alt_sep = '|'
 set laststatus=2
 
 " vim emmet setting
-let g:user_emmet_mode = 'n' " only enable normal mode functions.
-let g:user_emmet_leader_key = ','
+" let g:user_emmet_mode = 'n' " only enable normal mode functions.
+let g:user_emmet_leader_key = ',' " Redefine trigger key
 
 colorscheme gruvbox
 set background=dark
@@ -84,6 +86,12 @@ nnoremap <leader>h :wincmd h<CR>
 nnoremap <leader>j :wincmd j<CR>
 noremap <leader>k :wincmd k<CR>
 nnoremap <leader>l :wincmd l<CR>
-inoremap jk <esc>
+inoremap jj <Esc>
+inoremap { {}<Esc>i
+inoremap ( ()<Esc>i
+inoremap [ []<Esc>i
+inoremap ' ''<Esc>i
+inoremap " ""<Esc>i
+inoremap < <><Esc>i
 
 map <C-n> :NERDTreeToggle<CR>

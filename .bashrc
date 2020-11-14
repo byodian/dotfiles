@@ -166,4 +166,5 @@ function parse_git_dirty {
         fi
 }
 
-export PS1="\u@ubuntu:\[\033[1;34m\]\w\[\033[0m\]\`parse_git_branch\`$ "
+export PS1="🎉 \[\033[1;34m\]\w\[\033[0m\]\`parse_git_branch\` $ "
+export DISPLAY="`grep nameserver /etc/resolv.conf | sed 's/nameserver //'`:0"
