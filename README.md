@@ -30,6 +30,9 @@ set undodir=~/.vim/undodir
 set undofile
 set incsearch
 ```
+## dir_colors
+1. 复制 .dir_colors 文件至根（`~`）文件夹
+2. 添加 `eval "$(dircolors ~/.dir_colors)"` 代码至 ~/.bashrc 文件中
 
 ## 进阶设置 vim-plug
 
