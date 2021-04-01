@@ -1,6 +1,6 @@
-本文将教你如何在 Windows 的子系统 Linux （英文名 Windows Subsystem for Linux ，简称 WSL）上使用 Vim 编辑器。
+# 如何在 Windows Subsystem for Linux（简称 WSL）上使用 Vim 编辑器
 
-参考 [配置 Windows 终端 & WSL 开发环境](ht tps://byodiandev.com/how-to-setting-up-wsl/) 这篇文章配置 WSL 开发环境。
+参考 [配置 Windows 终端 & WSL 开发环境](https://byodiandev.com/how-to-setting-up-wsl/) 
 
 近期 WSL 已经从 WSL1 升级到 WSL2，WSL 2 提高了文件系统性能并增加完全的系统调用兼容性。在同一网络环境下与 WSL1 相比，WSL2 在执行 `git clone`、`apt install` 等命令时有着更快的速度。
 
