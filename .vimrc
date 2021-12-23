@@ -1,96 +1,77 @@
-set encoding=utf-8
-set nocompatible
+" change the mapleader from \ to a space
+let mapleader=' '
+
+""""""""""""""""""
+" basic settings 
+"""""""""""""""""""
+
+set hlsearch 	 " Highlight search results
+set showmode   " always show what mode we're currently editing in
+set nowrap		 " don't wrap lines
+set incsearch  " Makes search act like search in modern browsers
+set ignorecase " Ignore case when searching
+set number 	   " Show line number
+set ruler      " Always show current position
+set showmode
+set bg=dark		 " 显示不同的底色色调
 syntax on
-set noerrorbells
-set nu
-set tabstop=2
-set shiftwidth=2
-set softtabstop=2
-set expandtab
-set incsearch
-set smartindent
-set nowrap
-set smartcase
-set noswapfile
-set nobackup
-set undodir=~/.vim/undodir
-set undofile
-set incsearch
-
-set clipboard=unnamedplus
-
-set colorcolumn=80
-highlight ColorColumn ctermbg=0 guibg=lightgrey
+set tabstop=2    " a tab is two spaces
+set shiftwidth=2 " number of spaces to use for autoindenting 
+set expandtab    " expand tabs by default. see :help expandtab 
+set colorcolumn=80 " Setting vim highlight colorcolumn 
+set nolist         " don't show invisible characters by default
+set clipboard=unnamed " normal OS clipboard interaction
 
 call plug#begin('~/.vim/plugged')
 Plug 'vim-utils/vim-man'
-Plug 'mbbill/undotree'
-Plug 'gruvbox-community/gruvbox'
-Plug 'tpope/vim-fugitive'
-Plug 'preservim/nerdtree'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'sheerun/vim-polyglot'
-Plug 'yggdroot/indentline'
+Plug 'morhetz/gruvbox'
 Plug 'mattn/emmet-vim'
+Plug 'posva/vim-vue'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'dense-analysis/ale'
+Plug 'tpope/vim-surround'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'jiangmiao/auto-pairs'
+Plug 'sheerun/vim-polyglot'
+Plug 'yggdroot/indentline'
+Plug 'tpope/vim-fugitive'
+Plug 'preservim/nerdtree'
 call plug#end()
 
-" --- vim indentline settings.
-let g:indentLine_char = '│'
-
-" --- vim go (polyglot) settings.
-let g:go_highlight_build_constraints = 1
-let g:go_highlight_extra_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_structs = 1
-let g:go_highlight_types = 1
-let g:go_highlight_function_parameters = 1
-let g:go_highlight_function_calls = 1
-let g:go_highlight_generate_tags = 1
-let g:go_highlight_format_strings = 1
-let g:go_highlight_variable_declarations = 1
-let g:go_auto_sameids = 1
-
-" vim airline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
-set laststatus=2
-
-" vim emmet setting
-" let g:user_emmet_mode = 'n' " only enable normal mode functions.
-let g:user_emmet_leader_key = ',' " Redefine trigger key
-
 colorscheme gruvbox
-set background=dark
 
-if executable('rg')
-    let g:rg_derive_root='true'
-endif
+"""""""""""""""""""
+" plugins settings 
+"""""""""""""""""""
 
-let g:netrw_browse_split = 2
-let g:vrfr_rg = 'true'
-let g:netrw_banner = 0
-let g:netrw_winsize = 25
+let	g:user_emmet_mode = 'n' 			" only enable normal mode function
+let	g:user_emmet_leader_key = ',' " Redefine trigger key
 
-let mapleader = " "
+let g:ale_fixers = ['eslint']
+let g:ale_fix_on_save=1 					" Set this variable to 1 to fix files when you save them.
 
-noremap <leader>u :UndotreeToggle<CR>
-nnoremap <leader>h :wincmd h<CR>
-nnoremap <leader>j :wincmd j<CR>
-noremap <leader>k :wincmd k<CR>
-nnoremap <leader>l :wincmd l<CR>
-inoremap jj <Esc>
-inoremap { {}<Esc>i
-inoremap ( ()<Esc>i
-inoremap [ []<Esc>i
-inoremap ' ''<Esc>i
-inoremap " ""<Esc>i
-inoremap < <><Esc>i
+let g:indentLine_char = '┊'       " vim indentline settings
+let g:indentLine_color_term = 239
 
-map <C-n> :NERDTreeToggle<CR>
+
+""""""""""""""""""
+" map
+"""""""""""""""""""
+
+" Moving arrund windows
+nnoremap <leader>j <C-W>j
+nnoremap <leader>k <C-W>k
+nnoremap <leader>h <C-W>h
+nnoremap <leader>l <C-W>l
+
+" Escape insert mode
+inoremap jk <esc>
+inoremap jj <esc>
+
+" Search files with junegunn/fzf.vim plugin
+nnoremap <C-p> :Files<CR>
+nnoremap <leader>b :Buffers<CR>
+nnoremap <leader>H :History<CR>
+
+map <leader>n :NERDTreeToggle<CR>
