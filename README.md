@@ -166,6 +166,8 @@ vim 编辑器中执行 git 命令
 
 ### vim-polyglot
 
+### [coc-nvim](https://github.com/neoclide/coc.nvim)
+
 ## 常见问题
 
 ### WSL vim 编辑器使用 Windows 系统的剪贴板
