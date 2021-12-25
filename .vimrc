@@ -54,7 +54,7 @@ filetype on           " Vim will be able to try to detect the type of file in us
 filetype plugin on    " Enable plugins and load plugin for the detected file type
 set encoding=UTF-8
 set scrolloff=10      " Do not let cursor scroll below or above N number of lines when scrolling.
-
+set path+=**
 " To move to a misspelled word, use ]s and [s
 " Once the cursor is on the word, use z=, and Vim will suggest a list of alternatives that it thinks may be correct.
 " If the word is correct, Use the zg command and Vim will add it to its dictionary.
@@ -213,6 +213,17 @@ noremap <c-right> <c-w><
 " Escape insert mode
 inoremap jk <esc>
 inoremap jj <esc>
+
+" toggle tab
+nnoremap <leader>1 1gt
+nnoremap <leader>2 2gt
+nnoremap <leader>3 3gt
+nnoremap <leader>4 4gt
+nnoremap <leader>5 5gt
+nnoremap <leader>6 6gt
+nnoremap <leader>7 7gt
+nnoremap <leader>8 8gt
+nnoremap <leader>9 9gt
 
 " Press the space bar to type the : character in command mode.
 nnoremap <space> :
