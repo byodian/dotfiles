@@ -1,27 +1,29 @@
 call plug#begin('~/.vim/plugged')
 Plug 'vim-utils/vim-man'
 Plug 'morhetz/gruvbox'
-Plug 'mattn/emmet-vim'
+Plug 'arcticicestudio/nord-vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'dense-analysis/ale'
+Plug 'mattn/emmet-vim'
 Plug 'tpope/vim-surround'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'jiangmiao/auto-pairs'
+Plug 'AndrewRadev/tagalong.vim'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'sheerun/vim-polyglot'
 Plug 'yggdroot/indentline'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'preservim/nerdtree'
+Plug 'mbbill/undotree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'arcticicestudio/nord-vim'
-Plug 'AndrewRadev/tagalong.vim'
-Plug 'preservim/nerdcommenter'
+Plug 'suy/vim-context-commentstring'
+Plug 'tpope/vim-commentary'
 call plug#end()
-
+ 
 " change the mapleader from \ to a space
 let mapleader=' '
 
@@ -74,6 +76,14 @@ set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 " colorscheme gruvbox
 colorscheme nord
 
+" Uncomment the following to have Vim jump to the last position when                                                       
+" reopening a file
+" https://stackoverflow.com/questions/774560/in-vim-how-do-i-get-a-file-to-open-at-the-same-line-number-i-closed-it-at-last
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+    \| exe "normal! g'\"" | endif
+endif
+
 """""""""""""""""""
 " plugins settings 
 """""""""""""""""""
@@ -93,6 +103,12 @@ let g:ale_fix_on_save=1 					" Set this variable to 1 to fix files when you save
 
 let g:indentLine_char = '┊'       " vim indentline settings
 let g:indentLine_color_term = 239
+
+" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1
+
+" Enable trimming of trailing whitespace when uncommenting
+let g:NERDTrimTrailingWhitespace = 1
 
 """"""""""""""""""""""""
 " Coc.nvm settings
@@ -152,27 +168,6 @@ endfunction
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" F2 renaming.
-nmap <F2> <Plug>(coc-rename)
-
-" Using CocList
-" Show all diagnostics
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-" Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
-
 " coc config
 let g:coc_global_extensions = [
   \ 'coc-vetur',
@@ -188,6 +183,7 @@ let g:coc_global_extensions = [
   \ 'coc-python',
   \ 'coc-htmlhint',
   \ 'coc-css',
+  \ 'coc-sh'
   \ ]
 
 let g:NERDTreeIgnore = ['^node_modules$']
@@ -225,6 +221,14 @@ nnoremap <leader>7 7gt
 nnoremap <leader>8 8gt
 nnoremap <leader>9 9gt
 
+" Mappings to move lines
+nnoremap <A-j> :m .+1<CR>==
+nnoremap <A-k> :m .-2<CR>==
+inoremap <A-j> <Esc>:m .+1<CR>==gi
+inoremap <A-k> <Esc>:m .-2<CR>==gi
+vnoremap <A-j> :m '>+1<CR>gv=gv
+vnoremap <A-k> :m '<-2<CR>gv=gv
+
 " Press the space bar to type the : character in command mode.
 nnoremap <space> :
 
@@ -255,5 +259,26 @@ map <leader>n :NERDTreeToggle<CR>
 map <leader>r :NERDTreeFind<cr>
 
 " Toggles the comment state of the selected line(s)
-vmap ++  <plug>NERDCommenterToggle
-nmap ++  <plug>NERDCommenterToggle
+vmap ++ gcc
+nmap ++ gcc
+
+" F2 renaming.
+nmap <F2> <Plug>(coc-rename)
+
+" Using CocList
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
