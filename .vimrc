@@ -2,9 +2,10 @@ call plug#begin('~/.vim/plugged')
 Plug 'vim-utils/vim-man'
 Plug 'morhetz/gruvbox'
 Plug 'arcticicestudio/nord-vim'
+Plug 'dracula/vim', { 'as': 'dracula'  }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'dense-analysis/ale'
+" Plug 'dense-analysis/ale'
 Plug 'mattn/emmet-vim'
 Plug 'tpope/vim-surround'
 Plug 'jiangmiao/auto-pairs'
@@ -22,8 +23,9 @@ Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
 Plug 'suy/vim-context-commentstring'
 Plug 'tpope/vim-commentary'
+Plug 'rodrigore/coc-tailwind-intellisense', {'do': 'npm install'}
 call plug#end()
- 
+
 " change the mapleader from \ to a space
 let mapleader=' '
 
@@ -31,10 +33,10 @@ let mapleader=' '
 " basic settings 
 """""""""""""""""""
 " Tab tab
+set title
 set showmatch  " Show matching words during a search
-set hlsearch 	 " Highlight search results
+set hlsearch   " Highlight search results
 set showmode   " always show what mode we're currently editing in
-set nowrap		 " don't wrap lines
 set incsearch  " Makes search act like search in modern browsers
 " Override the ignorecase option if searching for capital letters.
 " This will allow you to search specifically for capital letters.
@@ -42,8 +44,9 @@ set smartcase
 set ignorecase " Ignore case when searching
 set number 	   " Show line number
 set ruler      " Always show current position
-set showmode
 set bg=dark		 " 显示不同的底色色调
+set showmode
+set signcolumn=yes
 syntax on
 set tabstop=2    " a tab is two spaces
 set shiftwidth=2 " number of spaces to use for autoindenting 
@@ -55,8 +58,18 @@ set nocompatible      " Disable compatibility with vi which can cause unexpected
 filetype on           " Vim will be able to try to detect the type of file in use.
 filetype plugin on    " Enable plugins and load plugin for the detected file type
 set encoding=UTF-8
+set sidescrolloff=8
 set scrolloff=10      " Do not let cursor scroll below or above N number of lines when scrolling.
+set nowrap		 " don't wrap lines
 set path+=**
+set mouse=a           " Enable the use of the mouse
+set splitright        " Splitting a window will put the new window right of the current one.
+set confirm
+set undofile
+set undodir=~/.vim/undodir
+set list
+set listchars=tab:▸\ ,trail:· 
+
 " To move to a misspelled word, use ]s and [s
 " Once the cursor is on the word, use z=, and Vim will suggest a list of alternatives that it thinks may be correct.
 " If the word is correct, Use the zg command and Vim will add it to its dictionary.
@@ -73,8 +86,9 @@ set wildmode=list:longest
 " Wildmenu will ignore files with these extensions.
 set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 
-" colorscheme gruvbox
-colorscheme nord
+colorscheme gruvbox
+" colorscheme nord
+" colorscheme dracula
 
 " Uncomment the following to have Vim jump to the last position when                                                       
 " reopening a file
@@ -87,19 +101,18 @@ endif
 """""""""""""""""""
 " plugins settings 
 """""""""""""""""""
-
 let	g:user_emmet_mode = 'n' 			" only enable normal mode function
 let	g:user_emmet_leader_key = ',' " Redefine trigger key
 
-let g:ale_fixers = { 
-\  'javascript': [ 'eslint' ],
-\  'vue': [ 'eslint', 'stylelint' ]
-\}
-let g:ale_linters = {
-\  'javascript': [ 'eslint' ],
-\  'vue': [ 'eslint', 'stylelint' ]
-\}
-let g:ale_fix_on_save=1 					" Set this variable to 1 to fix files when you save them.
+" let g:ale_fixers = { 
+" \  'javascript': [ 'eslint' ],
+" \  'vue': [ 'eslint', 'stylelint' ]
+" \}
+" let g:ale_linters = {
+" \  'javascript': [ 'eslint' ],
+" \  'vue': [ 'eslint', 'stylelint' ]
+" \}
+" let g:ale_fix_on_save=1 					" Set this variable to 1 to fix files when you save them.
 
 let g:indentLine_char = '┊'       " vim indentline settings
 let g:indentLine_color_term = 239
@@ -183,7 +196,9 @@ let g:coc_global_extensions = [
   \ 'coc-python',
   \ 'coc-htmlhint',
   \ 'coc-css',
-  \ 'coc-sh'
+  \ 'coc-sh',
+  \ 'coc-eslint',
+  \ 'coc-diagnostic'
   \ ]
 
 let g:NERDTreeIgnore = ['^node_modules$']
@@ -217,9 +232,14 @@ nnoremap <leader>3 3gt
 nnoremap <leader>4 4gt
 nnoremap <leader>5 5gt
 nnoremap <leader>6 6gt
-nnoremap <leader>7 7gt
 nnoremap <leader>8 8gt
 nnoremap <leader>9 9gt
+nnoremap <leader>7 7gt
+
+" https://stackoverflow.com/questions/49052619/any-mapping-in-vimrc-with-alt-isnt-working
+" wsl terminal
+map <Esc>j <A-j>
+map <Esc>k <A-k>
 
 " Mappings to move lines
 nnoremap <A-j> :m .+1<CR>==
@@ -230,15 +250,15 @@ vnoremap <A-j> :m '>+1<CR>gv=gv
 vnoremap <A-k> :m '<-2<CR>gv=gv
 
 " Press the space bar to type the : character in command mode.
-nnoremap <space> :
+" nnoremap <space> :
 
 " Fast saving
 nmap <leader>w :w!<cr>
 
 " Pressing the letter o will open a new line below the current one.
 " Exit insert mode after creating a new line above or below the current line.
-nnoremap o o<esc>
-nnoremap O O<esc>
+" nnoremap o o<esc>
+" nnoremap O O<esc>
 
 " Center the cursor vertically when moving to the next word during a search.
 nnoremap n nzz
@@ -248,7 +268,9 @@ nnoremap N Nzz
 nnoremap Y y$
 
 " Search files with junegunn/fzf.vim plugin
-nnoremap <C-p> :Files<CR>
+" It is one of the best FZF command that is excluding anything that is in
+" .gitignore.
+nnoremap <C-p> :GFiles<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>h :History<CR>
 
@@ -259,8 +281,8 @@ map <leader>n :NERDTreeToggle<CR>
 map <leader>r :NERDTreeFind<cr>
 
 " Toggles the comment state of the selected line(s)
-vmap ++ gcc
-nmap ++ gcc
+vmap <C-_> gcc
+nmap <C-_> gcc
 
 " F2 renaming.
 nmap <F2> <Plug>(coc-rename)
