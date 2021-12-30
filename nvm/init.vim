@@ -136,6 +136,43 @@ Plug 'sudormrfbin/cheatsheet.nvim'
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'ThePrimeagen/harpoon'
 
+" Language Server Protocol
+Plug 'neovim/nvim-lspconfig'
+Plug 'williamboman/nvim-lsp-installer'
+Plug 'folke/trouble.nvim'
+Plug 'onsails/lspkind-nvim'
+Plug 'creativenull/diagnosticls-configs-nvim'
+
+" TODO {{{
+" Completion
+" Plug 'hrsh7th/nvim-cmp'
+" Plug 'hrsh7th/cmp-buffer'
+" Plug 'hrsh7th/cmp-path'
+" Plug 'hrsh7th/cmp-nvim-lsp'
+" Plug 'L3MON4D3/LuaSnip'
+" Plug 'saadparwaiz1/cmp_luasnip'
+" Plug 'David-Kunz/cmp-npm'
+
+" " Custom Text Objects
+" Plug 'michaeljsmith/vim-indent-object' " gcii gcaI
+" Plug 'kana/vim-textobj-user'
+
+" " Custom Motions
+" Plug 'christoomey/vim-sort-motion' " gsip gsii
+" Plug 'tommcdo/vim-exchange' " cxiw ., cxx ., cxc
+
+" " tmux plugins
+" Plug 'christoomey/vim-tmux-navigator'
+" Plug 'preservim/vimux'
+
+" " https://github.com/nvim-treesitter/nvim-treesitter/issues/1111
+" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+" Plug 'JoosepAlviste/nvim-ts-context-commentstring'
+" Plug 'MaxMEllon/vim-jsx-pretty' " fix indentation in jsx until treesitter can
+" Plug 'jxnblk/vim-mdx-js'
+" " Plug 'code-biscuits/nvim-biscuits'
+" }}}
+
 " Status Line
 Plug 'hoob3rt/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
@@ -144,13 +181,42 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
-" Plug 'tpope/vim-repeat'
+Plug  'tpope/vim-repeat'
 " Plug 'tpope/vim-eunuch'
 " Plug 'tpope/vim-sleuth'
 " Plug 'tpope/vim-projectionist'
 " Plug 'tpope/vim-unimpaired' " helpful shorthand like [b ]b
 Plug 'suy/vim-context-commentstring'
 
+" TODO {{{ 
+" Plug 'editorconfig/editorconfig-vim'
+" " Plug 'APZelos/blamer.nvim'
+" Plug 'lewis6991/gitsigns.nvim'
+" Plug 'karb94/neoscroll.nvim'
+" Plug 'vimwiki/vimwiki', { 'on': ['VimwikiIndex'] }
+" Plug 'norcalli/nvim-colorizer.lua', { 'branch': 'color-editor' }
+" Plug 'machakann/vim-highlightedyank'
+" " Plug 'folke/which-key.nvim'
+" Plug 'wesQ3/vim-windowswap' " <leader>ww
+" Plug 'justinmk/vim-sneak'
+" " Plug 'tweekmonster/startuptime.vim'
+" Plug 'dstein64/vim-startuptime'
+" Plug 'akinsho/nvim-bufferline.lua'
+" Plug 'windwp/nvim-autopairs'
+" Plug 'miyakogi/conoline.vim'
+" " Plug 'github/copilot.vim'
+" Plug 'yamatsum/nvim-cursorline'
+" Plug 'mattn/emmet-vim'
+" Plug 'GustavoKatel/sidebar.nvim'
+
+" Plug 'folke/zen-mode.nvim'
+" Plug 'junegunn/limelight.vim'
+" Plug 'gelguy/wilder.nvim', { 'do': ':UpdateRemotePlugins' }
+" Plug 'stevearc/dressing.nvim'
+
+" Plug 'vim-pandoc/vim-pandoc'
+" Plug 'vim-pandoc/vim-pandoc-syntax'
+" }}}
 call plug#end()
 
 " Colors {{{
@@ -314,3 +380,101 @@ let g:dashboard_custom_header = s:header
 let g:dashboard_custom_footer = s:footer
 " }}}
 
+" neovim/nvim-lspconfig {{{
+" npm i -g typescript typescript-language-server
+lua << EOF
+local util = require "lspconfig/util"
+require 'lspconfig'.tsserver.setup{
+    on_attach = function(client)
+        client.resolved_capabilities.document_formatting = false
+    end,
+    root_dir = util.root_pattern(".git", "tsconfig.json", "jsconfig.json"),
+    --[=====[ 
+    handlers = {
+      ["textDocument/publishDiagnostics"] = function(_, _, params, client_id, _, config)
+        local ignore_codes = { 80001, 7016 };
+        if params.diagnostics ~= nil then
+          local idx = 1
+          while idx <= #params.diagnostics do
+            if vim.tbl_contains(ignore_codes, params.diagnostics[idx].code) then
+              table.remove(params.diagnostics, idx)
+            else
+              idx = idx + 1
+            end 
+          end
+        end
+        vim.lsp.diagnostic.on_publish_diagnostics(_, _, params, client_id, _, config)
+      end,
+    },
+    --]=====]
+}
+EOF
+
+lua << EOF
+-- npm install -g diagnostic-languageserver eslint_d prettier_d_slim prettier
+local function on_attach(client)
+  print('Attached to ' .. client.name)
+end
+local dlsconfig = require 'diagnosticls-configs'
+dlsconfig.init {
+  default_config = false,
+  format = true,
+  on_attach = on_attach,
+}
+local eslint = require 'diagnosticls-configs.linters.eslint'
+local prettier = require 'diagnosticls-configs.formatters.prettier'
+prettier.requiredFiles = {
+    '.prettierrc',
+    '.prettierrc.json',
+    '.prettierrc.toml',
+    '.prettierrc.json',
+    '.prettierrc.yml',
+    '.prettierrc.yaml',
+    '.prettierrc.json5',
+    '.prettierrc.js',
+    '.prettierrc.cjs',
+    'prettier.config.js',
+    'prettier.config.cjs',
+  }
+dlsconfig.setup {
+  ['javascript'] = {
+    linter = eslint,
+    formatter = { prettier }
+  },
+  ['javascriptreact'] = {
+    linter = { eslint },
+    formatter = { prettier }
+  },
+  ['css'] = {
+    formatter = prettier
+  },
+  ['html'] = {
+    formatter = prettier
+  },
+}
+EOF
+
+nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> gh    <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> gca   <cmd>:Telescope lsp_code_actions<CR>
+nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
+nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap <silent> gR    <cmd>lua vim.lsp.buf.rename()<CR>
+nnoremap <silent><leader>fo <cmd>lua vim.lsp.buf.formatting()<CR>
+
+" autocmd BufWritePre *.js lua vim.lsp.buf.formatting()
+" autocmd BufWritePre *.ts lua vim.lsp.buf.formatting()
+" autocmd BufWritePre *.css lua vim.lsp.buf.formatting()
+
+lua << EOF
+require 'trouble'.setup {}
+EOF
+
+nnoremap <leader>xx <cmd>TroubleToggle<cr>
+nnoremap <leader>xw <cmd>TroubleToggle workspace_diagnostics<cr>
+nnoremap <leader>xd <cmd>TroubleToggle document_diagnostics<cr>
+nnoremap <leader>xq <cmd>TroubleToggle quickfix<cr>
+nnoremap <leader>xl <cmd>TroubleToggle loclist<cr>
+nnoremap gR <cmd>TroubleToggle lsp_references<cr>
+" }}}
