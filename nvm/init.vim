@@ -38,6 +38,7 @@ set listchars=tab:▸\ ,trail:·
 set foldmethod=marker
 set updatetime=300    " Reduce time for highlighting other references
 set redrawtime=10000  " Allow more time for loading syntax on large files
+set completeopt=menu,menuone,noselect
 syntax on
 filetype on           " Vim will be able to try to detect the type of file in use.
 filetype plugin on    " Enable plugins and load plugin for the detected file type
@@ -71,7 +72,13 @@ let mapleader=' '
 
 nmap <leader>ve :edit ~/.config/nvim/init.vim<cr>
 nmap <leader>vc :edit ~/.config/nvim/coc-settings.json<cr>
-nmap <leader>vr :source ~/.config/nvim/init.vim<cr>
+map  <leader>vr :source ~/.config/nvim/init.vim<cr>
+
+" toggle relativenumber
+nnoremap <leader>tn :set invrelativenumber<cr>
+
+" toggle word wrap
+nnoremap <leader>tw :set wrap!<cr>
 
 " clear and redraw screen, de-highlight, fix syntax highlighting
 nnoremap <leader>l :nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>
@@ -101,17 +108,6 @@ nnoremap <M-Left> :vertical resize +5<cr>
 vnoremap <M-j> :m '>+1<CR>gv=gv
 vnoremap <M-k> :m '<-2<CR>gv=gv
 
-" toggle relativenumber
-nnoremap <leader>tn :set invrelativenumber<cr>
-
-" toggle word wrap
-nnoremap <leader>tw :set wrap!<cr>
-
-" nnoremap <leader>x :!chmod +x %<cr>
-
-" https://vi.stackexchange.com/questions/3814/is-there-a-best-practice-to-fold-a-vimrc-file
-" vim: filetype=vim foldmethod=marker foldlevel=0 foldcolumn=3
-
 "--------------------------------------------------------------------------
 " Plugins settings
 "--------------------------------------------------------------------------
@@ -123,7 +119,6 @@ Plug 'glepnir/dashboard-nvim'
 " Themes
 Plug 'dracula/vim', { 'as': 'dracula' }
 " Plug 'npxbr/gruvbox.nvim'
-" Plug 'projekt0n/github-nvim-theme'
 " Plug 'arcticicestudio/nord-vim'
 
 " File Management
@@ -136,42 +131,8 @@ Plug 'sudormrfbin/cheatsheet.nvim'
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'ThePrimeagen/harpoon'
 
-" Language Server Protocol
-Plug 'neovim/nvim-lspconfig'
-Plug 'williamboman/nvim-lsp-installer'
-Plug 'folke/trouble.nvim'
-Plug 'onsails/lspkind-nvim'
-Plug 'creativenull/diagnosticls-configs-nvim'
-
-" TODO {{{
-" Completion
-" Plug 'hrsh7th/nvim-cmp'
-" Plug 'hrsh7th/cmp-buffer'
-" Plug 'hrsh7th/cmp-path'
-" Plug 'hrsh7th/cmp-nvim-lsp'
-" Plug 'L3MON4D3/LuaSnip'
-" Plug 'saadparwaiz1/cmp_luasnip'
-" Plug 'David-Kunz/cmp-npm'
-
-" " Custom Text Objects
-" Plug 'michaeljsmith/vim-indent-object' " gcii gcaI
-" Plug 'kana/vim-textobj-user'
-
-" " Custom Motions
-" Plug 'christoomey/vim-sort-motion' " gsip gsii
-" Plug 'tommcdo/vim-exchange' " cxiw ., cxx ., cxc
-
-" " tmux plugins
-" Plug 'christoomey/vim-tmux-navigator'
-" Plug 'preservim/vimux'
-
 " " https://github.com/nvim-treesitter/nvim-treesitter/issues/1111
-" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-" Plug 'JoosepAlviste/nvim-ts-context-commentstring'
-" Plug 'MaxMEllon/vim-jsx-pretty' " fix indentation in jsx until treesitter can
-" Plug 'jxnblk/vim-mdx-js'
-" " Plug 'code-biscuits/nvim-biscuits'
-" }}}
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " Status Line
 Plug 'hoob3rt/lualine.nvim'
@@ -181,42 +142,41 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
-Plug  'tpope/vim-repeat'
-" Plug 'tpope/vim-eunuch'
-" Plug 'tpope/vim-sleuth'
-" Plug 'tpope/vim-projectionist'
-" Plug 'tpope/vim-unimpaired' " helpful shorthand like [b ]b
+Plug 'tpope/vim-repeat'
 Plug 'suy/vim-context-commentstring'
 
+Plug 'windwp/nvim-autopairs'
+Plug 'vim-utils/vim-man'
+Plug 'miyakogi/conoline.vim'
+Plug 'yamatsum/nvim-cursorline'
+Plug 'mattn/emmet-vim'
+Plug 'folke/zen-mode.nvim'
+Plug 'AndrewRadev/tagalong.vim'
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'GustavoKatel/sidebar.nvim'
+Plug 'junegunn/limelight.vim'
+Plug 'lewis6991/gitsigns.nvim'
+Plug 'karb94/neoscroll.nvim'
+Plug 'machakann/vim-highlightedyank'
+Plug 'dstein64/vim-startuptime'
+Plug 'folke/which-key.nvim'
+Plug 'APZelos/blamer.nvim'
+
 " TODO {{{ 
-" Plug 'editorconfig/editorconfig-vim'
-" " Plug 'APZelos/blamer.nvim'
-" Plug 'lewis6991/gitsigns.nvim'
-" Plug 'karb94/neoscroll.nvim'
-" Plug 'vimwiki/vimwiki', { 'on': ['VimwikiIndex'] }
+" Plug 'gelguy/wilder.nvim', { 'do': ':UpdateRemotePlugins' }
 " Plug 'norcalli/nvim-colorizer.lua', { 'branch': 'color-editor' }
-" Plug 'machakann/vim-highlightedyank'
-" " Plug 'folke/which-key.nvim'
+" Plug 'akinsho/nvim-bufferline.lua'
+
+" Plug 'editorconfig/editorconfig-vim'
 " Plug 'wesQ3/vim-windowswap' " <leader>ww
 " Plug 'justinmk/vim-sneak'
-" " Plug 'tweekmonster/startuptime.vim'
-" Plug 'dstein64/vim-startuptime'
-" Plug 'akinsho/nvim-bufferline.lua'
-" Plug 'windwp/nvim-autopairs'
-" Plug 'miyakogi/conoline.vim'
-" " Plug 'github/copilot.vim'
-" Plug 'yamatsum/nvim-cursorline'
-" Plug 'mattn/emmet-vim'
-" Plug 'GustavoKatel/sidebar.nvim'
-
-" Plug 'folke/zen-mode.nvim'
-" Plug 'junegunn/limelight.vim'
-" Plug 'gelguy/wilder.nvim', { 'do': ':UpdateRemotePlugins' }
+" Plug 'vimwiki/vimwiki', { 'on': ['VimwikiIndex'] }
 " Plug 'stevearc/dressing.nvim'
-
+" " Plug 'github/copilot.vim'
 " Plug 'vim-pandoc/vim-pandoc'
 " Plug 'vim-pandoc/vim-pandoc-syntax'
 " }}}
+
 call plug#end()
 
 " Colors {{{
@@ -227,7 +187,7 @@ let g:dracula_colorterm = 0
 let g:dracula_italic = 1
 colorscheme dracula
 
-" Colors {{{
+" Plug Colors {{{
 if (has("termguicolors"))
   set termguicolors " enable true colors support
 endif
@@ -246,11 +206,13 @@ set colorcolumn=80
 highlight ColorColumn guibg=#181818
 " }}}
 
-" nvim-telescope/telescope.nvim {{{
+" Plug nvim-telescope/telescope.nvim {{{
 lua << EOF
+local actions = require('telescope.actions') 
+
 require('telescope').setup {
   defaults = {
-    file_ignore_patterns = { "yarn.lock" }
+    file_ignore_patterns = { "yarn.lock", "node_modules", ".git/" }
   },
   extensions = {
     fzf = {
@@ -264,11 +226,12 @@ require('telescope').setup {
     buffers = {
       show_all_buffers = true,
       sort_lastused = true,
-      -- theme = "dropdown",
-      -- previewer = false,
       mappings = {
         i = {
           ["<M-d>"] = "delete_buffer",
+        },
+        n = {
+          ["q"] = actions.close
         }
       }
     }
@@ -277,6 +240,7 @@ require('telescope').setup {
 require('telescope').load_extension('fzf')
 require("telescope").load_extension "file_browser"
 EOF
+
 nnoremap <leader>ps :lua require('telescope.builtin').grep_string( { search = vim.fn.input("Grep for > ") } )<cr>
 nnoremap <leader>ff :lua require'telescope.builtin'.find_files{ hidden = true }<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
@@ -291,7 +255,7 @@ nnoremap <leader>fgd :lua require'telescope.builtin'.live_grep{ search_dirs = { 
 " nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 "}}}
 
-" ThePrimeagen/harpoon {{{
+" Plug ThePrimeagen/harpoon {{{
 nnoremap <leader>a :lua require("harpoon.mark").add_file()<CR>
 nnoremap <leader>, :lua require("harpoon.ui").toggle_quick_menu()<CR>
 nnoremap <leader>1 :lua require("harpoon.ui").nav_file(1)<CR>
@@ -300,10 +264,7 @@ nnoremap <leader>3 :lua require("harpoon.ui").nav_file(3)<CR>
 nnoremap <leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
 " }}}
 
-
-" kyazdani42/nvim-tree.lua {{{
-let g:nvim_tree_ignore = [ '.git', 'node_modules', '.cache' ]
-let g:nvim_tree_gitignore = 1
+" Plug kyazdani42/nvim-tree.lua {{{
 " let g:nvim_tree_auto_close = 1
 " let g:nvim_tree_auto_ignore_ft = [ 'startify', 'dashboard' ]
 let g:nvim_tree_quit_on_open = 1
@@ -343,12 +304,12 @@ require('lualine').setup({
 EOF
 " }}}
 
-" tpope/vim-commentary {{{
+" Plug tpope/vim-commentary {{{
 nnoremap <leader>/ :Commentary<CR>
 vnoremap <leader>/ :Commentary<CR>
 "}}}
 
-" 'glephir/dashboard-nvim' {{{
+" Plug 'glephir/dashboard-nvim' {{{
 let g:dashboard_default_executive ='telescope'
 nnoremap <silent> <Leader>fh :DashboardFindHistory<CR>
 " nnoremap <silent> <Leader>ff :DashboardFindFile<CR>
@@ -380,101 +341,154 @@ let g:dashboard_custom_header = s:header
 let g:dashboard_custom_footer = s:footer
 " }}}
 
-" neovim/nvim-lspconfig {{{
-" npm i -g typescript typescript-language-server
-lua << EOF
-local util = require "lspconfig/util"
-require 'lspconfig'.tsserver.setup{
-    on_attach = function(client)
-        client.resolved_capabilities.document_formatting = false
-    end,
-    root_dir = util.root_pattern(".git", "tsconfig.json", "jsconfig.json"),
-    --[=====[ 
-    handlers = {
-      ["textDocument/publishDiagnostics"] = function(_, _, params, client_id, _, config)
-        local ignore_codes = { 80001, 7016 };
-        if params.diagnostics ~= nil then
-          local idx = 1
-          while idx <= #params.diagnostics do
-            if vim.tbl_contains(ignore_codes, params.diagnostics[idx].code) then
-              table.remove(params.diagnostics, idx)
-            else
-              idx = idx + 1
-            end 
-          end
-        end
-        vim.lsp.diagnostic.on_publish_diagnostics(_, _, params, client_id, _, config)
-      end,
-    },
-    --]=====]
-}
-EOF
+" Plug nvim-treesitter {{{
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  -- One of "all", "maintained" (parsers with maintainers), or a list of languages
+  ensure_installed = { 
+    'javascript',
+    'jsdoc',
+    'css', 
+    'scss',
+    'html',
+    'vue',
+    'typescript',
+    'json',
+    'tsx',
+    'yaml',
+    'bash',
+    'lua'
+  },
+  ignore_install = { 'vim'},
 
-lua << EOF
--- npm install -g diagnostic-languageserver eslint_d prettier_d_slim prettier
-local function on_attach(client)
-  print('Attached to ' .. client.name)
-end
-local dlsconfig = require 'diagnosticls-configs'
-dlsconfig.init {
-  default_config = false,
-  format = true,
-  on_attach = on_attach,
-}
-local eslint = require 'diagnosticls-configs.linters.eslint'
-local prettier = require 'diagnosticls-configs.formatters.prettier'
-prettier.requiredFiles = {
-    '.prettierrc',
-    '.prettierrc.json',
-    '.prettierrc.toml',
-    '.prettierrc.json',
-    '.prettierrc.yml',
-    '.prettierrc.yaml',
-    '.prettierrc.json5',
-    '.prettierrc.js',
-    '.prettierrc.cjs',
-    'prettier.config.js',
-    'prettier.config.cjs',
-  }
-dlsconfig.setup {
-  ['javascript'] = {
-    linter = eslint,
-    formatter = { prettier }
-  },
-  ['javascriptreact'] = {
-    linter = { eslint },
-    formatter = { prettier }
-  },
-  ['css'] = {
-    formatter = prettier
-  },
-  ['html'] = {
-    formatter = prettier
+  highlight = {
+    -- `false` will disable the whole extension
+    enable = true,
+    -- list of language that will be disabled
+    disable = {},
+
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
   },
 }
 EOF
+" }}}
 
-nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> gh    <cmd>lua vim.lsp.buf.hover()<CR>
-nnoremap <silent> gca   <cmd>:Telescope lsp_code_actions<CR>
-nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
-nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <silent> gR    <cmd>lua vim.lsp.buf.rename()<CR>
-nnoremap <silent><leader>fo <cmd>lua vim.lsp.buf.formatting()<CR>
-
-" autocmd BufWritePre *.js lua vim.lsp.buf.formatting()
-" autocmd BufWritePre *.ts lua vim.lsp.buf.formatting()
-" autocmd BufWritePre *.css lua vim.lsp.buf.formatting()
-
+" Plug 'windwp/nvim-autopairs' {{{
 lua << EOF
-require 'trouble'.setup {}
+require 'nvim-autopairs'.setup{}
 EOF
+" }}}
 
-nnoremap <leader>xx <cmd>TroubleToggle<cr>
-nnoremap <leader>xw <cmd>TroubleToggle workspace_diagnostics<cr>
-nnoremap <leader>xd <cmd>TroubleToggle document_diagnostics<cr>
-nnoremap <leader>xq <cmd>TroubleToggle quickfix<cr>
-nnoremap <leader>xl <cmd>TroubleToggle loclist<cr>
-nnoremap gR <cmd>TroubleToggle lsp_references<cr>
+" Plug 'yamatsum/nvim-cursorline' {{{
+let g:cursorline_timeout = 0
+" }}}
+
+" Plug 'folke/zen-mode.nvim' {{{
+lua << EOF
+require("zen-mode").setup {
+  -- your configuration comes here
+  -- or leave it empty to use the default settings
+  -- refer to the configuration section below
+}
+EOF
+nnoremap <leader>sb <cmd>SidebarNvimToggl<cr>
+" }}}
+
+" Plug 'GustavoKatel/sidebar.nvim' {{{
+lua << EOF
+require("sidebar-nvim").setup({})
+EOF
+" }}}
+
+" Plug 'junegunn/limelight.vim' {{{
+" Color name (:help cterm-colors) or ANSI code
+let g:limelight_conceal_ctermfg = 'gray'
+let g:limelight_conceal_ctermfg = 240
+
+" Color name (:help gui-colors) or RGB color
+let g:limelight_conceal_guifg = 'DarkGray'
+let g:limelight_conceal_guifg = '#777777'
+
+" Default: 0.5
+let g:limelight_default_coefficient = 0.7
+
+" Number of preceding/following paragraphs to include (default: 0)
+let g:limelight_paragraph_span = 1
+
+" Beginning/end of paragraph
+"   When there's no empty line between the paragraphs
+"   and each paragraph starts with indentation
+let g:limelight_bop = '^\s'
+let g:limelight_eop = '\ze\n^\s'
+
+" Highlighting priority (default: 10)
+"   Set it to -1 not to overrule hlsearch
+let g:limelight_priority = -1
+" }}}
+
+" Plug 'lewis6991/gitsigns.nvim' {{{
+lua << EOF
+require('gitsigns').setup()
+EOF
+" }}}
+
+" Plug 'karb94/neoscroll.nvim' {{{
+lua << EOF
+require('neoscroll').setup()
+EOF
+" }}}
+
+" Plug folke/which-key.nvim {{{
+lua << EOF
+require("which-key").setup {
+  -- your configuration comes here
+  -- or leave it empty to use the default settings
+  -- refer to the configuration section below
+}
+EOF
+" }}}
+
+" Plug gelguy/wilder.nvim {{{
+" call wilder#setup({'modes': [':', '/', '?']})
+" call wilder#set_option('renderer', wilder#popupmenu_renderer({
+"   \ 'highlighter': wilder#basic_highlighter(),
+"   \ 'left': [
+"   \   ' ', wilder#popupmenu_devicons(),
+"   \ ],
+"   \ 'right': [
+"   \   ' ', wilder#popupmenu_scrollbar(),
+"   \ ],
+"   \ }))
+" }}}
+
+" Plug 'APZelos/blamer.nvim' {{{
+let g:blamer_enabled = 1
+let g:blamer_delay = 200
+let g:blamer_show_in_visual_modes = 0
+let g:blamer_relative_time = 1
+highlight Blamer guifg=lightgrey
+" }}}
+
+" Plug coc-settings {{{
+let g:coc_global_extensions = [
+  \ 'coc-vetur',
+  \ 'coc-tsserver',
+  \ 'coc-tailwindcss',
+  \ 'coc-tabnine',
+  \ 'coc-stylelint',
+  \ 'coc-snippets',
+  \ 'coc-pairs',
+  \ 'coc-json',
+  \ 'coc-html',
+  \ 'coc-git',
+  \ 'coc-htmlhint',
+  \ 'coc-css',
+  \ 'coc-sh',
+  \ 'coc-eslint',
+  \ 'coc-diagnostic'
+  \ ]
 " }}}
