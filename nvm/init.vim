@@ -38,6 +38,7 @@ set listchars=tab:▸\ ,trail:·
 set foldmethod=marker
 set updatetime=300    " Reduce time for highlighting other references
 set redrawtime=10000  " Allow more time for loading syntax on large files
+set completeopt=menu,menuone,noselect
 syntax on
 filetype on           " Vim will be able to try to detect the type of file in use.
 filetype plugin on    " Enable plugins and load plugin for the detected file type
@@ -71,7 +72,13 @@ let mapleader=' '
 
 nmap <leader>ve :edit ~/.config/nvim/init.vim<cr>
 nmap <leader>vc :edit ~/.config/nvim/coc-settings.json<cr>
-nmap <leader>vr :source ~/.config/nvim/init.vim<cr>
+map  <leader>vr :source ~/.config/nvim/init.vim<cr>
+
+" toggle relativenumber
+nnoremap <leader>tn :set invrelativenumber<cr>
+
+" toggle word wrap
+nnoremap <leader>tw :set wrap!<cr>
 
 " clear and redraw screen, de-highlight, fix syntax highlighting
 nnoremap <leader>l :nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>
@@ -100,12 +107,6 @@ nnoremap <M-Left> :vertical resize +5<cr>
 " move line
 vnoremap <M-j> :m '>+1<CR>gv=gv
 vnoremap <M-k> :m '<-2<CR>gv=gv
-
-" toggle relativenumber
-nnoremap <leader>tn :set invrelativenumber<cr>
-
-" toggle word wrap
-nnoremap <leader>tw :set wrap!<cr>
 
 " nnoremap <leader>x :!chmod +x %<cr>
 
@@ -145,13 +146,13 @@ Plug 'creativenull/diagnosticls-configs-nvim'
 
 " TODO {{{
 " Completion
-" Plug 'hrsh7th/nvim-cmp'
-" Plug 'hrsh7th/cmp-buffer'
-" Plug 'hrsh7th/cmp-path'
-" Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-nvim-lsp'
 " Plug 'L3MON4D3/LuaSnip'
 " Plug 'saadparwaiz1/cmp_luasnip'
-" Plug 'David-Kunz/cmp-npm'
+Plug 'David-Kunz/cmp-npm'
 
 " " Custom Text Objects
 " Plug 'michaeljsmith/vim-indent-object' " gcii gcaI
@@ -166,7 +167,7 @@ Plug 'creativenull/diagnosticls-configs-nvim'
 " Plug 'preservim/vimux'
 
 " " https://github.com/nvim-treesitter/nvim-treesitter/issues/1111
-" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 " Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 " Plug 'MaxMEllon/vim-jsx-pretty' " fix indentation in jsx until treesitter can
 " Plug 'jxnblk/vim-mdx-js'
@@ -182,13 +183,15 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug  'tpope/vim-repeat'
+Plug 'suy/vim-context-commentstring'
 " Plug 'tpope/vim-eunuch'
 " Plug 'tpope/vim-sleuth'
 " Plug 'tpope/vim-projectionist'
 " Plug 'tpope/vim-unimpaired' " helpful shorthand like [b ]b
-Plug 'suy/vim-context-commentstring'
 
 " TODO {{{ 
+Plug 'windwp/nvim-autopairs'
+
 " Plug 'editorconfig/editorconfig-vim'
 " " Plug 'APZelos/blamer.nvim'
 " Plug 'lewis6991/gitsigns.nvim'
@@ -202,7 +205,6 @@ Plug 'suy/vim-context-commentstring'
 " " Plug 'tweekmonster/startuptime.vim'
 " Plug 'dstein64/vim-startuptime'
 " Plug 'akinsho/nvim-bufferline.lua'
-" Plug 'windwp/nvim-autopairs'
 " Plug 'miyakogi/conoline.vim'
 " " Plug 'github/copilot.vim'
 " Plug 'yamatsum/nvim-cursorline'
@@ -248,9 +250,11 @@ highlight ColorColumn guibg=#181818
 
 " nvim-telescope/telescope.nvim {{{
 lua << EOF
+local actions = require('telescope.actions') 
+
 require('telescope').setup {
   defaults = {
-    file_ignore_patterns = { "yarn.lock" }
+    file_ignore_patterns = { "yarn.lock", "node_modules", ".git/" }
   },
   extensions = {
     fzf = {
@@ -264,11 +268,12 @@ require('telescope').setup {
     buffers = {
       show_all_buffers = true,
       sort_lastused = true,
-      -- theme = "dropdown",
-      -- previewer = false,
       mappings = {
         i = {
           ["<M-d>"] = "delete_buffer",
+        },
+        n = {
+          ["q"] = actions.close
         }
       }
     }
@@ -277,6 +282,7 @@ require('telescope').setup {
 require('telescope').load_extension('fzf')
 require("telescope").load_extension "file_browser"
 EOF
+
 nnoremap <leader>ps :lua require('telescope.builtin').grep_string( { search = vim.fn.input("Grep for > ") } )<cr>
 nnoremap <leader>ff :lua require'telescope.builtin'.find_files{ hidden = true }<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
@@ -300,10 +306,7 @@ nnoremap <leader>3 :lua require("harpoon.ui").nav_file(3)<CR>
 nnoremap <leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
 " }}}
 
-
 " kyazdani42/nvim-tree.lua {{{
-let g:nvim_tree_ignore = [ '.git', 'node_modules', '.cache' ]
-let g:nvim_tree_gitignore = 1
 " let g:nvim_tree_auto_close = 1
 " let g:nvim_tree_auto_ignore_ft = [ 'startify', 'dashboard' ]
 let g:nvim_tree_quit_on_open = 1
@@ -380,49 +383,60 @@ let g:dashboard_custom_header = s:header
 let g:dashboard_custom_footer = s:footer
 " }}}
 
+" 'williamboman/nvim-lsp-installer' {{{
+lua << EOF
+local lsp_installer = require "nvim-lsp-installer"
+
+-- Register a handler that will be called for all installed servers.
+-- Alternatively, you may also register handlers on specific server instances instead (see example below).
+
+lsp_installer.on_server_ready(function(server)
+    local opts = {}
+    server:setup(opts)
+end)
+EOF
+" }}}
+
 " neovim/nvim-lspconfig {{{
 " npm i -g typescript typescript-language-server
 lua << EOF
 local util = require "lspconfig/util"
-require 'lspconfig'.tsserver.setup{
+require 'lspconfig'.tsserver.setup {
     on_attach = function(client)
         client.resolved_capabilities.document_formatting = false
     end,
     root_dir = util.root_pattern(".git", "tsconfig.json", "jsconfig.json"),
-    --[=====[ 
-    handlers = {
-      ["textDocument/publishDiagnostics"] = function(_, _, params, client_id, _, config)
-        local ignore_codes = { 80001, 7016 };
-        if params.diagnostics ~= nil then
-          local idx = 1
-          while idx <= #params.diagnostics do
-            if vim.tbl_contains(ignore_codes, params.diagnostics[idx].code) then
-              table.remove(params.diagnostics, idx)
-            else
-              idx = idx + 1
-            end 
-          end
-        end
-        vim.lsp.diagnostic.on_publish_diagnostics(_, _, params, client_id, _, config)
-      end,
-    },
-    --]=====]
 }
 EOF
+
+nnoremap <silent> gd   <cmd>lua vim.lsp.buf.definition()<CR>
+" nnoremap <silent> gh   <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> gca  <cmd>:Telescope lsp_code_actions<CR>
+nnoremap <silent> gi   <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap <silent> K    <cmd>lua vim.lsp.buf.signature_help()<CR>
+nnoremap <silent> gr   <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap <silent> [g   <cmd>lua vim.diagnostic.goto_prev()<CR>
+nnoremap <silent> ]g   <cmd>lua vim.diagnostic.goto_next()<CR>
+nnoremap <silent><leader>fo <cmd>lua vim.lsp.buf.formatting()<CR>
 
 lua << EOF
 -- npm install -g diagnostic-languageserver eslint_d prettier_d_slim prettier
 local function on_attach(client)
   print('Attached to ' .. client.name)
 end
+
 local dlsconfig = require 'diagnosticls-configs'
 dlsconfig.init {
   default_config = false,
   format = true,
   on_attach = on_attach,
 }
+
+-- https://github.com/creativenull/diagnosticls-configs-nvim/blob/main/supported-linters-and-formatters.md 
 local eslint = require 'diagnosticls-configs.linters.eslint'
 local prettier = require 'diagnosticls-configs.formatters.prettier'
+local stylelint = require 'diagnosticls-configs.linters.stylelint'
+
 prettier.requiredFiles = {
     '.prettierrc',
     '.prettierrc.json',
@@ -436,6 +450,7 @@ prettier.requiredFiles = {
     'prettier.config.js',
     'prettier.config.cjs',
   }
+
 dlsconfig.setup {
   ['javascript'] = {
     linter = eslint,
@@ -445,6 +460,10 @@ dlsconfig.setup {
     linter = { eslint },
     formatter = { prettier }
   },
+  ['vue'] = {
+    linter = { eslint, stylelint },
+    formatter = { eslint }
+  },
   ['css'] = {
     formatter = prettier
   },
@@ -453,19 +472,6 @@ dlsconfig.setup {
   },
 }
 EOF
-
-nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> gh    <cmd>lua vim.lsp.buf.hover()<CR>
-nnoremap <silent> gca   <cmd>:Telescope lsp_code_actions<CR>
-nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
-nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <silent> gR    <cmd>lua vim.lsp.buf.rename()<CR>
-nnoremap <silent><leader>fo <cmd>lua vim.lsp.buf.formatting()<CR>
-
-" autocmd BufWritePre *.js lua vim.lsp.buf.formatting()
-" autocmd BufWritePre *.ts lua vim.lsp.buf.formatting()
-" autocmd BufWritePre *.css lua vim.lsp.buf.formatting()
 
 lua << EOF
 require 'trouble'.setup {}
@@ -477,4 +483,104 @@ nnoremap <leader>xd <cmd>TroubleToggle document_diagnostics<cr>
 nnoremap <leader>xq <cmd>TroubleToggle quickfix<cr>
 nnoremap <leader>xl <cmd>TroubleToggle loclist<cr>
 nnoremap gR <cmd>TroubleToggle lsp_references<cr>
+" }}}
+
+" nvim-treesitter {{{
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  -- One of "all", "maintained" (parsers with maintainers), or a list of languages
+  ensure_installed = { 
+    'javascript',
+    'jsdoc',
+    'css', 
+    'scss',
+    'html',
+    'vue',
+    'typescript',
+    'json',
+    'tsx',
+    'yaml',
+    'bash',
+    'lua'
+  },
+  ignore_install = { 'vim'},
+
+  highlight = {
+    -- `false` will disable the whole extension
+    enable = true,
+    -- list of language that will be disabled
+    disable = {},
+
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+}
+EOF
+" }}}
+
+" 'hrsh7th/nvim-cmp' {{{
+" https://github.com/neovim/nvim-lspconfig/wiki/Autocompletion
+lua << EOF
+  -- Setup nvim-cmp.
+local cmp = require'cmp'
+
+  cmp.setup({
+    snippet = {
+      -- REQUIRED - you must specify a snippet engine
+      expand = function(args)
+        -- vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+        -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+        -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+      end,
+    },
+    mapping = {
+      ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
+      ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+      ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+      ['<C-y>'] = cmp.mapping.confirm({
+        behavior = cmp.ConfirmBehavior.Insert,
+        select = true
+      }),
+      ['<C-e>'] = cmp.mapping({
+        i = cmp.mapping.abort(),
+        c = cmp.mapping.close(),
+      }),
+      ['<CR>'] = cmp.mapping.confirm {
+        behavior = cmp.ConfirmBehavior.Replace,
+        select = true,
+      },
+      ['<Tab>'] = function(fallback)
+        if cmp.visible() then
+          cmp.select_next_item()
+        else
+          fallback()
+        end
+      end,
+      ['<S-Tab>'] = function(fallback) if cmp.visible() then
+          cmp.select_prev_item()
+        elseif luasnip.jumpable(-1) then
+          luasnip.jump(-1)
+        else
+          fallback()
+        end
+      end,
+    },
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      { name = 'path' },
+      { name = 'buffer', keyword_length = 5 },
+      { name = 'npm', keyword_length = 4 }
+    })
+  })
+EOF
+" }}} 
+
+" Plug 'windwp/nvim-autopairs' {{{
+lua << EOF
+require 'nvim-autopairs'.setup{}
+EOF
 " }}}
