@@ -31,13 +31,17 @@ set splitright        " Splitting a window will put the new window right of the 
 set splitbelow
 set path+=**
 set confirm
-set undofile
-set undodir=~/.vim/undodir
+" set undofile
+" set undodir=~/.vim/undodir
 set list
 set listchars=tab:▸\ ,trail:·
 set foldmethod=marker
 set updatetime=300    " Reduce time for highlighting other references
 set redrawtime=10000  " Allow more time for loading syntax on large files
+set cmdheight=2       " Give more space for display messages
+set shortmess+=c      " Don't pass messages to |ins-completion-menu|.
+set completeopt=menu,menuone,noselect
+set cursorline
 syntax on
 filetype on           " Vim will be able to try to detect the type of file in use.
 filetype plugin on    " Enable plugins and load plugin for the detected file type
@@ -73,8 +77,19 @@ nmap <leader>ve :edit ~/.config/nvim/init.vim<cr>
 nmap <leader>vc :edit ~/.config/nvim/coc-settings.json<cr>
 nmap <leader>vr :source ~/.config/nvim/init.vim<cr>
 
+" toggle relativenumber
+nnoremap <leader>tn :set invrelativenumber<cr>
+
+" toggle word wrap
+nnoremap <leader>tw :set wrap!<cr>
+
 " clear and redraw screen, de-highlight, fix syntax highlighting
 nnoremap <leader>l :nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>
+
+hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
+nnoremap <Leader>ln :set cursorline!<CR>
+" hi CursorColumn cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
+" nnoremap <Leader>ln :set cursorline! cursorcolumn!<CR>
 
 " Escape insert mode
 inoremap jk <esc>
@@ -101,17 +116,6 @@ nnoremap <M-Left> :vertical resize +5<cr>
 vnoremap <M-j> :m '>+1<CR>gv=gv
 vnoremap <M-k> :m '<-2<CR>gv=gv
 
-" toggle relativenumber
-nnoremap <leader>tn :set invrelativenumber<cr>
-
-" toggle word wrap
-nnoremap <leader>tw :set wrap!<cr>
-
-" nnoremap <leader>x :!chmod +x %<cr>
-
-" https://vi.stackexchange.com/questions/3814/is-there-a-best-practice-to-fold-a-vimrc-file
-" vim: filetype=vim foldmethod=marker foldlevel=0 foldcolumn=3
-
 "--------------------------------------------------------------------------
 " Plugins settings
 "--------------------------------------------------------------------------
@@ -123,7 +127,6 @@ Plug 'glepnir/dashboard-nvim'
 " Themes
 Plug 'dracula/vim', { 'as': 'dracula' }
 " Plug 'npxbr/gruvbox.nvim'
-" Plug 'projekt0n/github-nvim-theme'
 " Plug 'arcticicestudio/nord-vim'
 
 " File Management
@@ -136,6 +139,9 @@ Plug 'sudormrfbin/cheatsheet.nvim'
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'ThePrimeagen/harpoon'
 
+" " https://github.com/nvim-treesitter/nvim-treesitter/issues/1111
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
 " Status Line
 Plug 'hoob3rt/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
@@ -144,24 +150,49 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
-" Plug 'tpope/vim-repeat'
-" Plug 'tpope/vim-eunuch'
-" Plug 'tpope/vim-sleuth'
-" Plug 'tpope/vim-projectionist'
-" Plug 'tpope/vim-unimpaired' " helpful shorthand like [b ]b
+Plug 'tpope/vim-repeat'
 Plug 'suy/vim-context-commentstring'
+
+" Language server protocol
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'folke/trouble.nvim'
+
+" Plugins for web development 
+Plug 'mattn/emmet-vim'
+Plug 'AndrewRadev/tagalong.vim'
+Plug 'folke/zen-mode.nvim'
+Plug 'jiangmiao/auto-pairs'
+Plug 'vim-utils/vim-man'
+
+Plug 'itchyny/vim-cursorword'
+Plug 'GustavoKatel/sidebar.nvim'
+Plug 'junegunn/limelight.vim'
+Plug 'karb94/neoscroll.nvim'
+Plug 'machakann/vim-highlightedyank'
+Plug 'dstein64/vim-startuptime'
+Plug 'folke/which-key.nvim'
+Plug 'APZelos/blamer.nvim'
+
+" TODO {{{ 
+" Plug 'miyakogi/conoline.vim'
+" Plug 'lewis6991/gitsigns.nvim'
+" Plug 'gelguy/wilder.nvim', { 'do': ':UpdateRemotePlugins' }
+" Plug 'norcalli/nvim-colorizer.lua', { 'branch': 'color-editor' }
+" Plug 'akinsho/nvim-bufferline.lua'
+
+" Plug 'editorconfig/editorconfig-vim'
+" Plug 'wesQ3/vim-windowswap' " <leader>ww
+" Plug 'justinmk/vim-sneak'
+" Plug 'vimwiki/vimwiki', { 'on': ['VimwikiIndex'] }
+" Plug 'stevearc/dressing.nvim'
+" " Plug 'github/copilot.vim'
+" Plug 'vim-pandoc/vim-pandoc'
+" Plug 'vim-pandoc/vim-pandoc-syntax'
+" }}}
 
 call plug#end()
 
-" Colors {{{
-if (has("termguicolors"))
-  set termguicolors " enable true colors support
-endif
-let g:dracula_colorterm = 0
-let g:dracula_italic = 1
-colorscheme dracula
-
-" Colors {{{
+" Plug Colors {{{
 if (has("termguicolors"))
   set termguicolors " enable true colors support
 endif
@@ -180,11 +211,13 @@ set colorcolumn=80
 highlight ColorColumn guibg=#181818
 " }}}
 
-" nvim-telescope/telescope.nvim {{{
+" Plug nvim-telescope/telescope.nvim {{{
 lua << EOF
+local actions = require('telescope.actions') 
+
 require('telescope').setup {
   defaults = {
-    file_ignore_patterns = { "yarn.lock" }
+    file_ignore_patterns = { "yarn.lock", "node_modules", ".git/" }
   },
   extensions = {
     fzf = {
@@ -198,11 +231,13 @@ require('telescope').setup {
     buffers = {
       show_all_buffers = true,
       sort_lastused = true,
-      -- theme = "dropdown",
-      -- previewer = false,
       mappings = {
         i = {
           ["<M-d>"] = "delete_buffer",
+          ["<C-/>"] = "which_key"
+        },
+        n = {
+          ["q"] = actions.close
         }
       }
     }
@@ -211,6 +246,7 @@ require('telescope').setup {
 require('telescope').load_extension('fzf')
 require("telescope").load_extension "file_browser"
 EOF
+
 nnoremap <leader>ps :lua require('telescope.builtin').grep_string( { search = vim.fn.input("Grep for > ") } )<cr>
 nnoremap <leader>ff :lua require'telescope.builtin'.find_files{ hidden = true }<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
@@ -225,7 +261,7 @@ nnoremap <leader>fgd :lua require'telescope.builtin'.live_grep{ search_dirs = { 
 " nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 "}}}
 
-" ThePrimeagen/harpoon {{{
+" Plug ThePrimeagen/harpoon {{{
 nnoremap <leader>a :lua require("harpoon.mark").add_file()<CR>
 nnoremap <leader>, :lua require("harpoon.ui").toggle_quick_menu()<CR>
 nnoremap <leader>1 :lua require("harpoon.ui").nav_file(1)<CR>
@@ -234,10 +270,7 @@ nnoremap <leader>3 :lua require("harpoon.ui").nav_file(3)<CR>
 nnoremap <leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
 " }}}
 
-
-" kyazdani42/nvim-tree.lua {{{
-let g:nvim_tree_ignore = [ '.git', 'node_modules', '.cache' ]
-let g:nvim_tree_gitignore = 1
+" Plug kyazdani42/nvim-tree.lua {{{
 " let g:nvim_tree_auto_close = 1
 " let g:nvim_tree_auto_ignore_ft = [ 'startify', 'dashboard' ]
 let g:nvim_tree_quit_on_open = 1
@@ -277,12 +310,12 @@ require('lualine').setup({
 EOF
 " }}}
 
-" tpope/vim-commentary {{{
+" Plug tpope/vim-commentary {{{
 nnoremap <leader>/ :Commentary<CR>
 vnoremap <leader>/ :Commentary<CR>
 "}}}
 
-" 'glephir/dashboard-nvim' {{{
+" Plug 'glephir/dashboard-nvim' {{{
 let g:dashboard_default_executive ='telescope'
 nnoremap <silent> <Leader>fh :DashboardFindHistory<CR>
 " nnoremap <silent> <Leader>ff :DashboardFindFile<CR>
@@ -314,3 +347,264 @@ let g:dashboard_custom_header = s:header
 let g:dashboard_custom_footer = s:footer
 " }}}
 
+" Plug nvim-treesitter {{{
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  -- One of "all", "maintained" (parsers with maintainers), or a list of languages
+  ensure_installed = { 
+    'javascript',
+    'jsdoc',
+    'css', 
+    'scss',
+    'html',
+    'vue',
+    'typescript',
+    'json',
+    'tsx',
+    'yaml',
+    'bash',
+    'lua'
+  },
+  ignore_install = { 'vim'},
+
+  highlight = {
+    -- `false` will disable the whole extension
+    enable = true,
+    -- list of language that will be disabled
+    disable = {},
+
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+}
+EOF
+" }}}
+
+" Plug 'folke/zen-mode.nvim' {{{
+lua << EOF
+require("zen-mode").setup {
+  -- your configuration comes here
+  -- or leave it empty to use the default settings
+  -- refer to the configuration section below
+}
+EOF
+nnoremap <leader>sb <cmd>SidebarNvimToggl<cr>
+" }}}
+
+" Plug 'GustavoKatel/sidebar.nvim' {{{
+lua << EOF
+require("sidebar-nvim").setup({})
+EOF
+" }}}
+
+" Plug 'junegunn/limelight.vim' {{{
+" Color name (:help cterm-colors) or ANSI code
+let g:limelight_conceal_ctermfg = 'gray'
+let g:limelight_conceal_ctermfg = 240
+
+" Color name (:help gui-colors) or RGB color
+let g:limelight_conceal_guifg = 'DarkGray'
+let g:limelight_conceal_guifg = '#777777'
+
+" Default: 0.5
+let g:limelight_default_coefficient = 0.7
+
+" Number of preceding/following paragraphs to include (default: 0)
+let g:limelight_paragraph_span = 1
+
+" Beginning/end of paragraph
+"   When there's no empty line between the paragraphs
+"   and each paragraph starts with indentation
+let g:limelight_bop = '^\s'
+let g:limelight_eop = '\ze\n^\s'
+
+" Highlighting priority (default: 10)
+"   Set it to -1 not to overrule hlsearch
+let g:limelight_priority = -1
+" }}}
+
+" Plug 'karb94/neoscroll.nvim' {{{
+lua << EOF
+require('neoscroll').setup()
+EOF
+" }}}
+
+" Plug folke/which-key.nvim {{{
+lua << EOF
+require("which-key").setup {
+  -- your configuration comes here
+  -- or leave it empty to use the default settings
+  -- refer to the configuration section below
+}
+EOF
+" }}}
+
+" Plug gelguy/wilder.nvim {{{
+" call wilder#setup({'modes': [':', '/', '?']})
+" call wilder#set_option('renderer', wilder#popupmenu_renderer({
+"   \ 'highlighter': wilder#basic_highlighter(),
+"   \ 'left': [
+"   \   ' ', wilder#popupmenu_devicons(),
+"   \ ],
+"   \ 'right': [
+"   \   ' ', wilder#popupmenu_scrollbar(),
+"   \ ],
+"   \ }))
+" }}}
+
+" Plug 'APZelos/blamer.nvim' {{{
+let g:blamer_enabled = 1
+let g:blamer_delay = 200
+let g:blamer_show_in_visual_modes = 0
+let g:blamer_relative_time = 1
+highlight Blamer guifg=lightgrey
+" }}}
+
+" Plug 'folke/trouble.nvim' {{{
+lua << EOF
+require 'trouble'.setup {}
+EOF
+
+" Vim Script
+nnoremap <leader>xx <cmd>TroubleToggle<cr>
+nnoremap <leader>xw <cmd>TroubleToggle workspace_diagnostics<cr>
+nnoremap <leader>xd <cmd>TroubleToggle document_diagnostics<cr>
+nnoremap <leader>xq <cmd>TroubleToggle quickfix<cr>
+nnoremap <leader>xl <cmd>TroubleToggle loclist<cr>
+nnoremap gR <cmd>TroubleToggle lsp_references<cr>
+" }}}
+
+" Plug coc-settings {{{
+
+" Setting that use tab for trigger completion {{{
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+
+inoremap <silent><expr> <TAB>
+\ pumvisible() ? "\<C-n>" :
+\ <SID>check_back_space() ? "\<TAB>" :
+\ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+" }}}
+
+" Use <c-space> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Symbol renaming.
+nmap <F2> <Plug>(coc-rename)
+
+
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder.
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Applying codeAction to the selected region.
+" Example: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap keys for applying codeAction to the current buffer.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Use CTRL-S for selections ranges.
+" Requires 'textDocument/selectionRange' support of language server.
+nmap <silent> <C-s> <Plug>(coc-range-select)
+xmap <silent> <C-s> <Plug>(coc-range-select)
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocAction('format')
+
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
+
+
+" Mappings for CoCList
+" Show all diagnostics.
+nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions.
+nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+" Show commands.
+nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document.
+nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols.
+nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+
+
+let g:coc_global_extensions = [
+  \ 'coc-vetur',
+  \ 'coc-tsserver',
+  \ 'coc-highlight',
+  \ 'coc-tabnine',
+  \ 'coc-eslint',
+  \ 'coc-stylelintplus',
+  \ 'coc-htmlhint',
+  \ 'coc-snippets',
+  \ 'coc-json',
+  \ 'coc-html',
+  \ 'coc-git',
+  \ 'coc-css',
+  \ 'coc-sh',
+  \ 'coc-tailwindcss',
+  \ 'https://github.com/rodrigore/coc-tailwind-intellisense'
+  \ ]
+" }}}
