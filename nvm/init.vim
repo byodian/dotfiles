@@ -31,14 +31,17 @@ set splitright        " Splitting a window will put the new window right of the 
 set splitbelow
 set path+=**
 set confirm
-set undofile
-set undodir=~/.vim/undodir
+" set undofile
+" set undodir=~/.vim/undodir
 set list
 set listchars=tab:▸\ ,trail:·
 set foldmethod=marker
 set updatetime=300    " Reduce time for highlighting other references
 set redrawtime=10000  " Allow more time for loading syntax on large files
+set cmdheight=2       " Give more space for display messages
+set shortmess+=c      " Don't pass messages to |ins-completion-menu|.
 set completeopt=menu,menuone,noselect
+set cursorline
 syntax on
 filetype on           " Vim will be able to try to detect the type of file in use.
 filetype plugin on    " Enable plugins and load plugin for the detected file type
@@ -72,7 +75,7 @@ let mapleader=' '
 
 nmap <leader>ve :edit ~/.config/nvim/init.vim<cr>
 nmap <leader>vc :edit ~/.config/nvim/coc-settings.json<cr>
-map  <leader>vr :source ~/.config/nvim/init.vim<cr>
+nmap <leader>vr :source ~/.config/nvim/init.vim<cr>
 
 " toggle relativenumber
 nnoremap <leader>tn :set invrelativenumber<cr>
@@ -82,6 +85,11 @@ nnoremap <leader>tw :set wrap!<cr>
 
 " clear and redraw screen, de-highlight, fix syntax highlighting
 nnoremap <leader>l :nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>
+
+hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
+nnoremap <Leader>ln :set cursorline!<CR>
+" hi CursorColumn cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
+" nnoremap <Leader>ln :set cursorline! cursorcolumn!<CR>
 
 " Escape insert mode
 inoremap jk <esc>
@@ -145,17 +153,20 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'suy/vim-context-commentstring'
 
-Plug 'windwp/nvim-autopairs'
-Plug 'vim-utils/vim-man'
-Plug 'miyakogi/conoline.vim'
-Plug 'yamatsum/nvim-cursorline'
+" Language server protocol
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'folke/trouble.nvim'
+
+" Plugins for web development 
 Plug 'mattn/emmet-vim'
-Plug 'folke/zen-mode.nvim'
 Plug 'AndrewRadev/tagalong.vim'
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'folke/zen-mode.nvim'
+Plug 'jiangmiao/auto-pairs'
+Plug 'vim-utils/vim-man'
+
+Plug 'itchyny/vim-cursorword'
 Plug 'GustavoKatel/sidebar.nvim'
 Plug 'junegunn/limelight.vim'
-Plug 'lewis6991/gitsigns.nvim'
 Plug 'karb94/neoscroll.nvim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'dstein64/vim-startuptime'
@@ -163,6 +174,8 @@ Plug 'folke/which-key.nvim'
 Plug 'APZelos/blamer.nvim'
 
 " TODO {{{ 
+" Plug 'miyakogi/conoline.vim'
+" Plug 'lewis6991/gitsigns.nvim'
 " Plug 'gelguy/wilder.nvim', { 'do': ':UpdateRemotePlugins' }
 " Plug 'norcalli/nvim-colorizer.lua', { 'branch': 'color-editor' }
 " Plug 'akinsho/nvim-bufferline.lua'
@@ -178,14 +191,6 @@ Plug 'APZelos/blamer.nvim'
 " }}}
 
 call plug#end()
-
-" Colors {{{
-if (has("termguicolors"))
-  set termguicolors " enable true colors support
-endif
-let g:dracula_colorterm = 0
-let g:dracula_italic = 1
-colorscheme dracula
 
 " Plug Colors {{{
 if (has("termguicolors"))
@@ -229,6 +234,7 @@ require('telescope').setup {
       mappings = {
         i = {
           ["<M-d>"] = "delete_buffer",
+          ["<C-/>"] = "which_key"
         },
         n = {
           ["q"] = actions.close
@@ -377,16 +383,6 @@ require'nvim-treesitter.configs'.setup {
 EOF
 " }}}
 
-" Plug 'windwp/nvim-autopairs' {{{
-lua << EOF
-require 'nvim-autopairs'.setup{}
-EOF
-" }}}
-
-" Plug 'yamatsum/nvim-cursorline' {{{
-let g:cursorline_timeout = 0
-" }}}
-
 " Plug 'folke/zen-mode.nvim' {{{
 lua << EOF
 require("zen-mode").setup {
@@ -430,12 +426,6 @@ let g:limelight_eop = '\ze\n^\s'
 let g:limelight_priority = -1
 " }}}
 
-" Plug 'lewis6991/gitsigns.nvim' {{{
-lua << EOF
-require('gitsigns').setup()
-EOF
-" }}}
-
 " Plug 'karb94/neoscroll.nvim' {{{
 lua << EOF
 require('neoscroll').setup()
@@ -473,22 +463,148 @@ let g:blamer_relative_time = 1
 highlight Blamer guifg=lightgrey
 " }}}
 
+" Plug 'folke/trouble.nvim' {{{
+lua << EOF
+require 'trouble'.setup {}
+EOF
+
+" Vim Script
+nnoremap <leader>xx <cmd>TroubleToggle<cr>
+nnoremap <leader>xw <cmd>TroubleToggle workspace_diagnostics<cr>
+nnoremap <leader>xd <cmd>TroubleToggle document_diagnostics<cr>
+nnoremap <leader>xq <cmd>TroubleToggle quickfix<cr>
+nnoremap <leader>xl <cmd>TroubleToggle loclist<cr>
+nnoremap gR <cmd>TroubleToggle lsp_references<cr>
+" }}}
+
 " Plug coc-settings {{{
+
+" Setting that use tab for trigger completion {{{
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+
+inoremap <silent><expr> <TAB>
+\ pumvisible() ? "\<C-n>" :
+\ <SID>check_back_space() ? "\<TAB>" :
+\ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+" }}}
+
+" Use <c-space> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Symbol renaming.
+nmap <F2> <Plug>(coc-rename)
+
+
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder.
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Applying codeAction to the selected region.
+" Example: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap keys for applying codeAction to the current buffer.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Use CTRL-S for selections ranges.
+" Requires 'textDocument/selectionRange' support of language server.
+nmap <silent> <C-s> <Plug>(coc-range-select)
+xmap <silent> <C-s> <Plug>(coc-range-select)
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocAction('format')
+
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
+
+
+" Mappings for CoCList
+" Show all diagnostics.
+nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions.
+nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+" Show commands.
+nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document.
+nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols.
+nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+
+
 let g:coc_global_extensions = [
   \ 'coc-vetur',
   \ 'coc-tsserver',
-  \ 'coc-tailwindcss',
+  \ 'coc-highlight',
   \ 'coc-tabnine',
-  \ 'coc-stylelint',
+  \ 'coc-eslint',
+  \ 'coc-stylelintplus',
+  \ 'coc-htmlhint',
   \ 'coc-snippets',
-  \ 'coc-pairs',
   \ 'coc-json',
   \ 'coc-html',
   \ 'coc-git',
-  \ 'coc-htmlhint',
   \ 'coc-css',
   \ 'coc-sh',
-  \ 'coc-eslint',
-  \ 'coc-diagnostic'
+  \ 'coc-tailwindcss',
+  \ 'https://github.com/rodrigore/coc-tailwind-intellisense'
   \ ]
 " }}}
