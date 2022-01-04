@@ -19,7 +19,6 @@ set signcolumn=yes
 set tabstop=2         " a tab is two spaces
 set shiftwidth=2      " number of spaces to use for autoindenting 
 set expandtab         " expand tabs by default. see :help expandtab 
-set nolist            " don't show invisible characters by default
 set nojoinspaces      " don't autoinsert two spaces after '.', '?', '!' for join command
 set clipboard+=unnamedplus
 set encoding=UTF-8
@@ -58,14 +57,6 @@ setlocal spell spelllang=en_us " turn spell checking on only in the local buffer
 set wildmenu                   " Enable auto completion menu after pressing TAB.
 set wildmode=list:longest      " Make wildmenu behave like similar to Bash completion.
 set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx,*/node_modules/**
-
-" Uncomment the following to have Vim jump to the last position when                                                       
-" reopening a file
-" https://stackoverflow.com/questions/774560/in-vim-how-do-i-get-a-file-to-open-at-the-same-line-number-i-closed-it-at-last
-if has("autocmd")
-  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
-    \| exe "normal! g'\"" | endif
-endif
 
 "--------------------------------------------------------------------------
 " Key maps
@@ -115,6 +106,29 @@ nnoremap <M-Left> :vertical resize +5<cr>
 " move line
 vnoremap <M-j> :m '>+1<CR>gv=gv
 vnoremap <M-k> :m '<-2<CR>gv=gv
+
+if has('nvim')
+  tnoremap <Esc> <C-\><C-n>
+endif
+
+"--------------------------------------------------------------------------
+" autocmd settings
+"--------------------------------------------------------------------------
+
+" Highlighting the yanked region
+augroup highlight_yank
+  " Delete any old autocommands with "au!" or "autocmd!"
+  au!
+  au TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=1000}
+augroup END
+
+" Uncomment the following to have Vim jump to the last position when                                                       
+" reopening a file
+" https://stackoverflow.com/questions/774560/in-vim-how-do-i-get-a-file-to-open-at-the-same-line-number-i-closed-it-at-last
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+    \| exe "normal! g'\"" | endif
+endif
 
 "--------------------------------------------------------------------------
 " Plugins settings
@@ -168,14 +182,18 @@ Plug 'itchyny/vim-cursorword'
 Plug 'GustavoKatel/sidebar.nvim'
 Plug 'junegunn/limelight.vim'
 Plug 'karb94/neoscroll.nvim'
-Plug 'machakann/vim-highlightedyank'
 Plug 'dstein64/vim-startuptime'
-Plug 'folke/which-key.nvim'
 Plug 'APZelos/blamer.nvim'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+Plug 'lewis6991/gitsigns.nvim'
+
+" Plugins no longer need {{{
+" Plug 'folke/which-key.nvim'
+" Plug 'machakann/vim-highlightedyank'
+" Plug 'miyakogi/conoline.vim'
+" }}}
 
 " TODO {{{ 
-" Plug 'miyakogi/conoline.vim'
-" Plug 'lewis6991/gitsigns.nvim'
 " Plug 'gelguy/wilder.nvim', { 'do': ':UpdateRemotePlugins' }
 " Plug 'norcalli/nvim-colorizer.lua', { 'branch': 'color-editor' }
 " Plug 'akinsho/nvim-bufferline.lua'
@@ -185,7 +203,7 @@ Plug 'APZelos/blamer.nvim'
 " Plug 'justinmk/vim-sneak'
 " Plug 'vimwiki/vimwiki', { 'on': ['VimwikiIndex'] }
 " Plug 'stevearc/dressing.nvim'
-" " Plug 'github/copilot.vim'
+" Plug 'github/copilot.vim'
 " Plug 'vim-pandoc/vim-pandoc'
 " Plug 'vim-pandoc/vim-pandoc-syntax'
 " }}}
@@ -271,20 +289,19 @@ nnoremap <leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
 " }}}
 
 " Plug kyazdani42/nvim-tree.lua {{{
-" let g:nvim_tree_auto_close = 1
-" let g:nvim_tree_auto_ignore_ft = [ 'startify', 'dashboard' ]
 let g:nvim_tree_quit_on_open = 1
 let g:nvim_tree_indent_markers = 1
 let g:nvim_tree_git_hl = 1
-let g:nvim_tree_highlight_opened_files = 1
+let g:nvim_tree_highlight_opened_files = 3
 let g:nvim_tree_group_empty = 1
-" let g:nvim_tree_lsp_diagnostics = 1
 
 lua << EOF
 require'nvim-tree'.setup {
   auto_close = true,
-  -- lsp_diagnostics = true,
   ignore_ft_on_setup  = { 'startify', 'dashboard' },
+  view = {
+    side = 'right'
+  }
 }
 EOF
 
@@ -432,16 +449,6 @@ require('neoscroll').setup()
 EOF
 " }}}
 
-" Plug folke/which-key.nvim {{{
-lua << EOF
-require("which-key").setup {
-  -- your configuration comes here
-  -- or leave it empty to use the default settings
-  -- refer to the configuration section below
-}
-EOF
-" }}}
-
 " Plug gelguy/wilder.nvim {{{
 " call wilder#setup({'modes': [':', '/', '?']})
 " call wilder#set_option('renderer', wilder#popupmenu_renderer({
@@ -475,6 +482,12 @@ nnoremap <leader>xd <cmd>TroubleToggle document_diagnostics<cr>
 nnoremap <leader>xq <cmd>TroubleToggle quickfix<cr>
 nnoremap <leader>xl <cmd>TroubleToggle loclist<cr>
 nnoremap gR <cmd>TroubleToggle lsp_references<cr>
+" }}}
+
+" Plug lewis6991/gitsigns.nvim {{{
+lua << EOF
+require('gitsigns').setup()
+EOF
 " }}}
 
 " Plug coc-settings {{{
