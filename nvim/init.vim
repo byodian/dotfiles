@@ -34,16 +34,22 @@ set confirm
 " set undodir=~/.vim/undodir
 set list
 set listchars=tab:▸\ ,trail:·
-set foldmethod=marker
+
+set foldlevel=20
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
+
+" set foldmethod=manual
+
 set updatetime=300    " Reduce time for highlighting other references
 set redrawtime=10000  " Allow more time for loading syntax on large files
-set cmdheight=2       " Give more space for display messages
+" set cmdheight=2       " Give more space for display messages
 set shortmess+=c      " Don't pass messages to |ins-completion-menu|.
 set completeopt=menu,menuone,noselect
 set cursorline
 syntax on
 filetype on           " Vim will be able to try to detect the type of file in use.
-filetype plugin on    " Enable plugins and load plugin for the detected file type
+filetype plugin indent on    " Enable plugins and load plugin for the detected file type
 
 " attempt to speed-up vim
 set ttyfast
@@ -103,9 +109,18 @@ nnoremap <M-Up> :resize +5<cr>
 nnoremap <M-Down> :resize -5<cr>
 nnoremap <M-Left> :vertical resize +5<cr>
 
-" move line
+" mappings to move lines {{{
 vnoremap <M-j> :m '>+1<CR>gv=gv
 vnoremap <M-k> :m '<-2<CR>gv=gv
+
+" For WSL2
+nnoremap <A-j> :m .+1<CR>==
+nnoremap <A-k> :m .-2<CR>==
+inoremap <A-j> <Esc>:m .+1<CR>==gi
+inoremap <A-k> <Esc>:m .-2<CR>==gi
+vnoremap <A-j> :m '>+1<CR>gv=gv
+vnoremap <A-k> :m '<-2<CR>gv=gv
+" }}}
 
 if has('nvim')
   tnoremap <Esc> <C-\><C-n>
@@ -166,6 +181,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'suy/vim-context-commentstring'
+Plug 'tpope/vim-eunuch'
 
 " Language server protocol
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -186,6 +202,11 @@ Plug 'dstein64/vim-startuptime'
 Plug 'APZelos/blamer.nvim'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'lewis6991/gitsigns.nvim'
+Plug 'github/copilot.vim'
+Plug 'phaazon/hop.nvim'
+Plug 'kevinhwang91/nvim-hlslens'
+Plug 'akinsho/nvim-bufferline.lua'
+Plug 'gelguy/wilder.nvim', { 'do': ':UpdateRemotePlugins' }
 
 " Plugins no longer need {{{
 " Plug 'folke/which-key.nvim'
@@ -194,16 +215,13 @@ Plug 'lewis6991/gitsigns.nvim'
 " }}}
 
 " TODO {{{ 
-" Plug 'gelguy/wilder.nvim', { 'do': ':UpdateRemotePlugins' }
 " Plug 'norcalli/nvim-colorizer.lua', { 'branch': 'color-editor' }
-" Plug 'akinsho/nvim-bufferline.lua'
 
 " Plug 'editorconfig/editorconfig-vim'
 " Plug 'wesQ3/vim-windowswap' " <leader>ww
 " Plug 'justinmk/vim-sneak'
 " Plug 'vimwiki/vimwiki', { 'on': ['VimwikiIndex'] }
 " Plug 'stevearc/dressing.nvim'
-" Plug 'github/copilot.vim'
 " Plug 'vim-pandoc/vim-pandoc'
 " Plug 'vim-pandoc/vim-pandoc-syntax'
 " }}}
@@ -305,9 +323,9 @@ require'nvim-tree'.setup {
 }
 EOF
 
-nnoremap <C-n> :NvimTreeToggle<CR>
+" nnoremap <C-n> :NvimTreeToggle<CR>
+nnoremap <C-n> :NvimTreeFindFileToggle<CR>
 nnoremap <leader>r :NvimTreeRefresh<CR>
-nnoremap <leader>n :NvimTreeFindFile<CR>
 "}}}
 
 " Plug 'hoob3rt/lualine.nvim' {{{
@@ -394,8 +412,14 @@ require'nvim-treesitter.configs'.setup {
     -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
     -- Using this option may slow down your editor, and you may see some duplicate highlights.
     -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = false,
+    additional_vim_regex_highlighting = true,
   },
+  indent = {
+    enable = true
+  },
+   context_commentstring = {
+    enable = true
+  }
 }
 EOF
 " }}}
@@ -450,16 +474,23 @@ EOF
 " }}}
 
 " Plug gelguy/wilder.nvim {{{
-" call wilder#setup({'modes': [':', '/', '?']})
-" call wilder#set_option('renderer', wilder#popupmenu_renderer({
-"   \ 'highlighter': wilder#basic_highlighter(),
-"   \ 'left': [
-"   \   ' ', wilder#popupmenu_devicons(),
-"   \ ],
-"   \ 'right': [
-"   \   ' ', wilder#popupmenu_scrollbar(),
-"   \ ],
-"   \ }))
+call wilder#setup({'modes': [':', '/', '?']})
+
+" Can also be passed to the 'highlights' option
+call wilder#set_option('renderer', wilder#popupmenu_renderer({
+      \ 'pumblend': 10,
+      \ 'highlighter': wilder#basic_highlighter(),
+      \ 'highlights': {
+      \   'accent': wilder#make_hl('WilderAccent', 'Pmenu', [{}, {}, {'foreground': '#f4468f'}]),
+      \ },
+      \ 'left': [
+      \   ' ', wilder#popupmenu_devicons(),
+      \ ],
+      \ 'right': [
+      \   ' ', wilder#popupmenu_scrollbar(),
+      \ ],
+      \ }))
+
 " }}}
 
 " Plug 'APZelos/blamer.nvim' {{{
@@ -552,7 +583,6 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 " Symbol renaming.
 nmap <F2> <Plug>(coc-rename)
 
-
 " Formatting selected code.
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
@@ -589,19 +619,17 @@ command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 " Add `:OR` command for organize imports of the current buffer.
 command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
 
-
 " Mappings for CoCList
 " Show all diagnostics.
-nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+" nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
 " Manage extensions.
 nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
 " Show commands.
-nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+" nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
 " Find symbol of current document.
 nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
 " Search workspace symbols.
-nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-
+" nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
 
 let g:coc_global_extensions = [
   \ 'coc-vetur',
@@ -620,4 +648,72 @@ let g:coc_global_extensions = [
   \ 'coc-tailwindcss',
   \ 'https://github.com/rodrigore/coc-tailwind-intellisense'
   \ ]
+" }}}
+
+" Plug 'phaazon/hop.nvim' {{{
+lua << EOF
+require'hop'.setup()
+EOF
+map s <cmd>HopChar1<CR>
+" }}}
+
+" Plug 'kevinhwang91/nvim-hlslens' {{{
+noremap <silent> n <Cmd>execute('normal! ' . v:count1 . 'n')<CR>
+            \<Cmd>lua require('hlslens').start()<CR>
+noremap <silent> N <Cmd>execute('normal! ' . v:count1 . 'N')<CR>
+            \<Cmd>lua require('hlslens').start()<CR>
+noremap * *<Cmd>lua require('hlslens').start()<CR>
+noremap # #<Cmd>lua require('hlslens').start()<CR>
+noremap g* g*<Cmd>lua require('hlslens').start()<CR>
+noremap g# g#<Cmd>lua require('hlslens').start()<CR>
+" }}}
+
+" Plug 'akinsho/nvim-bufferline.lua' {{{
+set termguicolors
+lua << EOF
+require("bufferline").setup{
+  highlights = {
+    fill = {
+      guibg = "#282828"
+    },
+    separator_selected = {
+      guifg = "#282828"
+    },
+    separator_visible = {
+      guifg = "#282828"
+    },
+    separator = {
+      guifg = "#282828"
+    }
+  },
+  options = {
+    numbers = "ordinal",
+    modified_icon = "●",
+    left_trunc_marker = "",
+    right_trunc_marker = "",
+    max_name_length = 25,
+    max_prefix_length = 25,
+    enforce_regular_tabs = false,
+    view = "multiwindow",
+    show_buffer_close_icons = true,
+    show_close_icon = false,
+    separator_style = "slant",
+    diagnostics = "nvim_lsp",
+    diagnostics_update_in_insert = false,
+    diagnostics_indicator = function(count, level, diagnostics_dict, context)
+      return "("..count..")"
+    end,
+    offsets = {
+      {
+        filetype = "coc-explorer",
+        text = "File Explorer",
+        highlight = "Directory",
+        text_align = "center"
+      }
+    }
+  }
+}
+EOF
+
+nnoremap <silent><leader>b :BufferLineCycleNext<CR>
 " }}}
