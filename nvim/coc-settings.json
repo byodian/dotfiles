@@ -13,10 +13,13 @@
   "git.changeRemovedSign.text": "~",
   "tailwindCSS.emmetCompletions": true,
   "tailwindCSS.headwind.removeDuplicates": true, 
-  "css.validate": false,
   "less.validate": false,
   "scss.validate": false,
+  "css.validate": false,
   "wxss.validate": false,
   "stylelintplus.autoFixOnSave": true,
-  "stylelintplus.cssInJs": true
+  "emmet.includeLanguages": {
+    "vue-html": "html",
+    "javascript": "javascriptreact"
+  }
 }

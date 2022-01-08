@@ -64,7 +64,7 @@ set wildmenu                   " Enable auto completion menu after pressing TAB.
 set wildmode=list:longest      " Make wildmenu behave like similar to Bash completion.
 set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx,*/node_modules/**
 
-"--------------------------------------------------------------------------
+"-------------------------------------------------------------------------
 " Key maps
 "--------------------------------------------------------------------------
 
@@ -81,7 +81,7 @@ nnoremap <leader>tn :set invrelativenumber<cr>
 nnoremap <leader>tw :set wrap!<cr>
 
 " clear and redraw screen, de-highlight, fix syntax highlighting
-nnoremap <leader>l :nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>
+nnoremap <c-c>l :nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>
 
 hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 nnoremap <Leader>ln :set cursorline!<CR>
@@ -131,11 +131,11 @@ endif
 "--------------------------------------------------------------------------
 
 " Highlighting the yanked region
-augroup highlight_yank
-  " Delete any old autocommands with "au!" or "autocmd!"
-  au!
-  au TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=1000}
-augroup END
+" augroup highlight_yank
+"   " Delete any old autocommands with "au!" or "autocmd!"
+"   au!
+"   au TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=1000}
+" augroup END
 
 " Uncomment the following to have Vim jump to the last position when                                                       
 " reopening a file
@@ -170,6 +170,8 @@ Plug 'ThePrimeagen/harpoon'
 
 " " https://github.com/nvim-treesitter/nvim-treesitter/issues/1111
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'JoosepAlviste/nvim-ts-context-commentstring'
+Plug 'p00f/nvim-ts-rainbow'
 
 " Status Line
 Plug 'hoob3rt/lualine.nvim'
@@ -180,7 +182,6 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
-Plug 'suy/vim-context-commentstring'
 Plug 'tpope/vim-eunuch'
 
 " Language server protocol
@@ -188,7 +189,6 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'folke/trouble.nvim'
 
 " Plugins for web development 
-Plug 'mattn/emmet-vim'
 Plug 'AndrewRadev/tagalong.vim'
 Plug 'folke/zen-mode.nvim'
 Plug 'jiangmiao/auto-pairs'
@@ -209,9 +209,10 @@ Plug 'akinsho/nvim-bufferline.lua'
 Plug 'gelguy/wilder.nvim', { 'do': ':UpdateRemotePlugins' }
 
 " Plugins no longer need {{{
-" Plug 'folke/which-key.nvim'
 " Plug 'machakann/vim-highlightedyank'
+" Plug 'folke/which-key.nvim'
 " Plug 'miyakogi/conoline.vim'
+" Plug 'mattn/emmet-vim'
 " }}}
 
 " TODO {{{ 
@@ -283,22 +284,19 @@ require('telescope').load_extension('fzf')
 require("telescope").load_extension "file_browser"
 EOF
 
-nnoremap <leader>ps :lua require('telescope.builtin').grep_string( { search = vim.fn.input("Grep for > ") } )<cr>
 nnoremap <leader>ff :lua require'telescope.builtin'.find_files{ hidden = true }<cr>
+nnoremap <leader>ps :lua require('telescope.builtin').grep_string( { search = vim.fn.input("Grep for > ") } )<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
-" nnoremap <Leader>fs :lua require'telescope.builtin'.file_browser{ cwd = vim.fn.expand('%:p:h') }<cr>
 nnoremap <leader>fs <cmd>lua require 'telescope'.extensions.file_browser.file_browser( { path = vim.fn.expand('%:p:h') } )<CR>
 nnoremap <Leader>fc :lua require'telescope.builtin'.git_status{}<cr>
 nnoremap <Leader>cb :lua require'telescope.builtin'.git_branches{}<cr>
 nnoremap <leader>fr :lua require'telescope.builtin'.resume{}<CR>
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep( { file_ignore_patterns = { '**/*.spec.js' } } )<cr>
-" nnoremap <leader>fgi <cmd>lua require('telescope.builtin').live_grep( { file_ignore_patterns = { vim.fn.input("Ignore pattern > ") } } )<cr>
-nnoremap <leader>fgd :lua require'telescope.builtin'.live_grep{ search_dirs = { 'slices/admin' } }
-" nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 "}}}
 
 " Plug ThePrimeagen/harpoon {{{
-nnoremap <leader>a :lua require("harpoon.mark").add_file()<CR>
+nnoremap <leader>af :lua require("harpoon.mark").add_file()<CR>
 nnoremap <leader>, :lua require("harpoon.ui").toggle_quick_menu()<CR>
 nnoremap <leader>1 :lua require("harpoon.ui").nav_file(1)<CR>
 nnoremap <leader>2 :lua require("harpoon.ui").nav_file(2)<CR>
@@ -315,11 +313,11 @@ let g:nvim_tree_group_empty = 1
 
 lua << EOF
 require'nvim-tree'.setup {
-  auto_close = true,
-  ignore_ft_on_setup  = { 'startify', 'dashboard' },
-  view = {
-    side = 'right'
-  }
+auto_close = true,
+ignore_ft_on_setup  = { 'startify', 'dashboard' },
+view = {
+  side = 'right'
+}
 }
 EOF
 
@@ -332,15 +330,15 @@ nnoremap <leader>r :NvimTreeRefresh<CR>
 lua << EOF
 require('plenary.reload').reload_module('lualine', true)
 require('lualine').setup({
-  options = {
-    theme = 'dracula',
-    disabled_types = { 'NvimTree' }
-  },
-  sections = {
-    lualine_x = {},
-    -- lualine_y = {},
-    -- lualine_z = {},
-  }
+options = {
+  theme = 'dracula',
+  disabled_types = { 'NvimTree' }
+},
+sections = {
+  lualine_x = {},
+  -- lualine_y = {},
+  -- lualine_z = {},
+}
 })
 EOF
 " }}}
@@ -368,15 +366,15 @@ let g:dashboard_custom_shortcut={
 \ 'book_marks'         : 'SPC f m',
 \ }
 let s:header = [
-    \ '███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗',
-    \ '████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║',
-    \ '██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║',
-    \ '██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║',
-    \ '██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║',
-    \ '╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝',
-    \ '',
-    \ '                 [ @byodian ]                 ',
-    \ ]
+  \ '███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗',
+  \ '████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║',
+  \ '██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║',
+  \ '██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║',
+  \ '██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║',
+  \ '╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝',
+  \ '',
+  \ '                 [ @byodian ]                 ',
+  \ ]
 let s:footer = []
 let g:dashboard_custom_header = s:header
 let g:dashboard_custom_footer = s:footer
@@ -385,7 +383,7 @@ let g:dashboard_custom_footer = s:footer
 " Plug nvim-treesitter {{{
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
-  -- One of "all", "maintained" (parsers with maintainers), or a list of languages
+-- One of "all", "maintained" (parsers with maintainers), or a list of languages
   ensure_installed = { 
     'javascript',
     'jsdoc',
@@ -419,6 +417,14 @@ require'nvim-treesitter.configs'.setup {
   },
    context_commentstring = {
     enable = true
+  },
+  rainbow = {
+    enable = true,
+    -- disable = { "jsx", "cpp" }, list of languages you want to disable the plugin for
+    extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
+    max_file_lines = nil, -- Do not enable for files with more than n lines, int
+    -- colors = {}, -- table of hex strings
+    -- termcolors = {} -- table of colour name strings
   }
 }
 EOF
@@ -427,9 +433,9 @@ EOF
 " Plug 'folke/zen-mode.nvim' {{{
 lua << EOF
 require("zen-mode").setup {
-  -- your configuration comes here
-  -- or leave it empty to use the default settings
-  -- refer to the configuration section below
+-- your configuration comes here
+-- or leave it empty to use the default settings
+-- refer to the configuration section below
 }
 EOF
 nnoremap <leader>sb <cmd>SidebarNvimToggl<cr>
@@ -476,20 +482,35 @@ EOF
 " Plug gelguy/wilder.nvim {{{
 call wilder#setup({'modes': [':', '/', '?']})
 
-" Can also be passed to the 'highlights' option
-call wilder#set_option('renderer', wilder#popupmenu_renderer({
-      \ 'pumblend': 10,
-      \ 'highlighter': wilder#basic_highlighter(),
-      \ 'highlights': {
-      \   'accent': wilder#make_hl('WilderAccent', 'Pmenu', [{}, {}, {'foreground': '#f4468f'}]),
-      \ },
-      \ 'left': [
-      \   ' ', wilder#popupmenu_devicons(),
-      \ ],
-      \ 'right': [
-      \   ' ', wilder#popupmenu_scrollbar(),
-      \ ],
-      \ }))
+" " Can also be passed to the 'highlights' option
+" call wilder#set_option('renderer', wilder#popupmenu_renderer({
+"       \ 'pumblend': 10,
+"       \ 'highlighter': wilder#basic_highlighter(),
+"       \ 'highlights': {
+"       \   'accent': wilder#make_hl('WilderAccent', 'Pmenu', [{}, {}, {'foreground': '#f4468f'}]),
+"       \ },
+"       \ 'left': [
+"       \   ' ', wilder#popupmenu_devicons(),
+"       \ ],
+"       \ 'right': [
+"       \   ' ', wilder#popupmenu_scrollbar(),
+"       \ ],
+"       \ }))
+
+call wilder#set_option('pipeline', [
+    \   wilder#branch(
+    \     wilder#cmdline_pipeline(),
+    \     wilder#search_pipeline(),
+    \   ),
+    \ ])
+
+call wilder#set_option('renderer', wilder#wildmenu_renderer({
+    \ 'pumblend': 10,
+    \ 'highlighter': wilder#basic_highlighter(),
+    \ 'highlights': { 
+    \   'accent': wilder#make_hl('WilderAccent', 'Pmenu', [{}, {}, {'foreground': '#f4468f', 'background': 'transparent' }]),
+    \ },
+    \ }))
 
 " }}}
 
@@ -536,22 +557,22 @@ inoremap <silent><expr> <TAB>
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+let col = col('.') - 1
+return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 " }}}
 
 " Use <c-space> to trigger completion.
 if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
+inoremap <silent><expr> <c-space> coc#refresh()
 else
-  inoremap <silent><expr> <c-@> coc#refresh()
+inoremap <silent><expr> <c-@> coc#refresh()
 endif
 
 " Make <CR> auto-select the first completion item and notify coc.nvim to
 " format on enter, <cr> could be remapped by other vim plugin
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+                            \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
@@ -568,13 +589,13 @@ nmap <silent> gr <Plug>(coc-references)
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
+if (index(['vim','help'], &filetype) >= 0)
+  execute 'h '.expand('<cword>')
+elseif (coc#rpc#ready())
+  call CocActionAsync('doHover')
+else
+  execute '!' . &keywordprg . " " . expand('<cword>')
+endif
 endfunction
 
 " Highlight the symbol and its references when holding the cursor.
@@ -588,11 +609,11 @@ xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
 augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder.
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+autocmd!
+" Setup formatexpr specified filetype(s).
+autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+" Update signature help on jump placeholder.
+autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
 " Applying codeAction to the selected region.
@@ -634,19 +655,21 @@ nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
 let g:coc_global_extensions = [
   \ 'coc-vetur',
   \ 'coc-tsserver',
-  \ 'coc-highlight',
   \ 'coc-tabnine',
   \ 'coc-eslint',
   \ 'coc-stylelintplus',
   \ 'coc-htmlhint',
   \ 'coc-snippets',
   \ 'coc-json',
+  \ 'coc-emmet',
   \ 'coc-html',
   \ 'coc-git',
+  \ 'coc-highlight',
   \ 'coc-css',
   \ 'coc-sh',
   \ 'coc-tailwindcss',
-  \ 'https://github.com/rodrigore/coc-tailwind-intellisense'
+  \ 'https://github.com/rodrigore/coc-tailwind-intellisense',
+  \ 'coc-yank'
   \ ]
 " }}}
 
@@ -698,14 +721,20 @@ require("bufferline").setup{
     show_buffer_close_icons = true,
     show_close_icon = false,
     separator_style = "slant",
-    diagnostics = "nvim_lsp",
+    diagnostics = "coc",
     diagnostics_update_in_insert = false,
     diagnostics_indicator = function(count, level, diagnostics_dict, context)
-      return "("..count..")"
+      local s = " "
+      for e, n in pairs(diagnostics_dict) do
+        local sym = e == "error" and " "
+        or (e == "warning" and " " or " " )
+        s = s ..  sym .. n .. ' '
+      end
+      return s
     end,
     offsets = {
       {
-        filetype = "coc-explorer",
+        filetype = "NvimTree",
         text = "File Explorer",
         highlight = "Directory",
         text_align = "center"
@@ -715,5 +744,7 @@ require("bufferline").setup{
 }
 EOF
 
-nnoremap <silent><leader>b :BufferLineCycleNext<CR>
+" mapping settings
+nnoremap <silent> gb :BufferLinePick<CR>
+nnoremap <silent><leader> b :BufferLineCycleNext<CR>
 " }}}
