@@ -3,6 +3,7 @@
 "--------------------------------------------------------------------------
 set title
 set hidden
+set number
 set showmatch         " Show matching words during a search
 set hlsearch          " Highlight search results
 set showmode          " always show what mode we're currently editing in
@@ -10,8 +11,7 @@ set incsearch         " Makes search act like search in modern browsers
 " Override the ignorecase option if searching for capital letters.
 " This will allow you to search specifically for capital letters.
 set smartcase
-set ignorecase        " Ignore case when searching
-set number            " Show line number
+set ignorecase        " Ignore case when searching set number            " Show line number
 set ruler             " Always show current position
 set bg=dark		        " 显示不同的底色色调
 set showmode
@@ -35,17 +35,16 @@ set confirm
 set list
 set listchars=tab:▸\ ,trail:·
 
-set foldlevel=20
-set foldmethod=expr
-set foldexpr=nvim_treesitter#foldexpr()
+" set foldlevel=20
+" set foldmethod=expr
+" set foldexpr=nvim_treesitter#foldexpr()
 
-" set foldmethod=manual
+set foldmethod=marker
 
 set updatetime=300    " Reduce time for highlighting other references
 set redrawtime=10000  " Allow more time for loading syntax on large files
 " set cmdheight=2       " Give more space for display messages
 set shortmess+=c      " Don't pass messages to |ins-completion-menu|.
-set completeopt=menu,menuone,noselect
 set cursorline
 syntax on
 filetype on           " Vim will be able to try to detect the type of file in use.
@@ -61,7 +60,6 @@ set lazyredraw
 " You can also mark words as incorrect using zw.
 setlocal spell spelllang=en_us " turn spell checking on only in the local buffer
 set wildmenu                   " Enable auto completion menu after pressing TAB.
-set wildmode=list:longest      " Make wildmenu behave like similar to Bash completion.
 set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx,*/node_modules/**
 
 "-------------------------------------------------------------------------
@@ -81,7 +79,7 @@ nnoremap <leader>tn :set invrelativenumber<cr>
 nnoremap <leader>tw :set wrap!<cr>
 
 " clear and redraw screen, de-highlight, fix syntax highlighting
-nnoremap <c-c>l :nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>
+nnoremap <leader>l :nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>
 
 hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 nnoremap <Leader>ln :set cursorline!<CR>
@@ -130,13 +128,6 @@ endif
 " autocmd settings
 "--------------------------------------------------------------------------
 
-" Highlighting the yanked region
-" augroup highlight_yank
-"   " Delete any old autocommands with "au!" or "autocmd!"
-"   au!
-"   au TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=1000}
-" augroup END
-
 " Uncomment the following to have Vim jump to the last position when                                                       
 " reopening a file
 " https://stackoverflow.com/questions/774560/in-vim-how-do-i-get-a-file-to-open-at-the-same-line-number-i-closed-it-at-last
@@ -168,10 +159,33 @@ Plug 'sudormrfbin/cheatsheet.nvim'
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'ThePrimeagen/harpoon'
 
+" Language Server Protocol
+Plug 'neovim/nvim-lspconfig'
+Plug 'williamboman/nvim-lsp-installer'
+Plug 'folke/trouble.nvim'
+Plug 'onsails/lspkind-nvim'
+Plug 'creativenull/diagnosticls-configs-nvim'
+
+" Completion
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'L3MON4D3/LuaSnip'
+Plug 'David-Kunz/cmp-npm'
+Plug 'saadparwaiz1/cmp_luasnip'
+
+" " tmux plugins
+" Plug 'christoomey/vim-tmux-navigator'
+" Plug 'preservim/vimux'
+
 " " https://github.com/nvim-treesitter/nvim-treesitter/issues/1111
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 Plug 'p00f/nvim-ts-rainbow'
+" Plug 'MaxMEllon/vim-jsx-pretty' " fix indentation in jsx until treesitter can
+" Plug 'jxnblk/vim-mdx-js'
+" " Plug 'code-biscuits/nvim-biscuits'
 
 " Status Line
 Plug 'hoob3rt/lualine.nvim'
@@ -181,18 +195,20 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-repeat'
+Plug  'tpope/vim-repeat'
 Plug 'tpope/vim-eunuch'
-
-" Language server protocol
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'folke/trouble.nvim'
+" Plug 'tpope/vim-sleuth'
+" Plug 'tpope/vim-projectionist'
+" Plug 'tpope/vim-unimpaired' " helpful shorthand like [b ]b
 
 " Plugins for web development 
+Plug 'norcalli/nvim-colorizer.lua', { 'branch': 'color-editor' }
 Plug 'AndrewRadev/tagalong.vim'
 Plug 'folke/zen-mode.nvim'
-Plug 'jiangmiao/auto-pairs'
+Plug 'windwp/nvim-autopairs'
 Plug 'vim-utils/vim-man'
+Plug 'machakann/vim-highlightedyank'
+Plug 'ap/vim-css-color'
 
 Plug 'itchyny/vim-cursorword'
 Plug 'GustavoKatel/sidebar.nvim'
@@ -200,35 +216,15 @@ Plug 'junegunn/limelight.vim'
 Plug 'karb94/neoscroll.nvim'
 Plug 'dstein64/vim-startuptime'
 Plug 'APZelos/blamer.nvim'
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'github/copilot.vim'
 Plug 'phaazon/hop.nvim'
 Plug 'kevinhwang91/nvim-hlslens'
 Plug 'akinsho/nvim-bufferline.lua'
-Plug 'gelguy/wilder.nvim', { 'do': ':UpdateRemotePlugins' }
-
-" Plugins no longer need {{{
-" Plug 'machakann/vim-highlightedyank'
-" Plug 'folke/which-key.nvim'
-" Plug 'miyakogi/conoline.vim'
-" Plug 'mattn/emmet-vim'
-" }}}
-
-" TODO {{{ 
-" Plug 'norcalli/nvim-colorizer.lua', { 'branch': 'color-editor' }
-
-" Plug 'editorconfig/editorconfig-vim'
-" Plug 'wesQ3/vim-windowswap' " <leader>ww
-" Plug 'justinmk/vim-sneak'
-" Plug 'vimwiki/vimwiki', { 'on': ['VimwikiIndex'] }
-" Plug 'stevearc/dressing.nvim'
-" Plug 'vim-pandoc/vim-pandoc'
-" Plug 'vim-pandoc/vim-pandoc-syntax'
-" }}}
-
 call plug#end()
 
+" Settings up for normal plugins {{{
 " Plug Colors {{{
 if (has("termguicolors"))
   set termguicolors " enable true colors support
@@ -248,7 +244,117 @@ set colorcolumn=80
 highlight ColorColumn guibg=#181818
 " }}}
 
-" Plug nvim-telescope/telescope.nvim {{{
+" Plug windwp/nvim-autopairs {{{
+lua << EOF
+require 'nvim-autopairs'.setup{}
+EOF
+" }}}
+
+" Plug tpope/vim-commentary {{{
+nnoremap <leader>/ :Commentary<CR>
+vnoremap <leader>/ :Commentary<CR>
+"}}}
+
+" Plug folke/zen-mode.nvim {{{
+lua << EOF
+require("zen-mode").setup {
+-- your configuration comes here
+-- or leave it empty to use the default settings
+-- refer to the configuration section below
+}
+EOF
+" }}}
+
+" Plug GustavoKatel/sidebar.nvim {{{
+lua << EOF
+require("sidebar-nvim").setup({})
+EOF
+
+" mapping setting
+nnoremap <leader>sb <cmd>SidebarNvimToggl<cr>
+" }}}
+
+" Plug junegunn/limelight.vim {{{
+" Color name (:help cterm-colors) or ANSI code
+let g:limelight_conceal_ctermfg = 'gray'
+let g:limelight_conceal_ctermfg = 240
+
+" Color name (:help gui-colors) or RGB color
+let g:limelight_conceal_guifg = 'DarkGray'
+let g:limelight_conceal_guifg = '#777777'
+
+" Default: 0.5
+let g:limelight_default_coefficient = 0.7
+
+" Number of preceding/following paragraphs to include (default: 0)
+let g:limelight_paragraph_span = 1
+
+" Beginning/end of paragraph
+"   When there's no empty line between the paragraphs
+"   and each paragraph starts with indentation
+let g:limelight_bop = '^\s'
+let g:limelight_eop = '\ze\n^\s'
+
+" Highlighting priority (default: 10)
+"   Set it to -1 not to overrule hlsearch
+let g:limelight_priority = -1
+" }}}
+
+" Plug 'karb94/neoscroll.nvim' {{{
+lua << EOF
+require('neoscroll').setup()
+EOF
+" }}}
+
+" Plug 'APZelos/blamer.nvim' {{{
+let g:blamer_enabled = 1
+let g:blamer_delay = 200
+let g:blamer_show_in_visual_modes = 0
+let g:blamer_relative_time = 1
+highlight Blamer guifg=lightgrey
+" }}}
+
+" Plug 'folke/trouble.nvim' {{{
+lua << EOF
+require 'trouble'.setup {}
+EOF
+
+" Vim Script
+nnoremap <leader>xx <cmd>TroubleToggle<cr>
+nnoremap <leader>xw <cmd>TroubleToggle workspace_diagnostics<cr>
+nnoremap <leader>xd <cmd>TroubleToggle document_diagnostics<cr>
+nnoremap <leader>xq <cmd>TroubleToggle quickfix<cr>
+nnoremap <leader>xl <cmd>TroubleToggle loclist<cr>
+nnoremap gR <cmd>TroubleToggle lsp_references<cr>
+" }}}
+
+" Plug lewis6991/gitsigns.nvim {{{
+lua << EOF
+require('gitsigns').setup()
+EOF
+" }}}
+
+" Plug 'phaazon/hop.nvim' {{{
+lua << EOF
+require'hop'.setup()
+EOF
+map s <cmd>HopChar1<CR>
+" }}}
+
+" Plug 'kevinhwang91/nvim-hlslens' {{{
+noremap <silent> n <Cmd>execute('normal! ' . v:count1 . 'n')<CR>
+            \<Cmd>lua require('hlslens').start()<CR>
+noremap <silent> N <Cmd>execute('normal! ' . v:count1 . 'N')<CR>
+            \<Cmd>lua require('hlslens').start()<CR>
+noremap * *<Cmd>lua require('hlslens').start()<CR>
+noremap # #<Cmd>lua require('hlslens').start()<CR>
+noremap g* g*<Cmd>lua require('hlslens').start()<CR>
+noremap g# g#<Cmd>lua require('hlslens').start()<CR>
+" }}}
+
+" }}}
+
+" nvim-telescope/telescope.nvim {{{
 lua << EOF
 local actions = require('telescope.actions') 
 
@@ -296,7 +402,7 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 "}}}
 
 " Plug ThePrimeagen/harpoon {{{
-nnoremap <leader>af :lua require("harpoon.mark").add_file()<CR>
+nnoremap <leader>a :lua require("harpoon.mark").add_file()<CR>
 nnoremap <leader>, :lua require("harpoon.ui").toggle_quick_menu()<CR>
 nnoremap <leader>1 :lua require("harpoon.ui").nav_file(1)<CR>
 nnoremap <leader>2 :lua require("harpoon.ui").nav_file(2)<CR>
@@ -308,16 +414,18 @@ nnoremap <leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
 let g:nvim_tree_quit_on_open = 1
 let g:nvim_tree_indent_markers = 1
 let g:nvim_tree_git_hl = 1
-let g:nvim_tree_highlight_opened_files = 3
+let g:nvim_tree_highlight_opened_files = 1
 let g:nvim_tree_group_empty = 1
+" let g:nvim_tree_lsp_diagnostics = 1
 
 lua << EOF
 require'nvim-tree'.setup {
-auto_close = true,
-ignore_ft_on_setup  = { 'startify', 'dashboard' },
-view = {
-  side = 'right'
-}
+  auto_close = true,
+  -- lsp_diagnostics = true,
+  ignore_ft_on_setup  = { 'startify', 'dashboard' },
+  view = {
+    side = 'right'
+  }
 }
 EOF
 
@@ -330,25 +438,18 @@ nnoremap <leader>r :NvimTreeRefresh<CR>
 lua << EOF
 require('plenary.reload').reload_module('lualine', true)
 require('lualine').setup({
-options = {
-  theme = 'dracula',
-  disabled_types = { 'NvimTree' }
-},
-sections = {
-  lualine_x = {},
-  -- lualine_y = {},
-  -- lualine_z = {},
-}
+  options = {
+    theme = 'dracula',
+    disabled_types = { 'NvimTree' }
+  },
+  sections = {
+    lualine_x = {},
+  }
 })
 EOF
 " }}}
 
-" Plug tpope/vim-commentary {{{
-nnoremap <leader>/ :Commentary<CR>
-vnoremap <leader>/ :Commentary<CR>
-"}}}
-
-" Plug 'glephir/dashboard-nvim' {{{
+" Plug glephir/dashboard-nvim {{{
 let g:dashboard_default_executive ='telescope'
 nnoremap <silent> <Leader>fh :DashboardFindHistory<CR>
 " nnoremap <silent> <Leader>ff :DashboardFindFile<CR>
@@ -366,24 +467,114 @@ let g:dashboard_custom_shortcut={
 \ 'book_marks'         : 'SPC f m',
 \ }
 let s:header = [
-  \ '███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗',
-  \ '████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║',
-  \ '██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║',
-  \ '██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║',
-  \ '██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║',
-  \ '╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝',
-  \ '',
-  \ '                 [ @byodian ]                 ',
-  \ ]
+    \ '███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗',
+    \ '████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║',
+    \ '██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║',
+    \ '██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║',
+    \ '██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║',
+    \ '╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝',
+    \ '',
+    \ '                 [ @byodian ]                 ',
+    \ ]
 let s:footer = []
 let g:dashboard_custom_header = s:header
 let g:dashboard_custom_footer = s:footer
 " }}}
 
+" Plug williamboman/nvim-lsp-installer {{{
+lua << EOF
+local lsp_installer = require "nvim-lsp-installer"
+
+-- Include the servers you want to have installed by default below
+
+local servers = {
+  "bashls",
+  "pyright",
+  "stylelint_lsp",
+  "html",
+  "tsserver",
+  "vuels",
+  "svelte",
+  "jsonls",
+  "emmet_ls",
+  "eslint",
+  "cssls",
+  "vimls",
+  "tailwindcss"
+}
+
+for _, name in pairs(servers) do
+  local server_is_found, server = lsp_installer.get_server(name)
+  if server_is_found then
+    if not server:is_installed() then
+      print("Installing " .. name)
+      server:install()
+    end
+  end
+end
+-- Register a handler that will be called for all installed servers.
+-- Alternatively, you may also register handlers on specific server instances instead (see example below).
+lsp_installer.settings({
+  ui = {
+    icons = {
+      server_installed = "✓",
+      server_pending = "➜",
+      server_uninstalled = "✗"
+      }
+    }
+})
+
+lsp_installer.on_server_ready(function(server)
+    local opts = {
+      capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+    }
+    server:setup(opts)
+end)
+EOF
+" }}}
+
+" Plug neovim/nvim-lspconfig {{{
+" npm i -g typescript typescript-language-server
+lua << EOF
+local util = require "lspconfig/util"
+require 'lspconfig'.tsserver.setup {
+    on_attach = function(client, bufnr)
+      local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+      local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+      -- Enable completion triggered by <c-x><c-o>
+      buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+      -- Mappings.
+      local opts = { noremap=true, silent=true }
+
+      client.resolved_capabilities.document_formatting = false
+    end,
+
+    root_dir = util.root_pattern(".git", "tsconfig.json", "jsconfig.json"),
+}
+EOF
+
+nnoremap <silent> gd   <cmd>lua vim.lsp.buf.definition()<CR>
+" nnoremap <silent> gh   <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> gca  <cmd>:Telescope lsp_code_actions<CR>
+nnoremap <silent> gi   <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap <silent> K    <cmd>lua vim.lsp.buf.signature_help()<CR>
+nnoremap <silent> gr   <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap <silent> [g   <cmd>lua vim.diagnostic.goto_prev()<CR>
+nnoremap <silent> ]g   <cmd>lua vim.diagnostic.goto_next()<CR>
+nnoremap <silent><leader>fo <cmd>lua vim.lsp.buf.formatting()<CR>
+
+lua << EOF
+-- npm install -g diagnostic-languageserver eslint_d prettier_d_slim prettier
+
+EOF
+" }}}
+
 " Plug nvim-treesitter {{{
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
--- One of "all", "maintained" (parsers with maintainers), or a list of languages
+  -- One of "all", "maintained" (parsers with maintainers), or a list of languages
   ensure_installed = { 
     'javascript',
     'jsdoc',
@@ -423,273 +614,72 @@ require'nvim-treesitter.configs'.setup {
     -- disable = { "jsx", "cpp" }, list of languages you want to disable the plugin for
     extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
     max_file_lines = nil, -- Do not enable for files with more than n lines, int
-    -- colors = {}, -- table of hex strings
+    colors = {
+      
+    }, -- table of hex strings
     -- termcolors = {} -- table of colour name strings
   }
 }
 EOF
 " }}}
 
-" Plug 'folke/zen-mode.nvim' {{{
+" Plug hrsh7th/nvim-cmp {{{
+" https://github.com/neovim/nvim-lspconfig/wiki/Autocompletion
+set completeopt=menu,menuone,noselect
 lua << EOF
-require("zen-mode").setup {
--- your configuration comes here
--- or leave it empty to use the default settings
--- refer to the configuration section below
-}
+-- nvim-cmp setup
+local luasnip = require 'luasnip'
+
+-- Setup nvim-cmp.
+local cmp = require'cmp'
+
+  cmp.setup({
+    snippet = {
+      expand = function(args)
+        require('luasnip').lsp_expand(args.body)
+      end,
+    },
+
+    mapping = {
+      ['<C-p>'] = cmp.mapping.select_prev_item(),
+      ['<C-n>'] = cmp.mapping.select_next_item(),
+      ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.close(),
+      ['<CR>'] = cmp.mapping.confirm {
+        behavior = cmp.ConfirmBehavior.Replace,
+        select = true,
+      },
+      ['<Tab>'] = function(fallback)
+        if cmp.visible() then
+          cmp.select_next_item()
+        elseif luasnip.expand_or_jumpable() then
+          luasnip.expand_or_jump()
+        else
+          fallback()
+        end
+      end,
+      ['<S-Tab>'] = function(fallback)
+        if cmp.visible() then
+          cmp.select_prev_item()
+        elseif luasnip.jumpable(-1) then
+          luasnip.jump(-1)
+        else
+          fallback()
+        end
+      end,
+    },
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      { name = 'luasnip' },
+      { name = 'path' },
+      { name = 'buffer', keyword_length = 5 },
+      { name = 'npm', keyword_length = 4 }
+    })
+  })
 EOF
-nnoremap <leader>sb <cmd>SidebarNvimToggl<cr>
-" }}}
-
-" Plug 'GustavoKatel/sidebar.nvim' {{{
-lua << EOF
-require("sidebar-nvim").setup({})
-EOF
-" }}}
-
-" Plug 'junegunn/limelight.vim' {{{
-" Color name (:help cterm-colors) or ANSI code
-let g:limelight_conceal_ctermfg = 'gray'
-let g:limelight_conceal_ctermfg = 240
-
-" Color name (:help gui-colors) or RGB color
-let g:limelight_conceal_guifg = 'DarkGray'
-let g:limelight_conceal_guifg = '#777777'
-
-" Default: 0.5
-let g:limelight_default_coefficient = 0.7
-
-" Number of preceding/following paragraphs to include (default: 0)
-let g:limelight_paragraph_span = 1
-
-" Beginning/end of paragraph
-"   When there's no empty line between the paragraphs
-"   and each paragraph starts with indentation
-let g:limelight_bop = '^\s'
-let g:limelight_eop = '\ze\n^\s'
-
-" Highlighting priority (default: 10)
-"   Set it to -1 not to overrule hlsearch
-let g:limelight_priority = -1
-" }}}
-
-" Plug 'karb94/neoscroll.nvim' {{{
-lua << EOF
-require('neoscroll').setup()
-EOF
-" }}}
-
-" Plug gelguy/wilder.nvim {{{
-call wilder#setup({'modes': [':', '/', '?']})
-
-" " Can also be passed to the 'highlights' option
-" call wilder#set_option('renderer', wilder#popupmenu_renderer({
-"       \ 'pumblend': 10,
-"       \ 'highlighter': wilder#basic_highlighter(),
-"       \ 'highlights': {
-"       \   'accent': wilder#make_hl('WilderAccent', 'Pmenu', [{}, {}, {'foreground': '#f4468f'}]),
-"       \ },
-"       \ 'left': [
-"       \   ' ', wilder#popupmenu_devicons(),
-"       \ ],
-"       \ 'right': [
-"       \   ' ', wilder#popupmenu_scrollbar(),
-"       \ ],
-"       \ }))
-
-call wilder#set_option('pipeline', [
-    \   wilder#branch(
-    \     wilder#cmdline_pipeline(),
-    \     wilder#search_pipeline(),
-    \   ),
-    \ ])
-
-call wilder#set_option('renderer', wilder#wildmenu_renderer({
-    \ 'pumblend': 10,
-    \ 'highlighter': wilder#basic_highlighter(),
-    \ 'highlights': { 
-    \   'accent': wilder#make_hl('WilderAccent', 'Pmenu', [{}, {}, {'foreground': '#f4468f', 'background': 'transparent' }]),
-    \ },
-    \ }))
-
-" }}}
-
-" Plug 'APZelos/blamer.nvim' {{{
-let g:blamer_enabled = 1
-let g:blamer_delay = 200
-let g:blamer_show_in_visual_modes = 0
-let g:blamer_relative_time = 1
-highlight Blamer guifg=lightgrey
-" }}}
-
-" Plug 'folke/trouble.nvim' {{{
-lua << EOF
-require 'trouble'.setup {}
-EOF
-
-" Vim Script
-nnoremap <leader>xx <cmd>TroubleToggle<cr>
-nnoremap <leader>xw <cmd>TroubleToggle workspace_diagnostics<cr>
-nnoremap <leader>xd <cmd>TroubleToggle document_diagnostics<cr>
-nnoremap <leader>xq <cmd>TroubleToggle quickfix<cr>
-nnoremap <leader>xl <cmd>TroubleToggle loclist<cr>
-nnoremap gR <cmd>TroubleToggle lsp_references<cr>
-" }}}
-
-" Plug lewis6991/gitsigns.nvim {{{
-lua << EOF
-require('gitsigns').setup()
-EOF
-" }}}
-
-" Plug coc-settings {{{
-
-" Setting that use tab for trigger completion {{{
-
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
-
-inoremap <silent><expr> <TAB>
-\ pumvisible() ? "\<C-n>" :
-\ <SID>check_back_space() ? "\<TAB>" :
-\ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-let col = col('.') - 1
-return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-" }}}
-
-" Use <c-space> to trigger completion.
-if has('nvim')
-inoremap <silent><expr> <c-space> coc#refresh()
-else
-inoremap <silent><expr> <c-@> coc#refresh()
-endif
-
-" Make <CR> auto-select the first completion item and notify coc.nvim to
-" format on enter, <cr> could be remapped by other vim plugin
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                            \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
-" Use `[g` and `]g` to navigate diagnostics
-" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-if (index(['vim','help'], &filetype) >= 0)
-  execute 'h '.expand('<cword>')
-elseif (coc#rpc#ready())
-  call CocActionAsync('doHover')
-else
-  execute '!' . &keywordprg . " " . expand('<cword>')
-endif
-endfunction
-
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" Symbol renaming.
-nmap <F2> <Plug>(coc-rename)
-
-" Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-
-augroup mygroup
-autocmd!
-" Setup formatexpr specified filetype(s).
-autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-" Update signature help on jump placeholder.
-autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
-
-" Applying codeAction to the selected region.
-" Example: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Remap keys for applying codeAction to the current buffer.
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Apply AutoFix to problem on the current line.
-nmap <leader>qf  <Plug>(coc-fix-current)
-
-" Use CTRL-S for selections ranges.
-" Requires 'textDocument/selectionRange' support of language server.
-nmap <silent> <C-s> <Plug>(coc-range-select)
-xmap <silent> <C-s> <Plug>(coc-range-select)
-
-" Add `:Format` command to format current buffer.
-command! -nargs=0 Format :call CocAction('format')
-
-" Add `:Fold` command to fold current buffer.
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
-" Add `:OR` command for organize imports of the current buffer.
-command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
-
-" Mappings for CoCList
-" Show all diagnostics.
-" nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions.
-nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
-" Show commands.
-" nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document.
-nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols.
-" nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-
-let g:coc_global_extensions = [
-  \ 'coc-vetur',
-  \ 'coc-tsserver',
-  \ 'coc-tabnine',
-  \ 'coc-eslint',
-  \ 'coc-stylelintplus',
-  \ 'coc-htmlhint',
-  \ 'coc-snippets',
-  \ 'coc-json',
-  \ 'coc-emmet',
-  \ 'coc-html',
-  \ 'coc-git',
-  \ 'coc-highlight',
-  \ 'coc-css',
-  \ 'coc-sh',
-  \ 'coc-tailwindcss',
-  \ 'https://github.com/rodrigore/coc-tailwind-intellisense',
-  \ 'coc-yank'
-  \ ]
-" }}}
-
-" Plug 'phaazon/hop.nvim' {{{
-lua << EOF
-require'hop'.setup()
-EOF
-map s <cmd>HopChar1<CR>
-" }}}
-
-" Plug 'kevinhwang91/nvim-hlslens' {{{
-noremap <silent> n <Cmd>execute('normal! ' . v:count1 . 'n')<CR>
-            \<Cmd>lua require('hlslens').start()<CR>
-noremap <silent> N <Cmd>execute('normal! ' . v:count1 . 'N')<CR>
-            \<Cmd>lua require('hlslens').start()<CR>
-noremap * *<Cmd>lua require('hlslens').start()<CR>
-noremap # #<Cmd>lua require('hlslens').start()<CR>
-noremap g* g*<Cmd>lua require('hlslens').start()<CR>
-noremap g# g#<Cmd>lua require('hlslens').start()<CR>
-" }}}
+" }}} 
 
 " Plug 'akinsho/nvim-bufferline.lua' {{{
 set termguicolors
@@ -721,7 +711,7 @@ require("bufferline").setup{
     show_buffer_close_icons = true,
     show_close_icon = false,
     separator_style = "slant",
-    diagnostics = "coc",
+    diagnostics = "nvim_lsp",
     diagnostics_update_in_insert = false,
     diagnostics_indicator = function(count, level, diagnostics_dict, context)
       local s = " "
