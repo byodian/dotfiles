@@ -35,15 +35,14 @@ set confirm
 set list
 set listchars=tab:▸\ ,trail:·
 
-" set foldlevel=20
-" set foldmethod=expr
-" set foldexpr=nvim_treesitter#foldexpr()
+set foldlevel=20
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
 
-set foldmethod=marker
+" set foldmethod=marker
 
 set updatetime=300    " Reduce time for highlighting other references
 set redrawtime=10000  " Allow more time for loading syntax on large files
-" set cmdheight=2       " Give more space for display messages
 set shortmess+=c      " Don't pass messages to |ins-completion-menu|.
 set cursorline
 syntax on
@@ -81,10 +80,11 @@ nnoremap <leader>tw :set wrap!<cr>
 " clear and redraw screen, de-highlight, fix syntax highlighting
 nnoremap <leader>l :nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>
 
-hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
-nnoremap <Leader>ln :set cursorline!<CR>
 " hi CursorColumn cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 " nnoremap <Leader>ln :set cursorline! cursorcolumn!<CR>
+
+hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
+nnoremap <Leader>ln :set cursorline!<CR>
 
 " Escape insert mode
 inoremap jk <esc>
@@ -185,7 +185,7 @@ Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 Plug 'p00f/nvim-ts-rainbow'
 " Plug 'MaxMEllon/vim-jsx-pretty' " fix indentation in jsx until treesitter can
 " Plug 'jxnblk/vim-mdx-js'
-" " Plug 'code-biscuits/nvim-biscuits'
+" Plug 'code-biscuits/nvim-biscuits'
 
 " Status Line
 Plug 'hoob3rt/lualine.nvim'
@@ -197,9 +197,9 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug  'tpope/vim-repeat'
 Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-unimpaired' " helpful shorthand like [b ]b
 " Plug 'tpope/vim-sleuth'
 " Plug 'tpope/vim-projectionist'
-" Plug 'tpope/vim-unimpaired' " helpful shorthand like [b ]b
 
 " Plugins for web development 
 Plug 'norcalli/nvim-colorizer.lua', { 'branch': 'color-editor' }
@@ -208,14 +208,12 @@ Plug 'folke/zen-mode.nvim'
 Plug 'windwp/nvim-autopairs'
 Plug 'vim-utils/vim-man'
 Plug 'machakann/vim-highlightedyank'
-Plug 'ap/vim-css-color'
 
 Plug 'itchyny/vim-cursorword'
 Plug 'GustavoKatel/sidebar.nvim'
 Plug 'junegunn/limelight.vim'
 Plug 'karb94/neoscroll.nvim'
 Plug 'dstein64/vim-startuptime'
-Plug 'APZelos/blamer.nvim'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'github/copilot.vim'
@@ -306,14 +304,6 @@ require('neoscroll').setup()
 EOF
 " }}}
 
-" Plug 'APZelos/blamer.nvim' {{{
-let g:blamer_enabled = 1
-let g:blamer_delay = 200
-let g:blamer_show_in_visual_modes = 0
-let g:blamer_relative_time = 1
-highlight Blamer guifg=lightgrey
-" }}}
-
 " Plug 'folke/trouble.nvim' {{{
 lua << EOF
 require 'trouble'.setup {}
@@ -330,8 +320,14 @@ nnoremap gR <cmd>TroubleToggle lsp_references<cr>
 
 " Plug lewis6991/gitsigns.nvim {{{
 lua << EOF
-require('gitsigns').setup()
+require('gitsigns').setup({
+  current_line_blame = false,
+  current_line_blame_opts = {
+    delay = 200;
+  }
+})
 EOF
+highlight link GitSignsCurrentLineBlame Visual
 " }}}
 
 " Plug 'phaazon/hop.nvim' {{{
@@ -525,10 +521,10 @@ lsp_installer.settings({
 })
 
 lsp_installer.on_server_ready(function(server)
-    local opts = {
-      capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-    }
-    server:setup(opts)
+  local opts = {
+    capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+  }
+  server:setup(opts)
 end)
 EOF
 " }}}
@@ -614,9 +610,7 @@ require'nvim-treesitter.configs'.setup {
     -- disable = { "jsx", "cpp" }, list of languages you want to disable the plugin for
     extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
     max_file_lines = nil, -- Do not enable for files with more than n lines, int
-    colors = {
-      
-    }, -- table of hex strings
+    -- colors = {}, -- table of hex strings
     -- termcolors = {} -- table of colour name strings
   }
 }
@@ -736,5 +730,6 @@ EOF
 
 " mapping settings
 nnoremap <silent> gb :BufferLinePick<CR>
+nnoremap <silent> gx :BufferLinePickClose<CR>
 nnoremap <silent><leader> b :BufferLineCycleNext<CR>
 " }}}
