@@ -35,11 +35,9 @@ set confirm
 set list
 set listchars=tab:▸\ ,trail:·
 
-set foldlevel=20
-set foldmethod=expr
-set foldexpr=nvim_treesitter#foldexpr()
-
-" set foldmethod=marker
+" set foldlevel=20
+" set foldmethod=expr
+" set foldexpr=nvim_treesitter#foldexpr()
 
 set updatetime=300    " Reduce time for highlighting other references
 set redrawtime=10000  " Allow more time for loading syntax on large files
@@ -135,6 +133,22 @@ if has("autocmd")
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
     \| exe "normal! g'\"" | endif
 endif
+
+
+" Folding by filetype
+" https://yianwillis.github.io/vimcdoc/doc/usr_41.html#41.7
+" https://forum.ubuntu.com.cn/viewtopic.php?t=367858
+function FoldByFileType()
+  if &filetype=="vim"
+    set foldmethod=marker
+  else 
+    set foldlevel=20
+    set foldmethod=expr
+    set foldexpr=nvim_treesitter#foldexpr()
+  endif
+endfunction
+
+autocmd FileType * call FoldByFileType()
 
 "--------------------------------------------------------------------------
 " Plugins settings
@@ -486,14 +500,11 @@ local lsp_installer = require "nvim-lsp-installer"
 local servers = {
   "bashls",
   "pyright",
-  "stylelint_lsp",
   "html",
-  "tsserver",
   "vuels",
   "svelte",
   "jsonls",
   "emmet_ls",
-  "eslint",
   "cssls",
   "vimls",
   "tailwindcss"
@@ -530,40 +541,82 @@ EOF
 " }}}
 
 " Plug neovim/nvim-lspconfig {{{
-" npm i -g typescript typescript-language-server
 lua << EOF
+local nvim_lsp = require'lspconfig'
+
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
+local on_attach = function(client, bufnr)
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+  -- Enable completion triggered by <c-x><c-o>
+  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  -- Mappings.
+  local opts = { noremap=true, silent=true }
+
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+  buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
+  buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+
+  -- formatting
+  if client.name == 'tsserver' then
+    client.resolved_capabilities.document_formatting = false
+  end
+
+  -- See `:help vim.lsp.buf.formatting_seq_sync()` for documentation on any of the below functions 
+  if client.resolved_capabilities.document_formatting then
+    vim.api.nvim_command [[augroup Format]]
+    vim.api.nvim_command [[autocmd! * <buffer>]]
+    vim.api.nvim_command [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
+    vim.api.nvim_command [[augroup END]]
+  end
+end
+
+-- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
+local capabilities = require('cmp_nvim_lsp').update_capabilities(
+  vim.lsp.protocol.make_client_capabilities()
+)
+
+-- Use a loop to conveniently call 'setup' on multiple servers and
+-- map buffer local keybindings when the language server attaches
+local servers = { }
+for _, lsp in ipairs(servers) do
+  nvim_lsp[lsp].setup {
+    on_attach = on_attach,
+    capabilities = capabilities,
+    flags = {
+      debounce_text_changes = 150,
+    }
+  }
+end
+
+-- npm i -g typescript typescript-language-server
 local util = require "lspconfig/util"
-require 'lspconfig'.tsserver.setup {
-    on_attach = function(client, bufnr)
-      local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-      local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-      -- Enable completion triggered by <c-x><c-o>
-      buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-      -- Mappings.
-      local opts = { noremap=true, silent=true }
-
-      client.resolved_capabilities.document_formatting = false
-    end,
-
-    root_dir = util.root_pattern(".git", "tsconfig.json", "jsconfig.json"),
+nvim_lsp.tsserver.setup {
+  on_attach = on_attach,
+  filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
+  capabilities = capabilities,
+  root_dir = util.root_pattern(".git", "tsconfig.json", "jsconfig.json"),
 }
-EOF
 
-nnoremap <silent> gd   <cmd>lua vim.lsp.buf.definition()<CR>
-" nnoremap <silent> gh   <cmd>lua vim.lsp.buf.hover()<CR>
-nnoremap <silent> gca  <cmd>:Telescope lsp_code_actions<CR>
-nnoremap <silent> gi   <cmd>lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> K    <cmd>lua vim.lsp.buf.signature_help()<CR>
-nnoremap <silent> gr   <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <silent> [g   <cmd>lua vim.diagnostic.goto_prev()<CR>
-nnoremap <silent> ]g   <cmd>lua vim.diagnostic.goto_next()<CR>
-nnoremap <silent><leader>fo <cmd>lua vim.lsp.buf.formatting()<CR>
-
-lua << EOF
--- npm install -g diagnostic-languageserver eslint_d prettier_d_slim prettier
-
+-- npm install -g diagnostic-languageserver eslint_d prettier_d_slim prettier 
 EOF
 " }}}
 
