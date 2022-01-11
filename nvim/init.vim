@@ -234,6 +234,7 @@ Plug 'github/copilot.vim'
 Plug 'phaazon/hop.nvim'
 Plug 'kevinhwang91/nvim-hlslens'
 Plug 'akinsho/nvim-bufferline.lua'
+Plug 'yardnsm/vim-import-cost', { 'do': 'npm install --production' }
 call plug#end()
 
 " Settings up for normal plugins {{{
@@ -493,59 +494,6 @@ let g:dashboard_custom_footer = s:footer
 
 " Plug williamboman/nvim-lsp-installer {{{
 lua << EOF
-local lsp_installer = require "nvim-lsp-installer"
-
--- Include the servers you want to have installed by default below
-
-local servers = {
-  "bashls",
-  "pyright",
-  "html",
-  "vuels",
-  "svelte",
-  "jsonls",
-  "emmet_ls",
-  "cssls",
-  "vimls",
-  "tailwindcss"
-}
-
-for _, name in pairs(servers) do
-  local server_is_found, server = lsp_installer.get_server(name)
-  if server_is_found then
-    if not server:is_installed() then
-      print("Installing " .. name)
-      server:install()
-    end
-  end
-end
--- Register a handler that will be called for all installed servers.
--- Alternatively, you may also register handlers on specific server instances instead (see example below).
-lsp_installer.settings({
-  ui = {
-    icons = {
-      server_installed = "✓",
-      server_pending = "➜",
-      server_uninstalled = "✗"
-      }
-    }
-})
-
-lsp_installer.on_server_ready(function(server)
-  local opts = {
-    capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-  }
-  server:setup(opts)
-end)
-EOF
-" }}}
-
-" Plug neovim/nvim-lspconfig {{{
-lua << EOF
-local nvim_lsp = require'lspconfig'
-
--- Use an on_attach function to only map the following keys
--- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
@@ -554,7 +502,7 @@ local on_attach = function(client, bufnr)
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   -- Mappings.
-  local opts = { noremap=true, silent=true }
+  local opts = { noremap = true, silent = true }
 
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
@@ -578,15 +526,110 @@ local on_attach = function(client, bufnr)
   -- formatting
   if client.name == 'tsserver' then
     client.resolved_capabilities.document_formatting = false
+  else 
+    client.resolved_capabilities.document_formatting = true 
   end
 
   -- See `:help vim.lsp.buf.formatting_seq_sync()` for documentation on any of the below functions 
   if client.resolved_capabilities.document_formatting then
     vim.api.nvim_command [[augroup Format]]
     vim.api.nvim_command [[autocmd! * <buffer>]]
-    vim.api.nvim_command [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
+    vim.api.nvim_command [[autocmd BufWritePre <buffer> EslintFixAll]]
+    -- vim.api.nvim_command [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
     vim.api.nvim_command [[augroup END]]
   end
+end
+
+local lsp_installer = require "nvim-lsp-installer"
+
+-- Include the servers you want to have installed by default below
+local servers = {
+  "bashls",
+  "pyright",
+  "html",
+  "vuels",
+  "svelte",
+  "jsonls",
+  "emmet_ls",
+  "cssls",
+  "vimls",
+  "tailwindcss",
+  "tsserver",
+  "eslint",
+  "diagnostics"
+}
+
+for _, name in pairs(servers) do
+  local server_is_found, server = lsp_installer.get_server(name)
+  if server_is_found then
+    if not server:is_installed() then
+      print("Installing " .. name)
+      server:install()
+    end
+  end
+end
+
+-- Register a handler that will be called for all installed servers.
+-- Alternatively, you may also register handlers on specific server instances instead (see example below).
+lsp_installer.settings({
+  ui = {
+    icons = {
+      server_installed = "✓",
+      server_pending = "➜",
+      server_uninstalled = "✗"
+      }
+    }
+})
+
+local enhance_server_opts = {
+  -- Provide settings that should only apply to the "eslintls" server
+  ["tsserver"] = function(opts) 
+    local util = require "lspconfig/util"
+    opts.settings = {
+      filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
+      root_dir = util.root_pattern(".git", "tsconfig.json", "jsconfig.json"),
+    } 
+  end,
+  ["stylelint_lsp"] = function(opts)
+    opts.settings = {
+      stylelintplus = {
+        autoFixOnSave = true,
+        autoFixOnFormat = true,
+      } 
+    } 
+  end
+}
+
+-- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
+local capabilities = require('cmp_nvim_lsp').update_capabilities(
+  vim.lsp.protocol.make_client_capabilities()
+)
+
+lsp_installer.on_server_ready(function(server)
+  local opts = {
+    on_attach = on_attach,
+    capabilities = capabilities
+  }
+
+  if enhance_server_opts[server.name] then
+    -- Enhance the default opts with the server-specific ones
+    enhance_server_opts[server.name](opts)
+  end 
+
+  server:setup(opts)
+end)
+EOF
+" }}}
+
+" Plug neovim/nvim-lspconfig {{{
+lua << EOF
+local nvim_lsp = require'lspconfig'
+
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
+local on_attach = function(client, bufnr)
+  -- https://github.com/neovim/nvim-lspconfig#keybindings-and-completion
+  print('...')
 end
 
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
@@ -596,6 +639,7 @@ local capabilities = require('cmp_nvim_lsp').update_capabilities(
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
+-- install manually server, like: npm install -g typescript-server
 local servers = { }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup {
@@ -606,17 +650,6 @@ for _, lsp in ipairs(servers) do
     }
   }
 end
-
--- npm i -g typescript typescript-language-server
-local util = require "lspconfig/util"
-nvim_lsp.tsserver.setup {
-  on_attach = on_attach,
-  filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
-  capabilities = capabilities,
-  root_dir = util.root_pattern(".git", "tsconfig.json", "jsconfig.json"),
-}
-
--- npm install -g diagnostic-languageserver eslint_d prettier_d_slim prettier 
 EOF
 " }}}
 
