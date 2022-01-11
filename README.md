@@ -1,3 +1,4 @@
+![template](./doc/wsl/template.png)
 # dotfiles
 
 ## WSL2 设置
