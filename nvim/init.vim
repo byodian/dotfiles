@@ -524,7 +524,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 
   -- formatting
-  if client.name == 'tsserver' then
+  if client.name == 'tsserver' or client.name == 'vimls' then
     client.resolved_capabilities.document_formatting = false
   else 
     client.resolved_capabilities.document_formatting = true 
@@ -534,13 +534,15 @@ local on_attach = function(client, bufnr)
   if client.resolved_capabilities.document_formatting then
     vim.api.nvim_command [[augroup Format]]
     vim.api.nvim_command [[autocmd! * <buffer>]]
-    vim.api.nvim_command [[autocmd BufWritePre <buffer> EslintFixAll]]
-    -- vim.api.nvim_command [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
+    -- vim.api.nvim_command [[autocmd BufWritePre <buffer> EslintFixAll]]
+    vim.api.nvim_command [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
     vim.api.nvim_command [[augroup END]]
   end
+
 end
 
 local lsp_installer = require "nvim-lsp-installer"
+local util = require "lspconfig/util"
 
 -- Include the servers you want to have installed by default below
 local servers = {
@@ -556,7 +558,8 @@ local servers = {
   "tailwindcss",
   "tsserver",
   "eslint",
-  "diagnostics"
+  "diagnostics",
+  "stylelint_lsp"
 }
 
 for _, name in pairs(servers) do
@@ -584,7 +587,6 @@ lsp_installer.settings({
 local enhance_server_opts = {
   -- Provide settings that should only apply to the "eslintls" server
   ["tsserver"] = function(opts) 
-    local util = require "lspconfig/util"
     opts.settings = {
       filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
       root_dir = util.root_pattern(".git", "tsconfig.json", "jsconfig.json"),
@@ -593,11 +595,32 @@ local enhance_server_opts = {
   ["stylelint_lsp"] = function(opts)
     opts.settings = {
       stylelintplus = {
-        autoFixOnSave = true,
+        enable = true,
         autoFixOnFormat = true,
+        cssInJs = false,
+        filetypes = { "css", "scss", "sass", "less", "vue", "javascriptreact", "typescriptreact", "sugarss"},
+        -- autoFixOnSave = true,
       } 
     } 
-  end
+  end,
+    ["vuels"] = function(opts)
+    opts.settings = {
+      vetur = {
+        completion = {
+          autoImport = true,
+          tagCasing = "initial",
+          useScaffoldSnippets = true 
+        },
+        languageFeatures = {
+          updateImportOnFileMove = true
+        },
+        validation = {
+          style = false,
+          script = false
+        }
+      }
+    }
+  end 
 }
 
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
