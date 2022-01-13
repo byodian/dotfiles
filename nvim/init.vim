@@ -178,7 +178,8 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'folke/trouble.nvim'
 Plug 'onsails/lspkind-nvim'
-Plug 'creativenull/diagnosticls-configs-nvim'
+Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
+" Plug 'creativenull/diagnosticls-configs-nvim'
 
 " Completion
 Plug 'hrsh7th/nvim-cmp'
@@ -494,7 +495,7 @@ let g:dashboard_custom_footer = s:footer
 
 " Plug williamboman/nvim-lsp-installer {{{
 lua << EOF
-local on_attach = function(client, bufnr)
+local default_on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
@@ -516,7 +517,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  buf_set_keymap('n', 'gf', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
   buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
@@ -534,8 +535,8 @@ local on_attach = function(client, bufnr)
   if client.resolved_capabilities.document_formatting then
     vim.api.nvim_command [[augroup Format]]
     vim.api.nvim_command [[autocmd! * <buffer>]]
-    -- vim.api.nvim_command [[autocmd BufWritePre <buffer> EslintFixAll]]
-    vim.api.nvim_command [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
+    vim.api.nvim_command [[autocmd BufWritePre <buffer> EslintFixAll]]
+    -- vim.api.nvim_command [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
     vim.api.nvim_command [[augroup END]]
   end
 
@@ -588,18 +589,42 @@ local enhance_server_opts = {
   -- Provide settings that should only apply to the "eslintls" server
   ["tsserver"] = function(opts) 
     opts.settings = {
-      filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
+      init_options = require'nvim-lsp-ts-utils'.init_options,
+      filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx", "vue" },
       root_dir = util.root_pattern(".git", "tsconfig.json", "jsconfig.json"),
-    } 
+    }
+
+    opts.on_attach = function(client, bufnr)
+       local ts_utils = require("nvim-lsp-ts-utils") 
+       default_on_attach(client, bufnr)
+
+       ts_utils.setup({
+          enable_import_on_completion = true,
+
+          -- update imports on file move
+          update_imports_on_move = true,
+          require_confirmation_on_move = true,
+          watch_dir = nil,
+       })
+
+      -- required to fix code action ranges and filter diagnostics
+      ts_utils.setup_client(client)
+
+      -- no default maps, so you may want to define some here
+      local opts = { silent = true }
+      vim.api.nvim_buf_set_keymap(bufnr, "n", "gs", ":TSLspOrganize<CR>", opts)
+      vim.api.nvim_buf_set_keymap(bufnr, "n", "gr", ":TSLspRenameFile<CR>", opts)
+      vim.api.nvim_buf_set_keymap(bufnr, "n", "gi", ":TSLspImportAll<CR>", opts)
+    end
   end,
   ["stylelint_lsp"] = function(opts)
     opts.settings = {
       stylelintplus = {
         enable = true,
-        autoFixOnFormat = true,
-        cssInJs = false,
-        filetypes = { "css", "scss", "sass", "less", "vue", "javascriptreact", "typescriptreact", "sugarss"},
         -- autoFixOnSave = true,
+        autoFixOnFormat = true,
+        -- cssInJs = false,
+        -- filetypes = { "css", "scss", "sass", "less", "vue", "javascriptreact", "typescriptreact", "sugarss"},
       } 
     } 
   end,
@@ -630,7 +655,7 @@ local capabilities = require('cmp_nvim_lsp').update_capabilities(
 
 lsp_installer.on_server_ready(function(server)
   local opts = {
-    on_attach = on_attach,
+    on_attach = default_on_attach,
     capabilities = capabilities
   }
 
@@ -840,5 +865,5 @@ EOF
 " mapping settings
 nnoremap <silent> gb :BufferLinePick<CR>
 nnoremap <silent> gx :BufferLinePickClose<CR>
-nnoremap <silent><leader> b :BufferLineCycleNext<CR>
+nnoremap <silent><leader>b :BufferLineCycleNext<CR>
 " }}}
