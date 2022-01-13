@@ -198,6 +198,7 @@ Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 Plug 'p00f/nvim-ts-rainbow'
+Plug 'tami5/lspsaga.nvim', { 'branch' : 'nvim6.0' } 
 " Plug 'MaxMEllon/vim-jsx-pretty' " fix indentation in jsx until treesitter can
 " Plug 'jxnblk/vim-mdx-js'
 " Plug 'code-biscuits/nvim-biscuits'
@@ -508,21 +509,33 @@ local default_on_attach = function(client, bufnr)
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  buf_set_keymap('n', 'gf', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+
   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  buf_set_keymap('n', 'gf', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
   buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+
+  buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  -- buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+  -- buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+  -- buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
+  -- buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  -- buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+
+  -- Lspsage keymapings
+  buf_set_keymap('n', '[d', '<cmd>Lspsaga diagnostic_jump_next<CR>', opts)
+  buf_set_keymap('n', ']d', '<cmd>Lspsaga diagnostic_jump_prev<CR>', opts)
+  -- buf_set_keymap('n', 'K', '<cmd>Lspsaga hover_doc<cr>', opts)
+  buf_set_keymap('n', '<space>ca', '<cmd>Lspsaga code_action<cr>', opts)
+  buf_set_keymap('n', '<space>rn', '<cmd>Lspsaga rename<cr>', opts)
+  buf_set_keymap('n', 'go', '<cmd>Lspsaga show_line_diagnostics<cr>', opts)
+  buf_set_keymap('n', 'gp', '<cmd>Lspsaga preview_definition<cr>', opts)
+  buf_set_keymap('n', 'gh', '<cmd>Lspsaga lsp_finder<cr>', opts)
 
   -- formatting
   if client.name == 'tsserver' or client.name == 'vimls' then
@@ -866,4 +879,13 @@ EOF
 nnoremap <silent> gb :BufferLinePick<CR>
 nnoremap <silent> gx :BufferLinePickClose<CR>
 nnoremap <silent><leader>b :BufferLineCycleNext<CR>
+" }}}
+
+" Plug tami5/lspsaga.nvim {{{
+lua << EOF
+local lspsaga = require 'lspsaga'
+lspsaga.setup{
+  rename_prompt_prefix = "",
+}
+EOF
 " }}}
