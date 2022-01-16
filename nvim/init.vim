@@ -178,7 +178,8 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'folke/trouble.nvim'
 Plug 'onsails/lspkind-nvim'
-Plug 'creativenull/diagnosticls-configs-nvim'
+Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
+" Plug 'creativenull/diagnosticls-configs-nvim'
 
 " Completion
 Plug 'hrsh7th/nvim-cmp'
@@ -197,6 +198,7 @@ Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 Plug 'p00f/nvim-ts-rainbow'
+Plug 'tami5/lspsaga.nvim', { 'branch' : 'nvim6.0' } 
 " Plug 'MaxMEllon/vim-jsx-pretty' " fix indentation in jsx until treesitter can
 " Plug 'jxnblk/vim-mdx-js'
 " Plug 'code-biscuits/nvim-biscuits'
@@ -494,7 +496,7 @@ let g:dashboard_custom_footer = s:footer
 
 " Plug williamboman/nvim-lsp-installer {{{
 lua << EOF
-local on_attach = function(client, bufnr)
+local default_on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
@@ -507,24 +509,36 @@ local on_attach = function(client, bufnr)
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  buf_set_keymap('n', 'gf', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+
   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
   buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 
+  buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  -- buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+  -- buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+  -- buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
+  -- buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  -- buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+
+  -- Lspsage keymapings
+  buf_set_keymap('n', '[d', '<cmd>Lspsaga diagnostic_jump_next<CR>', opts)
+  buf_set_keymap('n', ']d', '<cmd>Lspsaga diagnostic_jump_prev<CR>', opts)
+  -- buf_set_keymap('n', 'K', '<cmd>Lspsaga hover_doc<cr>', opts)
+  buf_set_keymap('n', '<space>ca', '<cmd>Lspsaga code_action<cr>', opts)
+  buf_set_keymap('n', '<space>rn', '<cmd>Lspsaga rename<cr>', opts)
+  buf_set_keymap('n', 'go', '<cmd>Lspsaga show_line_diagnostics<cr>', opts)
+  buf_set_keymap('n', 'gp', '<cmd>Lspsaga preview_definition<cr>', opts)
+  buf_set_keymap('n', 'gh', '<cmd>Lspsaga lsp_finder<cr>', opts)
+
   -- formatting
-  if client.name == 'tsserver' then
+  if client.name == 'tsserver' or client.name == 'vimls' then
     client.resolved_capabilities.document_formatting = false
   else 
     client.resolved_capabilities.document_formatting = true 
@@ -538,9 +552,11 @@ local on_attach = function(client, bufnr)
     -- vim.api.nvim_command [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
     vim.api.nvim_command [[augroup END]]
   end
+
 end
 
 local lsp_installer = require "nvim-lsp-installer"
+local util = require "lspconfig/util"
 
 -- Include the servers you want to have installed by default below
 local servers = {
@@ -556,7 +572,8 @@ local servers = {
   "tailwindcss",
   "tsserver",
   "eslint",
-  "diagnostics"
+  "diagnostics",
+  "stylelint_lsp"
 }
 
 for _, name in pairs(servers) do
@@ -584,20 +601,65 @@ lsp_installer.settings({
 local enhance_server_opts = {
   -- Provide settings that should only apply to the "eslintls" server
   ["tsserver"] = function(opts) 
-    local util = require "lspconfig/util"
     opts.settings = {
-      filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
+      init_options = require'nvim-lsp-ts-utils'.init_options,
+      filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx", "vue" },
       root_dir = util.root_pattern(".git", "tsconfig.json", "jsconfig.json"),
-    } 
+    }
+
+    opts.on_attach = function(client, bufnr)
+       local ts_utils = require("nvim-lsp-ts-utils") 
+       default_on_attach(client, bufnr)
+
+       ts_utils.setup({
+          enable_import_on_completion = true,
+
+          -- update imports on file move
+          update_imports_on_move = true,
+          require_confirmation_on_move = true,
+          watch_dir = nil,
+       })
+
+      -- required to fix code action ranges and filter diagnostics
+      ts_utils.setup_client(client)
+
+      -- no default maps, so you may want to define some here
+      local opts = { silent = true }
+      vim.api.nvim_buf_set_keymap(bufnr, "n", "gs", ":TSLspOrganize<CR>", opts)
+      vim.api.nvim_buf_set_keymap(bufnr, "n", "gr", ":TSLspRenameFile<CR>", opts)
+      vim.api.nvim_buf_set_keymap(bufnr, "n", "gi", ":TSLspImportAll<CR>", opts)
+    end
   end,
   ["stylelint_lsp"] = function(opts)
     opts.settings = {
       stylelintplus = {
-        autoFixOnSave = true,
+        enable = true,
+        -- autoFixOnSave = true,
         autoFixOnFormat = true,
+        -- cssInJs = false,
+        -- filetypes = { "css", "scss", "sass", "less", "vue", "javascriptreact", "typescriptreact", "sugarss"},
       } 
     } 
-  end
+  end,
+    ["vuels"] = function(opts)
+    opts.settings = {
+      vetur = {
+        completion = {
+          autoImport = true,
+          tagCasing = "initial",
+          useScaffoldSnippets = true 
+        },
+        languageFeatures = {
+          updateImportOnFileMove = true
+        },
+        validation = {
+          style = true,
+          script = true,
+          template = true
+        }
+      }
+    }
+  end 
 }
 
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
@@ -607,7 +669,7 @@ local capabilities = require('cmp_nvim_lsp').update_capabilities(
 
 lsp_installer.on_server_ready(function(server)
   local opts = {
-    on_attach = on_attach,
+    on_attach = default_on_attach,
     capabilities = capabilities
   }
 
@@ -817,5 +879,14 @@ EOF
 " mapping settings
 nnoremap <silent> gb :BufferLinePick<CR>
 nnoremap <silent> gx :BufferLinePickClose<CR>
-nnoremap <silent><leader> b :BufferLineCycleNext<CR>
+nnoremap <silent><leader>b :BufferLineCycleNext<CR>
+" }}}
+
+" Plug tami5/lspsaga.nvim {{{
+lua << EOF
+local lspsaga = require 'lspsaga'
+lspsaga.setup{
+  rename_prompt_prefix = "",
+}
+EOF
 " }}}
