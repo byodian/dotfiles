@@ -654,8 +654,9 @@ local enhance_server_opts = {
           updateImportOnFileMove = true
         },
         validation = {
-          style = false,
-          script = false
+          style = true,
+          script = true,
+          template = true
         }
       }
     }
