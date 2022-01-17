@@ -226,7 +226,7 @@ Plug 'vim-utils/vim-man'
 Plug 'machakann/vim-highlightedyank'
 
 Plug 'itchyny/vim-cursorword'
-Plug 'GustavoKatel/sidebar.nvim'
+Plug 'GustavoKatel/sidebar.nvim', { 'branch': 'dev' }
 Plug 'junegunn/limelight.vim'
 Plug 'karb94/neoscroll.nvim'
 Plug 'dstein64/vim-startuptime'
@@ -237,6 +237,7 @@ Plug 'phaazon/hop.nvim'
 Plug 'kevinhwang91/nvim-hlslens'
 Plug 'akinsho/nvim-bufferline.lua'
 Plug 'yardnsm/vim-import-cost', { 'do': 'npm install --production' }
+Plug 'vimwiki/vimwiki'
 call plug#end()
 
 " Settings up for normal plugins {{{
