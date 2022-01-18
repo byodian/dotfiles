@@ -55,8 +55,9 @@ set lazyredraw
 " Once the cursor is on the word, use z=, and Vim will suggest a list of alternatives that it thinks may be correct.
 " If the word is correct, Use the zg command and Vim will add it to its dictionary.
 " You can also mark words as incorrect using zw.
-setlocal spell spelllang=en_us " turn spell checking on only in the local buffer
-set wildmenu                   " Enable auto completion menu after pressing TAB.
+set spelllang=en,cjk            " turn spell checking on only in the local buffer
+set spellsuggest=best,9         " show nine spell checking candidates at most.
+set wildmenu                    " Enable auto completion menu after pressing TAB.
 set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx,*/node_modules/**
 
 "-------------------------------------------------------------------------
@@ -224,6 +225,7 @@ Plug 'folke/zen-mode.nvim'
 Plug 'windwp/nvim-autopairs'
 Plug 'vim-utils/vim-man'
 Plug 'machakann/vim-highlightedyank'
+Plug 'lukas-reineke/indent-blankline.nvim'
 
 Plug 'itchyny/vim-cursorword'
 Plug 'GustavoKatel/sidebar.nvim', { 'branch': 'dev' }
@@ -457,7 +459,8 @@ require('lualine').setup({
     disabled_types = { 'NvimTree' }
   },
   sections = {
-    lualine_x = {},
+    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_x = {'encoding', 'filetype'},
   }
 })
 EOF
@@ -642,7 +645,7 @@ local enhance_server_opts = {
       } 
     } 
   end,
-    ["vuels"] = function(opts)
+  ["vuels"] = function(opts)
     opts.settings = {
       vetur = {
         completion = {
@@ -660,7 +663,14 @@ local enhance_server_opts = {
         }
       }
     }
-  end 
+  end,
+  ["tailwindcss"] = function(opts)
+    opts.settings = {
+      tailwindCSS = {
+        rootFontSize = 10 
+      } 
+    }
+  end,
 }
 
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
@@ -888,6 +898,19 @@ lua << EOF
 local lspsaga = require 'lspsaga'
 lspsaga.setup{
   rename_prompt_prefix = "",
+}
+EOF
+" }}}
+
+" Plug lukas-reineke/indent-blankline.nvim {{{
+lua << EOF
+vim.opt.list = true
+vim.opt.listchars:append("space:⋅")
+vim.opt.listchars:append("eol:↴")
+
+require("indent_blankline").setup {
+  space_char_blankline = " ",
+  show_current_context = true,
 }
 EOF
 " }}}
