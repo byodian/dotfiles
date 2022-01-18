@@ -178,7 +178,6 @@ Plug 'ThePrimeagen/harpoon'
 Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'folke/trouble.nvim'
-Plug 'onsails/lspkind-nvim'
 Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
 " Plug 'creativenull/diagnosticls-configs-nvim'
 
@@ -190,6 +189,8 @@ Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'L3MON4D3/LuaSnip'
 Plug 'David-Kunz/cmp-npm'
 Plug 'saadparwaiz1/cmp_luasnip'
+Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
+Plug 'onsails/lspkind-nvim'
 
 " " tmux plugins
 " Plug 'christoomey/vim-tmux-navigator'
@@ -240,8 +241,6 @@ Plug 'kevinhwang91/nvim-hlslens'
 Plug 'akinsho/nvim-bufferline.lua'
 Plug 'yardnsm/vim-import-cost', { 'do': 'npm install --production' }
 Plug 'vimwiki/vimwiki'
-Plug 'wakatime/vim-wakatime'
-" Plug 'https://gitlab.com/code-stats/code-stats-vim.git'
 call plug#end()
 
 " Settings up for normal plugins {{{
@@ -640,9 +639,9 @@ local enhance_server_opts = {
     opts.settings = {
       stylelintplus = {
         enable = true,
-        -- autoFixOnSave = true,
+        autoFixOnSave = true,
         autoFixOnFormat = true,
-        -- cssInJs = false,
+        cssInJs = false,
         -- filetypes = { "css", "scss", "sass", "less", "vue", "javascriptreact", "typescriptreact", "sugarss"},
       } 
     } 
@@ -784,6 +783,27 @@ set completeopt=menu,menuone,noselect
 lua << EOF
 -- nvim-cmp setup
 local luasnip = require 'luasnip'
+local lspkind = require('lspkind')
+
+local tabnine = require('cmp_tabnine.config')
+tabnine:setup({
+  max_lines = 1000;
+  max_num_results = 20;
+  sort = true;
+  run_on_every_keystroke = true;
+  snippet_placement = '..';
+  ignored_file_types = {
+
+  }
+})
+
+local source_mapping = {
+	buffer = "[Buffer]",
+	nvim_lsp = "[LSP]",
+	nvim_lua = "[Lua]",
+	cmp_tabnine = "[TN]",
+	path = "[Path]",
+}
 
 -- Setup nvim-cmp.
 local cmp = require'cmp'
@@ -825,13 +845,40 @@ local cmp = require'cmp'
         end
       end,
     },
+
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
       { name = 'luasnip' },
       { name = 'path' },
       { name = 'buffer', keyword_length = 5 },
-      { name = 'npm', keyword_length = 4 }
-    })
+      { name = 'npm', keyword_length = 4 },
+      { name = 'cmp_tabnine' }
+    }),
+
+    formatting = {
+      format = lspkind.cmp_format({
+        with_text = false, -- do not show text alongside icons
+        maxwidth = 50, -- prevent the popup from showing more than provided characters
+
+        -- The function below will be called before any actual modifications from lspkind
+        -- so that you can provide more controls on popup customization
+        -- see https://github.com/onsails/lspkind-nvim#:~:text=https%3A//github.com/onsails/lspkind%2Dnvim/pull/30 
+        -- and https://github.com/tzachar/cmp-tabnine#pretty-printing-menu-items
+
+        -- before = function(entry, vim_item)
+        --  vim_item.kind = lspkind.presets.default[vim_item.kind]
+        --   local menu = source_mapping[entry.source.name]
+        --   if entry.source.name == 'cmp_tabnine' then
+        --     if entry.completion_item.data ~= nil and entry.completion_item.data.detail ~= nil then
+        --       menu = entry.completion_item.data.detail .. ' ' .. menu
+        --     end
+        --     vim_item.kind = ''
+        --   end
+        --   vim_item.menu = menu 
+        --   return vim_item
+        -- end
+      })
+    }
   })
 EOF
 " }}} 
