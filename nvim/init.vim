@@ -240,6 +240,8 @@ Plug 'kevinhwang91/nvim-hlslens'
 Plug 'akinsho/nvim-bufferline.lua'
 Plug 'yardnsm/vim-import-cost', { 'do': 'npm install --production' }
 Plug 'vimwiki/vimwiki'
+Plug 'wakatime/vim-wakatime'
+" Plug 'https://gitlab.com/code-stats/code-stats-vim.git'
 call plug#end()
 
 " Settings up for normal plugins {{{
