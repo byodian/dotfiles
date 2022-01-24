@@ -123,6 +123,10 @@ if has('nvim')
   tnoremap <Esc> <C-\><C-n>
 endif
 
+" Enable sell checking
+nnoremap <silent> <F11> :set spell!<cr>
+inoremap <silent> <F11> <C-O>:set spell!<cr>
+
 "--------------------------------------------------------------------------
 " autocmd settings
 "--------------------------------------------------------------------------
