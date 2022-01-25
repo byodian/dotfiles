@@ -223,6 +223,13 @@ Plug 'tpope/vim-unimpaired' " helpful shorthand like [b ]b
 " Plug 'tpope/vim-sleuth'
 " Plug 'tpope/vim-projectionist'
 
+" text objects
+Plug 'kana/vim-textobj-user'
+Plug 'glts/vim-textobj-comment' " ic ac
+Plug 'sgur/vim-textobj-parameter' " i, a,
+Plug 'michaeljsmith/vim-indent-object' "ii, ai, iI, aI
+Plug 'wellle/targets.vim'
+
 " Plugins for web development 
 Plug 'norcalli/nvim-colorizer.lua', { 'branch': 'color-editor' }
 Plug 'AndrewRadev/tagalong.vim'
