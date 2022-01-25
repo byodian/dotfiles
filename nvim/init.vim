@@ -35,10 +35,6 @@ set confirm
 set list
 set listchars=tab:▸\ ,trail:·
 
-" set foldlevel=20
-" set foldmethod=expr
-" set foldexpr=nvim_treesitter#foldexpr()
-
 set updatetime=300    " Reduce time for highlighting other references
 set redrawtime=10000  " Allow more time for loading syntax on large files
 set shortmess+=c      " Don't pass messages to |ins-completion-menu|.
@@ -55,8 +51,9 @@ set lazyredraw
 " Once the cursor is on the word, use z=, and Vim will suggest a list of alternatives that it thinks may be correct.
 " If the word is correct, Use the zg command and Vim will add it to its dictionary.
 " You can also mark words as incorrect using zw.
-setlocal spell spelllang=en_us " turn spell checking on only in the local buffer
-set wildmenu                   " Enable auto completion menu after pressing TAB.
+set spelllang=en,cjk            " turn spell checking on only in the local buffer
+set spellsuggest=best,9         " show nine spell checking candidates at most.
+set wildmenu                    " Enable auto completion menu after pressing TAB.
 set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx,*/node_modules/**
 
 "-------------------------------------------------------------------------
@@ -122,6 +119,10 @@ if has('nvim')
   tnoremap <Esc> <C-\><C-n>
 endif
 
+" Enable sell checking
+nnoremap <silent> <F11> :set spell!<cr>
+inoremap <silent> <F11> <C-O>:set spell!<cr>
+
 "--------------------------------------------------------------------------
 " autocmd settings
 "--------------------------------------------------------------------------
@@ -177,7 +178,6 @@ Plug 'ThePrimeagen/harpoon'
 Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'folke/trouble.nvim'
-Plug 'onsails/lspkind-nvim'
 Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
 " Plug 'creativenull/diagnosticls-configs-nvim'
 
@@ -189,6 +189,8 @@ Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'L3MON4D3/LuaSnip'
 Plug 'David-Kunz/cmp-npm'
 Plug 'saadparwaiz1/cmp_luasnip'
+Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
+Plug 'onsails/lspkind-nvim'
 
 " " tmux plugins
 " Plug 'christoomey/vim-tmux-navigator'
@@ -217,6 +219,17 @@ Plug 'tpope/vim-unimpaired' " helpful shorthand like [b ]b
 " Plug 'tpope/vim-sleuth'
 " Plug 'tpope/vim-projectionist'
 
+" text objects
+Plug 'kana/vim-textobj-user'
+Plug 'glts/vim-textobj-comment' " ic ac
+Plug 'sgur/vim-textobj-parameter' " i, a,
+Plug 'michaeljsmith/vim-indent-object' "ii, ai, iI, aI
+Plug 'whatyouhide/vim-textobj-xmlattr' " ix, ax
+Plug 'wellle/targets.vim'
+
+" code outline
+Plug 'simrat39/symbols-outline.nvim'
+
 " Plugins for web development 
 Plug 'norcalli/nvim-colorizer.lua', { 'branch': 'color-editor' }
 Plug 'AndrewRadev/tagalong.vim'
@@ -224,9 +237,10 @@ Plug 'folke/zen-mode.nvim'
 Plug 'windwp/nvim-autopairs'
 Plug 'vim-utils/vim-man'
 Plug 'machakann/vim-highlightedyank'
+Plug 'lukas-reineke/indent-blankline.nvim'
 
 Plug 'itchyny/vim-cursorword'
-Plug 'GustavoKatel/sidebar.nvim'
+Plug 'GustavoKatel/sidebar.nvim' 
 Plug 'junegunn/limelight.vim'
 Plug 'karb94/neoscroll.nvim'
 Plug 'dstein64/vim-startuptime'
@@ -237,6 +251,7 @@ Plug 'phaazon/hop.nvim'
 Plug 'kevinhwang91/nvim-hlslens'
 Plug 'akinsho/nvim-bufferline.lua'
 Plug 'yardnsm/vim-import-cost', { 'do': 'npm install --production' }
+Plug 'vimwiki/vimwiki'
 call plug#end()
 
 " Settings up for normal plugins {{{
@@ -437,7 +452,8 @@ require'nvim-tree'.setup {
   -- lsp_diagnostics = true,
   ignore_ft_on_setup  = { 'startify', 'dashboard' },
   view = {
-    side = 'right'
+    side = 'right',
+    width = 40
   }
 }
 EOF
@@ -456,7 +472,8 @@ require('lualine').setup({
     disabled_types = { 'NvimTree' }
   },
   sections = {
-    lualine_x = {},
+    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_x = {'encoding', 'filetype'},
   }
 })
 EOF
@@ -512,7 +529,7 @@ local default_on_attach = function(client, bufnr)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   buf_set_keymap('n', 'gf', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
 
-  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  -- buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
@@ -634,14 +651,14 @@ local enhance_server_opts = {
     opts.settings = {
       stylelintplus = {
         enable = true,
-        -- autoFixOnSave = true,
+        autoFixOnSave = true,
         autoFixOnFormat = true,
-        -- cssInJs = false,
+        cssInJs = false,
         -- filetypes = { "css", "scss", "sass", "less", "vue", "javascriptreact", "typescriptreact", "sugarss"},
       } 
     } 
   end,
-    ["vuels"] = function(opts)
+  ["vuels"] = function(opts)
     opts.settings = {
       vetur = {
         completion = {
@@ -659,7 +676,14 @@ local enhance_server_opts = {
         }
       }
     }
-  end 
+  end,
+  ["tailwindcss"] = function(opts)
+    opts.settings = {
+      tailwindCSS = {
+        rootFontSize = 10 
+      } 
+    }
+  end,
 }
 
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
@@ -771,6 +795,27 @@ set completeopt=menu,menuone,noselect
 lua << EOF
 -- nvim-cmp setup
 local luasnip = require 'luasnip'
+local lspkind = require('lspkind')
+
+local tabnine = require('cmp_tabnine.config')
+tabnine:setup({
+  max_lines = 1000;
+  max_num_results = 20;
+  sort = true;
+  run_on_every_keystroke = true;
+  snippet_placement = '..';
+  ignored_file_types = {
+
+  }
+})
+
+local source_mapping = {
+	buffer = "[Buffer]",
+	nvim_lsp = "[LSP]",
+	nvim_lua = "[Lua]",
+	cmp_tabnine = "[TN]",
+	path = "[Path]",
+}
 
 -- Setup nvim-cmp.
 local cmp = require'cmp'
@@ -812,13 +857,40 @@ local cmp = require'cmp'
         end
       end,
     },
+
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
       { name = 'luasnip' },
       { name = 'path' },
       { name = 'buffer', keyword_length = 5 },
-      { name = 'npm', keyword_length = 4 }
-    })
+      { name = 'npm', keyword_length = 4 },
+      { name = 'cmp_tabnine' }
+    }),
+
+    formatting = {
+      format = lspkind.cmp_format({
+        with_text = false, -- do not show text alongside icons
+        maxwidth = 50, -- prevent the popup from showing more than provided characters
+
+        -- The function below will be called before any actual modifications from lspkind
+        -- so that you can provide more controls on popup customization
+        -- see https://github.com/onsails/lspkind-nvim#:~:text=https%3A//github.com/onsails/lspkind%2Dnvim/pull/30 
+        -- and https://github.com/tzachar/cmp-tabnine#pretty-printing-menu-items
+
+        -- before = function(entry, vim_item)
+        --  vim_item.kind = lspkind.presets.default[vim_item.kind]
+        --   local menu = source_mapping[entry.source.name]
+        --   if entry.source.name == 'cmp_tabnine' then
+        --     if entry.completion_item.data ~= nil and entry.completion_item.data.detail ~= nil then
+        --       menu = entry.completion_item.data.detail .. ' ' .. menu
+        --     end
+        --     vim_item.kind = ''
+        --   end
+        --   vim_item.menu = menu 
+        --   return vim_item
+        -- end
+      })
+    }
   })
 EOF
 " }}} 
@@ -890,3 +962,26 @@ lspsaga.setup{
 }
 EOF
 " }}}
+
+" Plug lukas-reineke/indent-blankline.nvim {{{
+lua << EOF
+vim.opt.list = true
+vim.opt.listchars:append("space:⋅")
+vim.opt.listchars:append("eol:↴")
+
+require("indent_blankline").setup {
+  space_char_blankline = " ",
+  show_current_context = true,
+}
+EOF
+" }}}
+
+" Plug simrat39/symbols-outline.nvim 
+lua << EOF
+vim.g.symbols_outline = {
+  width = 50,
+  position = 'left',
+  auto_preview = false
+}
+EOF
+
