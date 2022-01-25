@@ -35,10 +35,6 @@ set confirm
 set list
 set listchars=tab:▸\ ,trail:·
 
-" set foldlevel=20
-" set foldmethod=expr
-" set foldexpr=nvim_treesitter#foldexpr()
-
 set updatetime=300    " Reduce time for highlighting other references
 set redrawtime=10000  " Allow more time for loading syntax on large files
 set shortmess+=c      " Don't pass messages to |ins-completion-menu|.
@@ -228,7 +224,11 @@ Plug 'kana/vim-textobj-user'
 Plug 'glts/vim-textobj-comment' " ic ac
 Plug 'sgur/vim-textobj-parameter' " i, a,
 Plug 'michaeljsmith/vim-indent-object' "ii, ai, iI, aI
+Plug 'whatyouhide/vim-textobj-xmlattr' " ix, ax
 Plug 'wellle/targets.vim'
+
+" code outline
+Plug 'simrat39/symbols-outline.nvim'
 
 " Plugins for web development 
 Plug 'norcalli/nvim-colorizer.lua', { 'branch': 'color-editor' }
@@ -975,3 +975,13 @@ require("indent_blankline").setup {
 }
 EOF
 " }}}
+
+" Plug simrat39/symbols-outline.nvim 
+lua << EOF
+vim.g.symbols_outline = {
+  width = 50,
+  position = 'left',
+  auto_preview = false
+}
+EOF
+
