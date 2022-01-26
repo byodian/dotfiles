@@ -163,6 +163,7 @@ Plug 'glepnir/dashboard-nvim'
 Plug 'dracula/vim', { 'as': 'dracula' }
 " Plug 'npxbr/gruvbox.nvim'
 " Plug 'arcticicestudio/nord-vim'
+" Plug 'JoosepAlviste/palenightfall.nvim'
 
 " File Management
 Plug 'nvim-lua/popup.nvim'
@@ -263,6 +264,9 @@ endif
 let g:dracula_colorterm = 0
 let g:dracula_italic = 1
 colorscheme dracula
+" colorscheme nord
+" colorscheme gruvbox
+" colorscheme palenightfall 
 
 highlight Cursor guifg=#f00 guibg=#657b83
 highlight Comment cterm=italic gui=italic
@@ -299,9 +303,6 @@ EOF
 lua << EOF
 require("sidebar-nvim").setup({})
 EOF
-
-" mapping setting
-nnoremap <leader>sb <cmd>SidebarNvimToggl<cr>
 " }}}
 
 " Plug junegunn/limelight.vim {{{
@@ -976,7 +977,7 @@ require("indent_blankline").setup {
 EOF
 " }}}
 
-" Plug simrat39/symbols-outline.nvim 
+" Plug simrat39/symbols-outline.nvim {{{
 lua << EOF
 vim.g.symbols_outline = {
   width = 50,
@@ -985,3 +986,6 @@ vim.g.symbols_outline = {
 }
 EOF
 
+" mapping setting
+nnoremap <leader>sb <cmd>SymbolsOutline<cr>
+" }}}
