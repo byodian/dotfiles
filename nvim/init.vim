@@ -537,6 +537,7 @@ local default_on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
   buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+  buf_set_keymap('n', '<space>le', '<cmd>EslintFixAll<CR>', opts)
 
   buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
   -- buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
@@ -566,8 +567,9 @@ local default_on_attach = function(client, bufnr)
   if client.resolved_capabilities.document_formatting then
     vim.api.nvim_command [[augroup Format]]
     vim.api.nvim_command [[autocmd! * <buffer>]]
-    vim.api.nvim_command [[autocmd BufWritePre <buffer> EslintFixAll]]
+    -- vim.api.nvim_command [[autocmd BufWritePre <buffer> EslintFixAll]]
     -- vim.api.nvim_command [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
+    -- vim.api.nvim_command [[autocmd BufWritePre *.js,*,vue,*.ts,*.tsx EslintFixAll]]
     vim.api.nvim_command [[augroup END]]
   end
 
@@ -860,6 +862,7 @@ local cmp = require'cmp'
     },
 
     sources = cmp.config.sources({
+		  { name = "copilot" }, -- For luasnip users.
       { name = 'nvim_lsp' },
       { name = 'luasnip' },
       { name = 'path' },
@@ -877,19 +880,18 @@ local cmp = require'cmp'
         -- so that you can provide more controls on popup customization
         -- see https://github.com/onsails/lspkind-nvim#:~:text=https%3A//github.com/onsails/lspkind%2Dnvim/pull/30 
         -- and https://github.com/tzachar/cmp-tabnine#pretty-printing-menu-items
-
-        -- before = function(entry, vim_item)
-        --  vim_item.kind = lspkind.presets.default[vim_item.kind]
-        --   local menu = source_mapping[entry.source.name]
-        --   if entry.source.name == 'cmp_tabnine' then
-        --     if entry.completion_item.data ~= nil and entry.completion_item.data.detail ~= nil then
-        --       menu = entry.completion_item.data.detail .. ' ' .. menu
-        --     end
-        --     vim_item.kind = ''
-        --   end
-        --   vim_item.menu = menu 
-        --   return vim_item
-        -- end
+        before = function(entry, vim_item)
+         vim_item.kind = lspkind.presets.default[vim_item.kind]
+          local menu = source_mapping[entry.source.name]
+          if entry.source.name == 'cmp_tabnine' then
+            if entry.completion_item.data ~= nil and entry.completion_item.data.detail ~= nil then
+              menu = entry.completion_item.data.detail .. ' ' .. menu
+            end
+            vim_item.kind = ''
+          end
+          vim_item.menu = menu 
+          return vim_item
+        end
       })
     }
   })
@@ -988,4 +990,10 @@ EOF
 
 " mapping setting
 nnoremap <leader>sb <cmd>SymbolsOutline<cr>
+" }}}
+
+" Plug github/copilot.nvim {{{
+imap <silent><script><expr> <c-j> copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true
+highlight CopilotSuggestion guifg=#555555 ctermfg=8
 " }}}
