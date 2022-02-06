@@ -73,7 +73,7 @@ nnoremap <leader>tn :set invrelativenumber<cr>
 nnoremap <leader>tw :set wrap!<cr>
 
 " clear and redraw screen, de-highlight, fix syntax highlighting
-nnoremap <leader>l :nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>
+nnoremap <leader>lh :nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>
 
 " hi CursorColumn cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 " nnoremap <Leader>ln :set cursorline! cursorcolumn!<CR>
@@ -122,6 +122,18 @@ endif
 " Enable sell checking
 nnoremap <silent> <F11> :set spell!<cr>
 inoremap <silent> <F11> <C-O>:set spell!<cr>
+
+" mappings to quickfix {{{
+" quickfix list
+nnoremap <c-q> :copen<cr>
+nnoremap [q :cprevious<cr>
+nnoremap ]q :cnext<cr>
+
+" location quickfix list
+nnoremap <leader>q :lopen<cr>
+nnoremap <leader>k :lprevious<cr>
+nnoremap <leader>j :lnext<cr>
+"}}}
 
 "--------------------------------------------------------------------------
 " autocmd settings
@@ -214,7 +226,7 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
-Plug  'tpope/vim-repeat'
+Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-unimpaired' " helpful shorthand like [b ]b
 " Plug 'tpope/vim-sleuth'
@@ -297,6 +309,7 @@ require("zen-mode").setup {
 -- refer to the configuration section below
 }
 EOF
+nnoremap <leader>z :Zen<CR>
 " }}}
 
 " Plug GustavoKatel/sidebar.nvim {{{
@@ -389,7 +402,16 @@ local actions = require('telescope.actions')
 
 require('telescope').setup {
   defaults = {
-    file_ignore_patterns = { "yarn.lock", "node_modules", ".git/" }
+    file_ignore_patterns = { "yarn.lock", "node_modules", ".git/" },
+    mappings = {
+      i = {
+        ["<M-d>"] = "delete_buffer",
+        ["<C-/>"] = "which_key"
+      },
+      n = {
+        ["q"] = actions.close
+      }
+    }
   },
   extensions = {
     fzf = {
@@ -403,31 +425,29 @@ require('telescope').setup {
     buffers = {
       show_all_buffers = true,
       sort_lastused = true,
-      mappings = {
-        i = {
-          ["<M-d>"] = "delete_buffer",
-          ["<C-/>"] = "which_key"
-        },
-        n = {
-          ["q"] = actions.close
-        }
-      }
-    }
+    },
+    find_files = {
+      show_all_files = true,
+      sort_lastused = true,
+      -- theme = "dropdown"
+    },
   }
 }
 require('telescope').load_extension('fzf')
 require("telescope").load_extension "file_browser"
 EOF
 
-nnoremap <leader>ff :lua require'telescope.builtin'.find_files{ hidden = true }<cr>
-nnoremap <leader>ps :lua require('telescope.builtin').grep_string( { search = vim.fn.input("Grep for > ") } )<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>fs <cmd>lua require 'telescope'.extensions.file_browser.file_browser( { path = vim.fn.expand('%:p:h') } )<CR>
-nnoremap <Leader>fc :lua require'telescope.builtin'.git_status{}<cr>
-nnoremap <Leader>cb :lua require'telescope.builtin'.git_branches{}<cr>
-nnoremap <leader>fr :lua require'telescope.builtin'.resume{}<CR>
-nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep( { file_ignore_patterns = { '**/*.spec.js' } } )<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+nnoremap <leader>ff <cmd>lua require'telescope.builtin'.find_files{ hidden = true }<cr>
+nnoremap <leader>ft <cmd>lua require'telescope.builtin'.git_files{ hidden = true }<cr>
+nnoremap <leader>ps <cmd>lua require'telescope.builtin'.grep_string( { search = vim.fn.input("Grep for > ") } )<cr>
+nnoremap <leader>fb <cmd>lua require'telescope.builtin'.buffers()<cr>
+nnoremap <leader>fs <cmd>lua require'telescope'.extensions.file_browser.file_browser( { path = vim.fn.expand('%:p:h') } )<CR>
+nnoremap <Leader>fc <cmd>lua require'telescope.builtin'.git_status{}<cr>
+nnoremap <Leader>cb <cmd>lua require'telescope.builtin'.git_branches{}<cr>
+nnoremap <leader>fr <cmd>lua require'telescope.builtin'.resume{}<cr>
+nnoremap <leader>fg <cmd>lua require'telescope.builtin'.live_grep( { file_ignore_patterns = { '**/*.spec.js' } } )<cr>
+nnoremap <leader>fh <cmd>lua require'telescope.builtin'.help_tags()<cr>
+nnoremap <leader>fo <cmd>lua require'telescope.builtin'.oldfiles()<cr>
 "}}}
 
 " Plug ThePrimeagen/harpoon {{{
@@ -482,7 +502,7 @@ EOF
 
 " Plug glephir/dashboard-nvim {{{
 let g:dashboard_default_executive ='telescope'
-nnoremap <silent> <Leader>fh :DashboardFindHistory<CR>
+nnoremap <silent> <Leader>fo :DashboardFindHistory<CR>
 " nnoremap <silent> <Leader>ff :DashboardFindFile<CR>
 nnoremap <silent> <Leader>ct :DashboardChangeColorscheme<CR>
 " nnoremap <silent> <Leader>fg :DashboardFindWord<CR>
@@ -536,13 +556,13 @@ local default_on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-  buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+  buf_set_keymap('n', '<space>lf', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
   buf_set_keymap('n', '<space>le', '<cmd>EslintFixAll<CR>', opts)
 
   buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', '<space>vll', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
   -- buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
   -- buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-  -- buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
   -- buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   -- buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
 
