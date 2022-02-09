@@ -32,3 +32,12 @@ set -gx EDITOR nvim
 set -gx PATH bin $PATH
 set -gx PATH ~/bin $PATH
 set -gx PATH ~/.local/bin $PATH
+
+switch (uname)
+  case Darwin
+    source (dirname (status --current-filename))/config-osx.fish
+  case Linux
+    source (dirname (status --current-filename))/config-linux.fish
+  case '*'
+    source (dirname (status --current-filename))/config-windows.fish
+end
