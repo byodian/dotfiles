@@ -394,6 +394,12 @@ noremap g* g*<Cmd>lua require('hlslens').start()<CR>
 noremap g# g#<Cmd>lua require('hlslens').start()<CR>
 " }}}
 
+" Plug norcalli/nvim-colorizer.lua {{{
+lua << EOF
+require'colorizer'.setup()
+EOF
+" }}}
+
 " }}}
 
 " nvim-telescope/telescope.nvim {{{
@@ -886,7 +892,14 @@ local cmp = require'cmp'
       { name = 'nvim_lsp' },
       { name = 'luasnip' },
       { name = 'path' },
-      { name = 'buffer', keyword_length = 5 },
+      { name = 'buffer',
+        option = {
+          keyword_length = 5,
+          get_bufnrs = function()
+            return vim.api.nvim_list_bufs()
+          end
+        }
+      },
       { name = 'npm', keyword_length = 4 },
       { name = 'cmp_tabnine' }
     }),
