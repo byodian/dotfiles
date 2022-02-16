@@ -229,7 +229,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-unimpaired' " helpful shorthand like [b ]b
-" Plug 'tpope/vim-sleuth'
+Plug 'tpope/vim-sleuth'
 " Plug 'tpope/vim-projectionist'
 
 " text objects
@@ -801,7 +801,7 @@ require'nvim-treesitter.configs'.setup {
     additional_vim_regex_highlighting = true,
   },
   indent = {
-    enable = true
+    enable = false 
   },
    context_commentstring = {
     enable = true
