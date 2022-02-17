@@ -27,15 +27,25 @@ alias ln "ln -i"
 alias rm "rm -iv"
 alias mkdir "mkdir -pv"
 
+# fzf preview
+alias fzfpreview 'fzf --layout=reverse --multi --preview "bat --style=numbers --color=always --theme=Dracula --line-range :500 {}"'
+
 set -gx EDITOR nvim
 set -gx PATH bin $PATH
 set -gx PATH ~/bin $PATH
 set -gx PATH ~/.local/bin $PATH
 
 # set up fzf
-# set -gx FZF_DEFAULT_COMMAND 'fd --type f --hidden --follow --exclude .git'
-# set -gx FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
-set fzf_fd_opts --hidden --exclude=.git
+# fish plugin variables
+set -U FZF_DEFAULT_OPTS '--height 40% --layout=reverse --border --multi'
+set -U FZF_ENABLE_OPEN_PREVIEW 1
+set -U FZF_COMPLETE 3
+
+# fish plugin commands
+set FZF_DEFAULT_COMMAND "fd --type f --hidden --follow --exclude .git . \$dir"
+set -U FZF_FIND_FILE_COMMAND $FZF_DEFAULT_COMMAND
+set -U FZF_CD_COMMAND "fd --type d --hidden --follow --exclude .git . \$dir"
+set -U FZF_OPEN_COMMAND $FZF_DEFAULT_COMMAND
 
 switch (uname)
   case Darwin

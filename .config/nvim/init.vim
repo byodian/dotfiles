@@ -30,8 +30,8 @@ set splitright        " Splitting a window will put the new window right of the 
 set splitbelow
 set path+=**
 set confirm
-" set undofile
-" set undodir=~/.vim/undodir
+set undofile
+set undodir=~/.vim/undodir
 set list
 set listchars=tab:▸\ ,trail:·
 
@@ -147,7 +147,6 @@ if has("autocmd")
     \| exe "normal! g'\"" | endif
 endif
 
-
 " Folding by filetype
 " https://yianwillis.github.io/vimcdoc/doc/usr_41.html#41.7
 " https://forum.ubuntu.com.cn/viewtopic.php?t=367858
@@ -172,7 +171,8 @@ call plug#begin('~/.vim/plugged')
 Plug 'glepnir/dashboard-nvim'
 
 " Themes
-Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'navarasu/onedark.nvim'
+" Plug 'dracula/vim', { 'as': 'dracula' }
 " Plug 'npxbr/gruvbox.nvim'
 " Plug 'arcticicestudio/nord-vim'
 " Plug 'JoosepAlviste/palenightfall.nvim'
@@ -273,9 +273,6 @@ if (has("termguicolors"))
   set termguicolors " enable true colors support
 endif
 
-let g:dracula_colorterm = 0
-let g:dracula_italic = 1
-colorscheme dracula
 " colorscheme nord
 " colorscheme gruvbox
 " colorscheme palenightfall 
@@ -288,6 +285,22 @@ set textwidth=80
 set colorcolumn=+1
 set colorcolumn=80
 highlight ColorColumn guibg=#181818
+
+" dracula theme {{{
+" let g:dracula_colorterm = 0
+" let g:dracula_italic = 1
+" colorscheme dracula
+" }}}
+
+" onedark theme {{{
+lua << EOF
+require'onedark'.setup {
+  style = 'cool',
+}
+require('onedark').load()
+EOF
+" }}}
+
 " }}}
 
 " Plug windwp/nvim-autopairs {{{
@@ -495,7 +508,8 @@ lua << EOF
 require('plenary.reload').reload_module('lualine', true)
 require('lualine').setup({
   options = {
-    theme = 'dracula',
+    -- theme = 'dracula',
+    theme = 'onedark',
     disabled_types = { 'NvimTree' }
   },
   sections = {
@@ -1001,7 +1015,7 @@ EOF
 
 " Plug lukas-reineke/indent-blankline.nvim {{{
 lua << EOF
-vim.opt.list = true
+vim.opt.list = false 
 vim.opt.listchars:append("space:⋅")
 vim.opt.listchars:append("eol:↴")
 
