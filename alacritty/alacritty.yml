@@ -11,8 +11,8 @@
 #import:
 #  - /path/to/alacritty.yml
 import:
-  # - C:\Users\Lenovo\AppData\Roaming\alacritty\dracula.yml
-  - C:\Users\Lenovo\AppData\Roaming\alacritty\nord.yml
+  - C:\Users\Lenovo\AppData\Roaming\alacritty\dracula.yml
+  # - C:\Users\Lenovo\AppData\Roaming\alacritty\nord.yml
 
 # Any items in the `env` entry below will be added as
 # environment variables. Some entries may override variables
@@ -96,13 +96,13 @@ window:
   # and `light`. Set this to `None` to use the default theme variant.
   #gtk_theme_variant: None
 
-#scrolling:
+scrolling:
   # Maximum number of lines in the scrollback buffer.
   # Specifying '0' will disable scrolling.
-  #history: 10000
+  history: 2000 
 
   # Scrolling distance multiplier.
-  #multiplier: 3
+  multiplier: 20
 
 # Font configuration
 font:
@@ -127,7 +127,7 @@ font:
     style: Bold Italic
 
   # Point size
-  size: 12.0
+  size: 14.0
 
   # Offset is the extra space around each character. `offset.y` can be thought
   # of as modifying the line spacing, and `offset.x` as modifying the letter
@@ -153,7 +153,7 @@ font:
 #draw_bold_text_with_bright_colors: false
 
 # Colors (Tomorrow Night)
-#colors:
+colors:
   # Default colors
   #primary:
   #  background: '#1d1f21'
@@ -174,9 +174,9 @@ font:
   #
   # Allowed values are CellForeground/CellBackground, which reference the
   # affected cell, or hexadecimal colors like #ff00ff.
-  #cursor:
-  #  text: CellBackground
-  #  cursor: CellForeground
+  cursor:
+    text: CellBackground
+    cursor: '#ffffff' 
 
   # Vi mode cursor colors
   #
@@ -184,9 +184,9 @@ font:
   #
   # Allowed values are CellForeground/CellBackground, which reference the
   # affected cell, or hexadecimal colors like #ff00ff.
-  #vi_mode_cursor:
-  #  text: CellBackground
-  #  cursor: CellForeground
+  vi_mode_cursor:
+    text: CellBackground
+    cursor: '#ffffff'
 
   # Search colors
   #
@@ -334,7 +334,7 @@ font:
 #
 # Window opacity as a floating point number from `0.0` to `1.0`.
 # The value `0.0` is completely transparent and `1.0` is opaque.
-#background_opacity: 1.0
+background_opacity: 0.95
 
 #selection:
   # This string contains all characters that are used as separators for
@@ -698,13 +698,21 @@ alt_send_esc: false
 #
 # If the same trigger is assigned to multiple actions, all of them are executed
 # in the order they were defined in.
-# key_bindings:
+# https://github.com/alacritty/alacritty/issues/62#issuecomment-347552058
+# support for alt+key
+key_bindings:
+  - { key: J,        mods: Alt,     chars: "\x1bj"                       }
+  - { key: K,        mods: Alt,     chars: "\x1bk"                       }
+  - { key: H,        mods: Alt,     chars: "\x1bh"                       }
+  - { key: L,        mods: Alt,     chars: "\x1bl"                       }
   #- { key: Paste,                                       action: Paste          }
   #- { key: Copy,                                        action: Copy           }
   #- { key: L,         mods: Control,                    action: ClearLogNotice }
   #- { key: L,         mods: Control, mode: ~Vi|~Search, chars: "\x0c"          }
   #- { key: PageUp,    mods: Shift,   mode: ~Alt,        action: ScrollPageUp,  }
   #- { key: PageDown,  mods: Shift,   mode: ~Alt,        action: ScrollPageDown }
+  #- { key: J,         mods: Alt|Shift, chars: "\x1bJ"                       }
+  #- { key: K,         mods: Alt|Shift, chars: "\x1bK"                       }
   #- { key: Home,      mods: Shift,   mode: ~Alt,        action: ScrollToTop,   }
   #- { key: End,       mods: Shift,   mode: ~Alt,        action: ScrollToBottom }
 
