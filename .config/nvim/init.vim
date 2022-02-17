@@ -479,21 +479,48 @@ nnoremap <leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
 " }}}
 
 " Plug kyazdani42/nvim-tree.lua {{{
-let g:nvim_tree_quit_on_open = 1
-let g:nvim_tree_indent_markers = 1
-let g:nvim_tree_git_hl = 1
-let g:nvim_tree_highlight_opened_files = 1
-let g:nvim_tree_group_empty = 1
-" let g:nvim_tree_lsp_diagnostics = 1
-
 lua << EOF
 require'nvim-tree'.setup {
   auto_close = true,
-  -- lsp_diagnostics = true,
+  git_hl = 1,
+  indent_markers = 1,
+  highlight_opened_files = 1,
+  group_empty = 1,
+  actions = {
+    open_file = {
+      quit_on_open = 1, 
+    }
+  },
   ignore_ft_on_setup  = { 'startify', 'dashboard' },
   view = {
     side = 'right',
-    width = 40
+    width = 30,
+    hide_root_folder = true,
+    number = true,
+    auto_resize = true,
+  },
+  diagnostics = {
+    enable = true,
+    icons = {
+      hint = "",
+      info = "",
+      warning = "",
+      error = "",
+    }
+  },
+  update_focused_file = {
+    enable = true,
+    update_cwd = false,
+    ignore_list = {},
+  },
+  git = {
+    enable = true,
+    ignore = false,
+    timeout = 500,
+  },
+  filters = {
+    dotfiles = false,
+    custom = {}
   }
 }
 EOF
