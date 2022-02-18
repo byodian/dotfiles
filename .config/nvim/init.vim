@@ -266,6 +266,7 @@ Plug 'kevinhwang91/nvim-hlslens'
 Plug 'akinsho/nvim-bufferline.lua'
 Plug 'yardnsm/vim-import-cost', { 'do': 'npm install --production' }
 Plug 'vimwiki/vimwiki'
+Plug 'akinsho/toggleterm.nvim'
 call plug#end()
 
 " Settings up for normal plugins {{{
@@ -309,11 +310,6 @@ lua << EOF
 require 'nvim-autopairs'.setup{}
 EOF
 " }}}
-
-" Plug tpope/vim-commentary {{{
-nnoremap <leader>/ :Commentary<CR>
-vnoremap <leader>/ :Commentary<CR>
-"}}}
 
 " Plug folke/zen-mode.nvim {{{
 lua << EOF
@@ -414,6 +410,12 @@ require'colorizer'.setup()
 EOF
 " }}}
 
+" Plug akinsho/toggleterm.nvim
+lua << EOF
+require('toggleterm').setup({
+  open_mapping = [[<c-\>]],
+})
+EOF
 " }}}
 
 " nvim-telescope/telescope.nvim {{{
