@@ -214,6 +214,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 Plug 'p00f/nvim-ts-rainbow'
 Plug 'tami5/lspsaga.nvim', { 'branch' : 'nvim6.0' } 
+Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 " Plug 'MaxMEllon/vim-jsx-pretty' " fix indentation in jsx until treesitter can
 " Plug 'jxnblk/vim-mdx-js'
 " Plug 'code-biscuits/nvim-biscuits'
@@ -421,7 +422,7 @@ local actions = require('telescope.actions')
 
 require('telescope').setup {
   defaults = {
-    file_ignore_patterns = { "yarn.lock", "node_modules", ".git/" },
+    file_ignore_patterns = { "yarn.lock", "node_modules", ".git/", "dist/" },
     mappings = {
       i = {
         ["<M-d>"] = "delete_buffer",
@@ -448,6 +449,8 @@ require('telescope').setup {
     find_files = {
       show_all_files = true,
       sort_lastused = true,
+      no_ignore = true,
+      follow = true,
       -- theme = "dropdown"
     },
   }
@@ -844,7 +847,7 @@ require'nvim-treesitter.configs'.setup {
   indent = {
     enable = false 
   },
-   context_commentstring = {
+  context_commentstring = {
     enable = true
   },
   rainbow = {
@@ -854,6 +857,49 @@ require'nvim-treesitter.configs'.setup {
     max_file_lines = nil, -- Do not enable for files with more than n lines, int
     -- colors = {}, -- table of hex strings
     -- termcolors = {} -- table of colour name strings
+  },
+  textobjects = {
+    select = {
+      enable = true,
+
+      -- Automatically jump forward to textobj, similar to targets.vim
+      lookahead = true,
+      keymaps = {
+        -- You can use the capture groups defined in textobjects.scm
+        ["af"] = "@function.outer",
+        ["if"] = "@function.inner",
+        ["ac"] = "@class.outer",
+        ["ic"] = "@class.inner",
+      }
+    },
+    move = {
+      enable = true,
+      set_jumps = true, -- whether to set jumps in the jumplist
+      goto_next_start = {
+        ["]m"] = "@function.outer",
+        ["]]"] = "@class.outer",
+      },
+      goto_previous_start = {
+        ["[m"] = "@function.outer",
+        ["[["] = "@class.outer",
+      },
+      goto_next_end = {
+        ["]M"] = "@function.outer",
+        ["]["] = "@class.outer",
+      },
+      goto_previous_end = {
+        ["[M"] = "@function.outer",
+        ["[]"] = "@class.outer",
+      },
+    },
+    lsp_interop = {
+      enable = true,
+      border = 'none',
+      peek_definition_code = {
+        ["<leader>df"] = "@function.outer",
+        ["<leader>dF"] = "@class.outer",
+      },
+    },
   }
 }
 EOF
