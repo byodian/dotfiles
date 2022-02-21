@@ -505,7 +505,7 @@ require'nvim-tree'.setup {
     auto_resize = true,
   },
   diagnostics = {
-    enable = true,
+    enable = false,
     icons = {
       hint = "",
       info = "",
@@ -1036,10 +1036,16 @@ require("bufferline").setup{
     },
     separator = {
       guifg = "#282828"
-    }
+    },
+    indicator_selected = {
+      guifg = "#61afef"
+    },
+    pick_selected = {
+      guifg = "#61afef",
+    },
   },
   options = {
-    numbers = "ordinal",
+    numbers = "none",
     modified_icon = "●",
     left_trunc_marker = "",
     right_trunc_marker = "",
@@ -1049,7 +1055,7 @@ require("bufferline").setup{
     view = "multiwindow",
     show_buffer_close_icons = true,
     show_close_icon = false,
-    separator_style = "slant",
+    separator_style = "thin",
     diagnostics = "nvim_lsp",
     diagnostics_update_in_insert = false,
     diagnostics_indicator = function(count, level, diagnostics_dict, context)
