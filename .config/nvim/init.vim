@@ -499,7 +499,7 @@ require'nvim-tree'.setup {
   ignore_ft_on_setup  = { 'startify', 'dashboard' },
   view = {
     side = 'right',
-    width = 30,
+    width = 50,
     hide_root_folder = true,
     number = true,
     auto_resize = true,
