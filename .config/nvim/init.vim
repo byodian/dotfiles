@@ -722,17 +722,6 @@ local enhance_server_opts = {
       vim.api.nvim_buf_set_keymap(bufnr, "n", "gi", ":TSLspImportAll<CR>", opts)
     end
   end,
-  ["stylelint_lsp"] = function(opts)
-    opts.settings = {
-      stylelintplus = {
-        enable = true,
-        autoFixOnSave = true,
-        autoFixOnFormat = true,
-        cssInJs = false,
-        -- filetypes = { "css", "scss", "sass", "less", "vue", "javascriptreact", "typescriptreact", "sugarss"},
-      } 
-    } 
-  end,
   ["vuels"] = function(opts)
     opts.settings = {
       vetur = {
@@ -771,11 +760,34 @@ lsp_installer.on_server_ready(function(server)
     on_attach = default_on_attach,
     capabilities = capabilities
   }
-
+ 
   if enhance_server_opts[server.name] then
     -- Enhance the default opts with the server-specific ones
     enhance_server_opts[server.name](opts)
   end 
+
+  if server.name == 'emmet_ls' then
+    local emmet_ls_opts = {
+      filetypes = { "html", "css", "typescriptreact", "javascriptreact", "javascript" },
+    }
+    opts = vim.tbl_deep_extend("force", emmet_ls_opts, opts)
+  end
+
+  if server.name == 'stylelint_lsp' then 
+    local stylelint_opts = {
+      settings = {
+        stylelintplus = {
+          enable = true,
+          autoFixOnSave = true,
+          autoFixOnFormat = true,
+          cssInJs = false,
+          filetypes = { "css", "scss", "sass", "less", "vue", "javascriptreact", "typescriptreact", "sugarss"},
+        },
+      }
+    }
+
+    opts = vim.tbl_deep_extend("force", stylelint_opts, opts)
+  end
 
   server:setup(opts)
 end)
@@ -784,8 +796,7 @@ EOF
 
 " Plug neovim/nvim-lspconfig {{{
 lua << EOF
-local nvim_lsp = require'lspconfig'
-
+local lspconfig = require'lspconfig'
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
