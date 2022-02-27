@@ -199,11 +199,18 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'L3MON4D3/LuaSnip'
+Plug 'hrsh7th/cmp-nvim-lua'
 Plug 'David-Kunz/cmp-npm'
-Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
-Plug 'onsails/lspkind-nvim'
+Plug 'petertriho/cmp-git'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/cmp-emoji'
+" Plug 'onsails/lspkind-nvim'
+
+" Snippets
+Plug 'L3MON4D3/LuaSnip'
+Plug 'saadparwaiz1/cmp_luasnip'
+Plug 'rafamadriz/friendly-snippets'
 
 " " tmux plugins
 " Plug 'christoomey/vim-tmux-navigator'
@@ -875,7 +882,7 @@ require'nvim-treesitter.configs'.setup {
     additional_vim_regex_highlighting = true,
   },
   indent = {
-    enable = false 
+    enable = true 
   },
   context_commentstring = {
     enable = true
@@ -939,9 +946,16 @@ EOF
 " https://github.com/neovim/nvim-lspconfig/wiki/Autocompletion
 set completeopt=menu,menuone,noselect
 lua << EOF
+local has_words_before = function()
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
 -- nvim-cmp setup
 local luasnip = require 'luasnip'
-local lspkind = require('lspkind')
+require('luasnip.loaders.from_vscode').lazy_load()
+
+-- local lspkind = require('lspkind')
 
 local tabnine = require('cmp_tabnine.config')
 tabnine:setup({
@@ -955,96 +969,181 @@ tabnine:setup({
   }
 })
 
-local source_mapping = {
-  buffer = "[Buffer]",
-  nvim_lsp = "[LSP]",
-  nvim_lua = "[Lua]",
-  cmp_tabnine = "[TN]",
-  path = "[Path]",
+-- local source_mapping = {
+--   buffer = "[Buffer]",
+--   nvim_lsp = "[LSP]",
+--   luasnip = "[Snippet]",
+--   nvim_lua = "[Lua]",
+--   cmp_tabnine = "[TN]",
+--   path = "[Path]",
+-- }
+
+local kind_icons = {
+  Text = "",
+  Method = "",
+  Function = "",
+  Constructor = "",
+  Field = "",
+  Variable = "",
+  Class = "ﴯ",
+  Interface = "",
+  Module = "",
+  Property = "ﰠ",
+  Unit = "",
+  Value = "",
+  Enum = "",
+  Keyword = "",
+  Snippet = "",
+  Color = "",
+  File = "",
+  Reference = "",
+  Folder = "",
+  EnumMember = "",
+  Constant = "",
+  Struct = "",
+  Event = "",
+  Operator = "",
+  TypeParameter = ""
 }
 
 -- Setup nvim-cmp.
 local cmp = require'cmp'
+require("cmp_git").setup()
 
-  cmp.setup({
-    snippet = {
-      expand = function(args)
-        require('luasnip').lsp_expand(args.body)
-      end,
+cmp.setup({
+  snippet = {
+    expand = function(args)
+      luasnip.lsp_expand(args.body)
+    end,
+  },
+  mapping = {
+    ['<C-p>'] = cmp.mapping.select_prev_item(),
+    ['<C-n>'] = cmp.mapping.select_next_item(),
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.close(),
+    ['<CR>'] = cmp.mapping.confirm {
+      behavior = cmp.ConfirmBehavior.Replace,
+      select = true,
     },
-
-    mapping = {
-      ['<C-p>'] = cmp.mapping.select_prev_item(),
-      ['<C-n>'] = cmp.mapping.select_next_item(),
-      ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-      ['<C-f>'] = cmp.mapping.scroll_docs(4),
-      ['<C-Space>'] = cmp.mapping.complete(),
-      ['<C-e>'] = cmp.mapping.close(),
-      ['<CR>'] = cmp.mapping.confirm {
-        behavior = cmp.ConfirmBehavior.Replace,
-        select = true,
-      },
-      ['<Tab>'] = function(fallback)
-        if cmp.visible() then
-          cmp.select_next_item()
-        elseif luasnip.expand_or_jumpable() then
-          luasnip.expand_or_jump()
-        else
-          fallback()
+    ["<Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      elseif has_words_before() then
+        cmp.complete()
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
+  },
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    { name = 'luasnip' },
+    { name = 'path' },
+    { name = 'buffer',
+      option = {
+        keyword_length = 5,
+        get_bufnrs = function()
+          return vim.api.nvim_list_bufs()
         end
-      end,
-      ['<S-Tab>'] = function(fallback)
-        if cmp.visible() then
-          cmp.select_prev_item()
-        elseif luasnip.jumpable(-1) then
-          luasnip.jump(-1)
-        else
-          fallback()
-        end
-      end,
+      }
     },
+    { name = 'npm', keyword_length = 4 },
+    { name = 'cmp_tabnine' },
+    { name = "cmp_git" },
+    { name = 'emoji' },
+    { name = 'nvim_lua' }
+  }),
+  completion = { 
+    border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" }, 
+    scrollbar = "║" 
+  },
+  documentation = {
+    border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+    scrollbar = "║",
+  },
+  formatting = {
+    -- fields = { 'abbr', 'kind' , 'menu' },
+    format = function(entry, vim_item)
+      -- Kind icons
+      vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
+      -- Source
+      vim_item.menu = ({
+        buffer = "[Buffer]",
+        nvim_lsp = "[LSP]",
+        luasnip = "[LuaSnip]",
+        nvim_lua = "[Lua]",
+        latex_symbols = "[LaTeX]",
+        cmp_tabnine = "[TN]",
+      })[entry.source.name]
+      return vim_item
+    end
+  },
+  -- formatting = {
+  --   fields = { 'abbr', 'kind' , 'menu' },
+  --   format = lspkind.cmp_format({
+  --     mode = 'symbol_text',
+  --     with_text = false, -- do not show text alongside icons
+  --     maxwidth = 50, -- prevent the popup from showing more than provided characters
+  --     -- The function below will be called before any actual modifications from lspkind
+  --     -- so that you can provide more controls on popup customization
+  --     -- see https://github.com/onsails/lspkind-nvim#:~:text=https%3A//github.com/onsails/lspkind%2Dnvim/pull/30 
+  --     -- and https://github.com/tzachar/cmp-tabnine#pretty-printing-menu-items
+  --     menu = ({
+  --       buffer = "[Buffer]",
+  --       nvim_lsp = "[LSP]",
+  --       luasnip = "[LuaSnip]",
+  --       nvim_lua = "[Lua]",
+  --       cmp_tabnine = "[TN]",
+  --       latex_symbols = "[Latex]",
+  --       path = "[Path]",
+  --     }),
+  --   })
+  -- }
+})
 
-    sources = cmp.config.sources({
-		  { name = "copilot" }, -- For luasnip users.
-      { name = 'nvim_lsp' },
-      { name = 'luasnip' },
-      { name = 'path' },
-      { name = 'buffer',
-        option = {
-          keyword_length = 5,
-          get_bufnrs = function()
-            return vim.api.nvim_list_bufs()
-          end
-        }
-      },
-      { name = 'npm', keyword_length = 4 },
-      { name = 'cmp_tabnine' }
-    }),
+-- cmp.setup.cmdline(':', {
+--   sources = cmp.config.sources({
+--     { name = 'path' },
+--     { name = 'cmdline' },
+--   }),
+--   formatting = {
+--     format = function(entry, vim_item)
+--       vim_item.kind = string.format('%s', kind_icons[vim_item.kind]) -- This concatonates the icons with the name of the item kind
+--       vim_item.menu = ({
+--         buffer = "",
+--       })[entry.source.name]
+--       return vim_item
+--     end
+--   }
+-- })
 
-    formatting = {
-      format = lspkind.cmp_format({
-        with_text = false, -- do not show text alongside icons
-        maxwidth = 50, -- prevent the popup from showing more than provided characters
-
-        -- The function below will be called before any actual modifications from lspkind
-        -- so that you can provide more controls on popup customization
-        -- see https://github.com/onsails/lspkind-nvim#:~:text=https%3A//github.com/onsails/lspkind%2Dnvim/pull/30 
-        -- and https://github.com/tzachar/cmp-tabnine#pretty-printing-menu-items
-        before = function(entry, vim_item)
-         vim_item.kind = lspkind.presets.default[vim_item.kind]
-          local menu = source_mapping[entry.source.name]
-          if entry.source.name == 'cmp_tabnine' then
-            if entry.completion_item.data ~= nil and entry.completion_item.data.detail ~= nil then
-              menu = entry.completion_item.data.detail .. ' ' .. menu
-            end
-            vim_item.kind = ''
-          end
-          vim_item.menu = menu 
-          return vim_item
-        end
-      })
-    }
-  })
+cmp.setup.cmdline('/', {
+  sources = {
+    { name = 'buffer' }
+  },
+  formatting = {
+    format = function(entry, vim_item)
+      vim_item.kind = string.format('%s', vim_item.kind) -- This concatonates the icons with the name of the item kind
+      vim_item.menu = ({
+        buffer = "",
+      })[entry.source.name]
+      return vim_item
+    end
+  }
+})
 EOF
 " }}} 
 
