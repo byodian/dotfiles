@@ -192,6 +192,7 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'folke/trouble.nvim'
 Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
+Plug 'jose-elias-alvarez/null-ls.nvim' " for formatters and linters
 " Plug 'creativenull/diagnosticls-configs-nvim'
 
 " Completion
@@ -632,7 +633,7 @@ local default_on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-  buf_set_keymap('n', '<space>lf', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+  buf_set_keymap('n', '<space>lf', '<cmd>lua vim.lsp.buf.formatting_sync()<CR>', opts)
   buf_set_keymap('n', '<space>le', '<cmd>EslintFixAll<CR>', opts)
 
   buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
@@ -653,7 +654,13 @@ local default_on_attach = function(client, bufnr)
   buf_set_keymap('n', 'gh', '<cmd>Lspsaga lsp_finder<cr>', opts)
 
   -- formatting
-  if client.name == 'tsserver' or client.name == 'vimls' then
+  if 
+    client.name == 'tsserver' or 
+    client.name == 'vimls' or 
+    client.name == 'emmet_ls' or 
+    client.name == 'eslint' or
+    client.name == 'tailwindcss' or 
+    client.name == 'vuels' then
     client.resolved_capabilities.document_formatting = false
   else 
     client.resolved_capabilities.document_formatting = true 
@@ -848,6 +855,38 @@ for _, lsp in ipairs(servers) do
 end
 EOF
 " }}}
+
+" Plug jose-elias-alvarez/null-ls.nvim {{{{
+lua << EOF
+local null_ls = require'null-ls'
+local formatting = null_ls.builtins.formatting
+
+local sources = {
+  formatting.prettier.with {
+    -- extra_filetypes = { "toml", "solidity" },
+    extra_args = { "--no-semi", "--single-quote", "--jsx-single-quote" },
+  },
+  formatting.black.with { extra_args = { "--fast" } },
+  formatting.stylua,
+  null_ls.builtins.diagnostics.write_good,
+  null_ls.builtins.code_actions.gitsigns,     
+ }
+
+null_ls.setup({ 
+  sources = sources,
+  on_attach = function(client)
+    if client.resolved_capabilities.document_formatting then
+        vim.cmd([[
+        augroup LspFormatting
+            autocmd! * <buffer>
+            autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()
+        augroup END
+        ]])
+    end
+  end,
+})
+EOF
+" }}}}
 
 " Plug nvim-treesitter {{{
 lua <<EOF
