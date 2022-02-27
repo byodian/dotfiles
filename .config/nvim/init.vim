@@ -75,9 +75,6 @@ nnoremap <leader>tw :set wrap!<cr>
 " clear and redraw screen, de-highlight, fix syntax highlighting
 nnoremap <leader>lh :nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>
 
-" hi CursorColumn cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
-" nnoremap <Leader>ln :set cursorline! cursorcolumn!<CR>
-
 hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 nnoremap <Leader>ln :set cursorline!<CR>
 
@@ -172,10 +169,6 @@ Plug 'glepnir/dashboard-nvim'
 
 " Themes
 Plug 'navarasu/onedark.nvim'
-" Plug 'dracula/vim', { 'as': 'dracula' }
-" Plug 'npxbr/gruvbox.nvim'
-" Plug 'arcticicestudio/nord-vim'
-" Plug 'JoosepAlviste/palenightfall.nvim'
 
 " File Management
 Plug 'nvim-lua/popup.nvim'
@@ -193,7 +186,6 @@ Plug 'williamboman/nvim-lsp-installer'
 Plug 'folke/trouble.nvim'
 Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
 Plug 'jose-elias-alvarez/null-ls.nvim' " for formatters and linters
-" Plug 'creativenull/diagnosticls-configs-nvim'
 
 " Completion
 Plug 'hrsh7th/nvim-cmp'
@@ -206,16 +198,11 @@ Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
 Plug 'petertriho/cmp-git'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/cmp-emoji'
-" Plug 'onsails/lspkind-nvim'
 
 " Snippets
 Plug 'L3MON4D3/LuaSnip'
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'rafamadriz/friendly-snippets'
-
-" " tmux plugins
-" Plug 'christoomey/vim-tmux-navigator'
-" Plug 'preservim/vimux'
 
 " " https://github.com/nvim-treesitter/nvim-treesitter/issues/1111
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -223,9 +210,6 @@ Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 Plug 'p00f/nvim-ts-rainbow'
 Plug 'tami5/lspsaga.nvim', { 'branch' : 'nvim6.0' } 
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
-" Plug 'MaxMEllon/vim-jsx-pretty' " fix indentation in jsx until treesitter can
-" Plug 'jxnblk/vim-mdx-js'
-" Plug 'code-biscuits/nvim-biscuits'
 
 " Status Line
 Plug 'hoob3rt/lualine.nvim'
@@ -239,7 +223,6 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-unimpaired' " helpful shorthand like [b ]b
 Plug 'tpope/vim-sleuth'
-" Plug 'tpope/vim-projectionist'
 
 " text objects
 Plug 'kana/vim-textobj-user'
@@ -283,10 +266,6 @@ if (has("termguicolors"))
   set termguicolors " enable true colors support
 endif
 
-" colorscheme nord
-" colorscheme gruvbox
-" colorscheme palenightfall 
-
 highlight Cursor guifg=#f00 guibg=#657b83
 highlight Comment cterm=italic gui=italic
 
@@ -295,12 +274,6 @@ set textwidth=80
 set colorcolumn=+1
 set colorcolumn=80
 highlight ColorColumn guibg=#181818
-
-" dracula theme {{{
-" let g:dracula_colorterm = 0
-" let g:dracula_italic = 1
-" colorscheme dracula
-" }}}
 
 " onedark theme {{{
 lua << EOF
@@ -638,10 +611,6 @@ local default_on_attach = function(client, bufnr)
 
   buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
   buf_set_keymap('n', '<space>vll', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
-  -- buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-  -- buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-  -- buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  -- buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
 
   -- Lspsage keymapings
   buf_set_keymap('n', '[d', '<cmd>Lspsaga diagnostic_jump_next<CR>', opts)
@@ -994,8 +963,6 @@ end
 local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
 
--- local lspkind = require('lspkind')
-
 local tabnine = require('cmp_tabnine.config')
 tabnine:setup({
   max_lines = 1000;
@@ -1007,15 +974,6 @@ tabnine:setup({
 
   }
 })
-
--- local source_mapping = {
---   buffer = "[Buffer]",
---   nvim_lsp = "[LSP]",
---   luasnip = "[Snippet]",
---   nvim_lua = "[Lua]",
---   cmp_tabnine = "[TN]",
---   path = "[Path]",
--- }
 
 local kind_icons = {
   Text = "",
@@ -1130,44 +1088,7 @@ cmp.setup({
       return vim_item
     end
   },
-  -- formatting = {
-  --   fields = { 'abbr', 'kind' , 'menu' },
-  --   format = lspkind.cmp_format({
-  --     mode = 'symbol_text',
-  --     with_text = false, -- do not show text alongside icons
-  --     maxwidth = 50, -- prevent the popup from showing more than provided characters
-  --     -- The function below will be called before any actual modifications from lspkind
-  --     -- so that you can provide more controls on popup customization
-  --     -- see https://github.com/onsails/lspkind-nvim#:~:text=https%3A//github.com/onsails/lspkind%2Dnvim/pull/30 
-  --     -- and https://github.com/tzachar/cmp-tabnine#pretty-printing-menu-items
-  --     menu = ({
-  --       buffer = "[Buffer]",
-  --       nvim_lsp = "[LSP]",
-  --       luasnip = "[LuaSnip]",
-  --       nvim_lua = "[Lua]",
-  --       cmp_tabnine = "[TN]",
-  --       latex_symbols = "[Latex]",
-  --       path = "[Path]",
-  --     }),
-  --   })
-  -- }
 })
-
--- cmp.setup.cmdline(':', {
---   sources = cmp.config.sources({
---     { name = 'path' },
---     { name = 'cmdline' },
---   }),
---   formatting = {
---     format = function(entry, vim_item)
---       vim_item.kind = string.format('%s', kind_icons[vim_item.kind]) -- This concatonates the icons with the name of the item kind
---       vim_item.menu = ({
---         buffer = "",
---       })[entry.source.name]
---       return vim_item
---     end
---   }
--- })
 
 cmp.setup.cmdline('/', {
   sources = {
