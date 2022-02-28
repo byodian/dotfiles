@@ -665,7 +665,8 @@ local servers = {
   "tsserver",
   "eslint",
   "diagnostics",
-  "stylelint_lsp"
+  "stylelint_lsp",
+  "sumneko_lua",
 }
 
 for _, name in pairs(servers) do
@@ -746,6 +747,20 @@ local enhance_server_opts = {
       tailwindCSS = {
         rootFontSize = 10 
       } 
+    }
+  end,
+  ["sumneko_lua"] = function(opts)
+    opts.settings = {
+      Lua = {
+        diagnostics = {
+          -- Get the language server to recognize the `vim` global
+          globals = {'vim'},
+        }, 
+        workspace = {
+          -- Make the server aware of Neovim runtime files
+          library = vim.api.nvim_get_runtime_file("", true),
+        },
+      }
     }
   end,
 }
@@ -1088,6 +1103,23 @@ cmp.setup({
       return vim_item
     end
   },
+})
+
+
+cmp.setup.cmdline(':', {
+  sources = cmp.config.sources({
+    { name = 'path' },
+    { name = 'cmdline' },
+  }),
+  formatting = {
+    format = function(entry, vim_item)
+      vim_item.kind = string.format('%s', kind_icons[vim_item.kind]) -- This concatonates the icons with the name of the item kind
+      vim_item.menu = ({
+        buffer = "",
+      })[entry.source.name]
+      return vim_item
+    end
+  }
 })
 
 cmp.setup.cmdline('/', {
