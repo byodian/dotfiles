@@ -256,7 +256,7 @@ Plug 'phaazon/hop.nvim'
 Plug 'kevinhwang91/nvim-hlslens'
 Plug 'akinsho/nvim-bufferline.lua'
 Plug 'yardnsm/vim-import-cost', { 'do': 'npm install --production' }
-Plug 'vimwiki/vimwiki'
+" Plug 'vimwiki/vimwiki'
 Plug 'akinsho/toggleterm.nvim'
 call plug#end()
 
@@ -277,6 +277,12 @@ highlight ColorColumn guibg=#181818
 
 " onedark theme {{{
 lua << EOF
+local status_ok, onedark = pcall(require, "onedark")
+if not status_ok then
+  print('Note: Please install "onedark" plugin')
+  return
+end
+
 require'onedark'.setup {
   style = 'cool',
 }
@@ -288,13 +294,25 @@ EOF
 
 " Plug windwp/nvim-autopairs {{{
 lua << EOF
-require 'nvim-autopairs'.setup{}
+local status_ok, nvim_autopairs = pcall(require, "nvim-autopairs")
+if not status_ok then
+  print('Note: Please install "nvim-autopairs" plugin')
+  return
+end
+
+nvim_autopairs.setup{}
 EOF
 " }}}
 
 " Plug folke/zen-mode.nvim {{{
 lua << EOF
-require("zen-mode").setup {
+local status_ok, zen_mode = pcall(require, "zen-mode")
+if not status_ok then
+  print('Note: Please install "zen-mode" plugin')
+  return
+end
+
+zen_mode.setup {
 -- your configuration comes here
 -- or leave it empty to use the default settings
 -- refer to the configuration section below
@@ -305,7 +323,12 @@ nnoremap <leader>z :Zen<CR>
 
 " Plug GustavoKatel/sidebar.nvim {{{
 lua << EOF
-require("sidebar-nvim").setup({})
+local status_ok, sidebar_nvim = pcall(require, "sidebar-nvim")
+if not status_ok then
+  return
+end
+
+sidebar_nvim.setup({})
 EOF
 " }}}
 
@@ -337,13 +360,25 @@ let g:limelight_priority = -1
 
 " Plug 'karb94/neoscroll.nvim' {{{
 lua << EOF
-require('neoscroll').setup()
+local status_ok, neoscroll = pcall(require, "neoscroll")
+if not status_ok then
+  print('Note: Please install "neoscroll" plugin')
+  return
+end
+
+neoscroll.setup()
 EOF
 " }}}
 
 " Plug 'folke/trouble.nvim' {{{
 lua << EOF
-require 'trouble'.setup {}
+local status_ok, trouble = pcall(require, "trouble")
+if not status_ok then
+  print('Note: Please install "trouble" plugin')
+  return
+end
+
+trouble.setup {}
 EOF
 
 " Vim Script
@@ -357,7 +392,13 @@ nnoremap gR <cmd>TroubleToggle lsp_references<cr>
 
 " Plug lewis6991/gitsigns.nvim {{{
 lua << EOF
-require('gitsigns').setup({
+local status_ok, gitsigns = pcall(require, "gitsigns")
+if not status_ok then
+  print('Note: Please install "gitsigns" plugin')
+  return
+end
+
+gitsigns.setup({
   current_line_blame = false,
   current_line_blame_opts = {
     delay = 200;
@@ -386,7 +427,13 @@ highlight link GitSignsCurrentLineBlame Visual
 
 " Plug 'phaazon/hop.nvim' {{{
 lua << EOF
-require'hop'.setup()
+local status_ok, hop = pcall(require, "hop")
+if not status_ok then
+  print('Note: Please install "hop" plugin')
+  return
+end
+
+hop.setup()
 EOF
 map s <cmd>HopChar1<CR>
 " }}}
@@ -404,23 +451,45 @@ noremap g# g#<Cmd>lua require('hlslens').start()<CR>
 
 " Plug norcalli/nvim-colorizer.lua {{{
 lua << EOF
-require'colorizer'.setup()
+local status_ok, colorizer = pcall(require, "colorizer")
+if not status_ok then
+  print('Note: Please install "colorizer" plugin')
+  return
+end
+
+colorizer.setup()
 EOF
 " }}}
 
-" Plug akinsho/toggleterm.nvim
+" Plug akinsho/toggleterm.nvim {{{
 lua << EOF
-require('toggleterm').setup({
+local status_ok, toggleterm = pcall(require, "toggleterm")
+if not status_ok then
+  print('Note: Please install "toggleterm" plugin')
+  return
+end
+
+toggleterm.setup({
   open_mapping = [[<c-\>]],
 })
 EOF
 " }}}
 
+" }}}
+
 " nvim-telescope/telescope.nvim {{{
 lua << EOF
-local actions = require('telescope.actions') 
+local status_ok, telescope = pcall(require, "telescope")
+if not status_ok then
+  print('Note: Please install "telescope" plugin')
+  return
+end
 
-require('telescope').setup {
+local actions = require('telescope.actions') 
+telescope.load_extension('fzf')
+telescope.load_extension "file_browser"
+
+telescope.setup {
   defaults = {
     file_ignore_patterns = { "yarn.lock", "node_modules", ".git/", "dist/" },
     mappings = {
@@ -455,8 +524,6 @@ require('telescope').setup {
     },
   }
 }
-require('telescope').load_extension('fzf')
-require("telescope").load_extension "file_browser"
 EOF
 
 nnoremap <leader>ff <cmd>lua require'telescope.builtin'.find_files{ hidden = true }<cr>
@@ -483,7 +550,13 @@ nnoremap <leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
 
 " Plug kyazdani42/nvim-tree.lua {{{
 lua << EOF
-require'nvim-tree'.setup {
+local status_ok, nvim_tree = pcall(require, "nvim-tree")
+if not status_ok then
+  print('Note: Please install "nvim-tree" plugin')
+  return
+end
+
+nvim_tree.setup {
   auto_close = true,
   git_hl = 1,
   indent_markers = 1,
@@ -535,6 +608,12 @@ nnoremap <leader>r :NvimTreeRefresh<CR>
 
 " Plug 'hoob3rt/lualine.nvim' {{{
 lua << EOF
+local status_ok, lualine = pcall(require, "lualine")
+if not status_ok then
+  print('Note: Please install "lualine" plugin')
+  return
+end
+
 require('plenary.reload').reload_module('lualine', true)
 require('lualine').setup({
   options = {
@@ -601,9 +680,9 @@ local default_on_attach = function(client, bufnr)
   buf_set_keymap('n', 'gf', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
 
   -- buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+  buf_set_keymap('n', '<space>ga', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<space>gr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<space>gl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
   buf_set_keymap('n', '<space>lf', '<cmd>lua vim.lsp.buf.formatting_sync()<CR>', opts)
@@ -647,7 +726,12 @@ local default_on_attach = function(client, bufnr)
 
 end
 
-local lsp_installer = require "nvim-lsp-installer"
+local status_ok, lsp_installer = pcall(require, "nvim-lsp-installer")
+if not status_ok then
+  print('Note: Please install "nvim-lsp-installer" plugin')
+  return
+end
+
 local util = require "lspconfig/util"
 
 -- Include the servers you want to have installed by default below
@@ -691,17 +775,22 @@ lsp_installer.settings({
     }
 })
 
+local status_ok, ts_utils = pcall(require, "nvim-lsp-ts-utils")
+if not status_ok then
+  print('Note: Please install "nvim-lsp-ts-utils" plugin')
+  return
+end
+
 local enhance_server_opts = {
   -- Provide settings that should only apply to the "eslintls" server
   ["tsserver"] = function(opts) 
     opts.settings = {
-      init_options = require'nvim-lsp-ts-utils'.init_options,
+      init_options = ts_utils.init_options,
       filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx", "vue" },
       root_dir = util.root_pattern(".git", "tsconfig.json", "jsconfig.json"),
     }
 
     opts.on_attach = function(client, bufnr)
-       local ts_utils = require("nvim-lsp-ts-utils") 
        default_on_attach(client, bufnr)
 
        ts_utils.setup({
@@ -765,8 +854,14 @@ local enhance_server_opts = {
   end,
 }
 
+local status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+if not status_ok then
+  print('Note: Please install "cmp_nvim_lsp" plugin')
+  return
+end
+
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
-local capabilities = require('cmp_nvim_lsp').update_capabilities(
+local capabilities = cmp_nvim_lsp.update_capabilities(
   vim.lsp.protocol.make_client_capabilities()
 )
 
@@ -811,7 +906,12 @@ EOF
 
 " Plug neovim/nvim-lspconfig {{{
 lua << EOF
-local lspconfig = require'lspconfig'
+local status_ok, lspconfig = pcall(require, "lspconfig")
+if not status_ok then
+  print('Note: Please install "lspconfig" plugin')
+  return
+end
+
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
@@ -820,7 +920,13 @@ local on_attach = function(client, bufnr)
 end
 
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
-local capabilities = require('cmp_nvim_lsp').update_capabilities(
+local status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+if not status_ok then
+  print('Note: Please install "cmp_nvim_lsp" plugin')
+  return
+end
+
+local capabilities = cmp_nvim_lsp.update_capabilities(
   vim.lsp.protocol.make_client_capabilities()
 )
 
@@ -842,7 +948,12 @@ EOF
 
 " Plug jose-elias-alvarez/null-ls.nvim {{{{
 lua << EOF
-local null_ls = require'null-ls'
+local status_ok, null_ls = pcall(require, "null-ls")
+if not status_ok then
+  print('Note: Please install "null-ls" plugin')
+  return
+end
+
 local formatting = null_ls.builtins.formatting
 
 local sources = {
@@ -874,7 +985,13 @@ EOF
 
 " Plug nvim-treesitter {{{
 lua <<EOF
-require'nvim-treesitter.configs'.setup {
+local status_ok, nvim_treesitter = pcall(require, "nvim-treesitter.configs")
+if not status_ok then
+  print('Note: Please install "nvim-treesitter" plugin')
+  return
+end
+
+nvim_treesitter.setup {
   -- One of "all", "maintained" (parsers with maintainers), or a list of languages
   ensure_installed = { 
     'javascript',
@@ -975,10 +1092,19 @@ local has_words_before = function()
 end
 
 -- nvim-cmp setup
-local luasnip = require 'luasnip'
+local status_ok, luasnip = pcall(require, "luasnip")
+if not status_ok then
+  print('Note: Please install "luasnip" plugin')
+  return
+end
 require('luasnip.loaders.from_vscode').lazy_load()
 
-local tabnine = require('cmp_tabnine.config')
+local status_ok, tabnine = pcall(require, "cmp_tabnine.config")
+if not status_ok then
+  print('Note: Please install "cmp_tabnine" plugin')
+  return
+end
+
 tabnine:setup({
   max_lines = 1000;
   max_num_results = 20;
@@ -1019,8 +1145,19 @@ local kind_icons = {
 }
 
 -- Setup nvim-cmp.
-local cmp = require'cmp'
-require("cmp_git").setup()
+local status_ok, cmp = pcall(require, "cmp")
+if not status_ok then
+  print('Note: Please install "cmp" plugin')
+  return
+end
+
+local status_ok, cmp_git = pcall(require, "cmp_git")
+if not status_ok then
+  print('Note: Please install "cmp_git" plugin')
+  return
+end
+
+cmp_git.setup()
 
 cmp.setup({
   snippet = {
@@ -1105,7 +1242,6 @@ cmp.setup({
   },
 })
 
-
 cmp.setup.cmdline(':', {
   sources = cmp.config.sources({
     { name = 'path' },
@@ -1142,7 +1278,13 @@ EOF
 " Plug 'akinsho/nvim-bufferline.lua' {{{
 set termguicolors
 lua << EOF
-require("bufferline").setup{
+local status_ok, bufferline = pcall(require, "bufferline")
+if not status_ok then
+  print('Note: Please install "bufferline" plugin')
+  return
+end
+
+bufferline.setup{
   highlights = {
     fill = {
       guibg = "#282828"
@@ -1206,7 +1348,12 @@ nnoremap <silent><leader>b :BufferLineCycleNext<CR>
 
 " Plug tami5/lspsaga.nvim {{{
 lua << EOF
-local lspsaga = require 'lspsaga'
+local status_ok, lspsaga = pcall(require, "lspsaga")
+if not status_ok then
+  print('Note: Please install "lspsaga" plugin')
+  return
+end
+
 lspsaga.setup{
   rename_prompt_prefix = "",
 }
@@ -1219,7 +1366,14 @@ vim.opt.list = false
 vim.opt.listchars:append("space:⋅")
 vim.opt.listchars:append("eol:↴")
 
-require("indent_blankline").setup {
+local status_ok, indent_blankline = pcall(require, "indent_blankline")
+if not status_ok then
+  print('Note: Please install "indent_blankline" plugin')
+  return
+end
+
+
+indent_blankline.setup {
   space_char_blankline = " ",
   show_current_context = true,
 }
