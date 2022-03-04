@@ -163,10 +163,6 @@ autocmd FileType * call FoldByFileType()
 " Plugins settings
 "--------------------------------------------------------------------------
 call plug#begin('~/.vim/plugged')
-
-" Dashboard
-Plug 'glepnir/dashboard-nvim'
-
 " Themes
 Plug 'navarasu/onedark.nvim'
 
@@ -245,8 +241,6 @@ Plug 'machakann/vim-highlightedyank'
 Plug 'lukas-reineke/indent-blankline.nvim'
 
 Plug 'itchyny/vim-cursorword'
-Plug 'GustavoKatel/sidebar.nvim' 
-Plug 'junegunn/limelight.vim'
 Plug 'karb94/neoscroll.nvim'
 Plug 'dstein64/vim-startuptime'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
@@ -255,8 +249,6 @@ Plug 'github/copilot.vim'
 Plug 'phaazon/hop.nvim'
 Plug 'kevinhwang91/nvim-hlslens'
 Plug 'akinsho/nvim-bufferline.lua'
-Plug 'yardnsm/vim-import-cost', { 'do': 'npm install --production' }
-" Plug 'vimwiki/vimwiki'
 Plug 'akinsho/toggleterm.nvim'
 call plug#end()
 
@@ -319,43 +311,6 @@ zen_mode.setup {
 }
 EOF
 nnoremap <leader>z :Zen<CR>
-" }}}
-
-" Plug GustavoKatel/sidebar.nvim {{{
-lua << EOF
-local status_ok, sidebar_nvim = pcall(require, "sidebar-nvim")
-if not status_ok then
-  return
-end
-
-sidebar_nvim.setup({})
-EOF
-" }}}
-
-" Plug junegunn/limelight.vim {{{
-" Color name (:help cterm-colors) or ANSI code
-let g:limelight_conceal_ctermfg = 'gray'
-let g:limelight_conceal_ctermfg = 240
-
-" Color name (:help gui-colors) or RGB color
-let g:limelight_conceal_guifg = 'DarkGray'
-let g:limelight_conceal_guifg = '#777777'
-
-" Default: 0.5
-let g:limelight_default_coefficient = 0.7
-
-" Number of preceding/following paragraphs to include (default: 0)
-let g:limelight_paragraph_span = 1
-
-" Beginning/end of paragraph
-"   When there's no empty line between the paragraphs
-"   and each paragraph starts with indentation
-let g:limelight_bop = '^\s'
-let g:limelight_eop = '\ze\n^\s'
-
-" Highlighting priority (default: 10)
-"   Set it to -1 not to overrule hlsearch
-let g:limelight_priority = -1
 " }}}
 
 " Plug 'karb94/neoscroll.nvim' {{{
@@ -627,38 +582,6 @@ require('lualine').setup({
   }
 })
 EOF
-" }}}
-
-" Plug glephir/dashboard-nvim {{{
-let g:dashboard_default_executive ='telescope'
-nnoremap <silent> <Leader>fo :DashboardFindHistory<CR>
-" nnoremap <silent> <Leader>ff :DashboardFindFile<CR>
-nnoremap <silent> <Leader>ct :DashboardChangeColorscheme<CR>
-" nnoremap <silent> <Leader>fg :DashboardFindWord<CR>
-nnoremap <silent> <Leader>fm :DashboardJumpMark<CR>
-nnoremap <silent> <Leader>nf :DashboardNewFile<CR>
-let g:dashboard_custom_shortcut={
-\ 'last_session'       : 'SPC s l',
-\ 'find_history'       : 'SPC f h',
-\ 'find_file'          : 'SPC f f',
-\ 'new_file'           : 'SPC n f',
-\ 'change_colorscheme' : 'SPC c t',
-\ 'find_word'          : 'SPC f g',
-\ 'book_marks'         : 'SPC f m',
-\ }
-let s:header = [
-    \ '███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗',
-    \ '████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║',
-    \ '██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║',
-    \ '██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║',
-    \ '██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║',
-    \ '╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝',
-    \ '',
-    \ '                 [ @byodian ]                 ',
-    \ ]
-let s:footer = []
-let g:dashboard_custom_header = s:header
-let g:dashboard_custom_footer = s:footer
 " }}}
 
 " Plug williamboman/nvim-lsp-installer {{{
@@ -1157,7 +1080,14 @@ if not status_ok then
   return
 end
 
+local status_ok, cmp_npm = pcall(require, "cmp-npm")
+if not status_ok then
+  print('Note: Please install "cmp-npm" plugin')
+  return
+end
+
 cmp_git.setup()
+cmp_npm.setup()
 
 cmp.setup({
   snippet = {
