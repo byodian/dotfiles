@@ -370,9 +370,9 @@ gitsigns.setup({
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '[c', '<cmd>lua require"gitsigns".prev_hunk()<CR>', opts)
 
     -- Actions
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'hS', '<cmd>lua require"gitsigns".stage_hunk()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'hR', '<cmd>lua require"gitsigns".reset_hunk()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'hp', '<cmd>lua require"gitsigns".preview_hunk()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>hS', '<cmd>lua require"gitsigns".stage_hunk()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>hR', '<cmd>lua require"gitsigns".reset_hunk()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>hp', '<cmd>lua require"gitsigns".preview_hunk()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'tb', '<cmd>lua require"gitsigns".toggle_current_line_blame()<CR>', opts)
   end
 })
@@ -563,24 +563,30 @@ nnoremap <leader>r :NvimTreeRefresh<CR>
 
 " Plug 'hoob3rt/lualine.nvim' {{{
 lua << EOF
-local status_ok, lualine = pcall(require, "lualine")
-if not status_ok then
-  print('Note: Please install "lualine" plugin')
-  return
-end
+local enable = {
+  lualine = false 
+}
 
-require('plenary.reload').reload_module('lualine', true)
-require('lualine').setup({
-  options = {
-    -- theme = 'dracula',
-    theme = 'onedark',
-    disabled_types = { 'NvimTree' }
-  },
-  sections = {
-    lualine_b = {'branch', 'diff', 'diagnostics'},
-    lualine_x = {'encoding', 'filetype'},
-  }
-})
+if enable.lualine then 
+  local status_ok, lualine = pcall(require, "lualine")
+  if not status_ok then
+    print('Note: Please install "lualine" plugin')
+    return
+  end
+
+  require('plenary.reload').reload_module('lualine', true)
+  require('lualine').setup({
+    options = {
+      -- theme = 'dracula',
+      theme = 'onedark',
+      disabled_types = { 'NvimTree' }
+    },
+    sections = {
+      lualine_b = {'branch', 'diff', 'diagnostics'},
+      lualine_x = {'encoding', 'filetype'},
+    }
+  })
+end
 EOF
 " }}}
 
