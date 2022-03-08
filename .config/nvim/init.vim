@@ -34,6 +34,7 @@ set undofile
 set undodir=~/.vim/undodir
 set list
 set listchars=tab:▸\ ,trail:·
+" set cmdheight=2
 
 set updatetime=300    " Reduce time for highlighting other references
 set redrawtime=10000  " Allow more time for loading syntax on large files
@@ -564,7 +565,7 @@ nnoremap <leader>r :NvimTreeRefresh<CR>
 " Plug 'hoob3rt/lualine.nvim' {{{
 lua << EOF
 local enable = {
-  lualine = false 
+  lualine = true 
 }
 
 if enable.lualine then 
@@ -577,9 +578,15 @@ if enable.lualine then
   require('plenary.reload').reload_module('lualine', true)
   require('lualine').setup({
     options = {
+      theme = 'material',
+      -- theme = 'nord',
       -- theme = 'dracula',
-      theme = 'onedark',
-      disabled_types = { 'NvimTree' }
+      -- theme = 'iceberg_dark',
+      -- theme = 'gruvbox_dark',
+      -- theme = 'onedark',
+      -- disabled_filetypes = { 'NvimTree' },
+      component_separators = { left = "", right = "", },
+      section_separators = { left = "", right = "", },
     },
     sections = {
       lualine_b = {'branch', 'diff', 'diagnostics'},
@@ -1214,6 +1221,12 @@ EOF
 " Plug 'akinsho/nvim-bufferline.lua' {{{
 set termguicolors
 lua << EOF
+local enabled = true 
+
+if not enabled then
+  return
+end
+
 local status_ok, bufferline = pcall(require, "bufferline")
 if not status_ok then
   print('Note: Please install "bufferline" plugin')
