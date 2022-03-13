@@ -389,9 +389,11 @@ if not status_ok then
   return
 end
 
-hop.setup()
+hop.setup({
+  inclusive_jump = true
+})
 EOF
-map s <cmd>HopChar1<CR>
+map S <cmd>HopChar1<CR>
 " }}}
 
 " Plug 'kevinhwang91/nvim-hlslens' {{{
