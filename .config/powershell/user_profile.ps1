@@ -19,7 +19,11 @@ Set-PsFzfOption -PSReadLineChordProvider 'Ctrl+f' -PSReadLineChordReverseHistory
 # Alias
 Set-Alias vim nvim
 Set-Alias ll ls
-Set-Alias grep findstr
 Set-Alias c clear
 Set-Alias less 'C:\Program Files\Git\usr\bin\less.exe'
 Set-Alias tig 'C:\Program Files\Git\usr\bin\tig.exe'
+
+function which($command) {
+  Get-command -Name $command -ErrorAction SilentlyContinue | 
+    Select-Object -ExpandProperty Path -ErrorAction SilentlyContinue
+}
