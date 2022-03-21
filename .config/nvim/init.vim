@@ -529,7 +529,7 @@ nvim_tree.setup {
   view = {
     side = 'right',
     width = 50,
-    hide_root_folder = true,
+    hide_root_folder = false,
     number = true,
     auto_resize = true,
   },
@@ -624,6 +624,7 @@ local default_on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
   buf_set_keymap('n', '<space>lf', '<cmd>lua vim.lsp.buf.formatting_sync()<CR>', opts)
+  buf_set_keymap('n', '<space>ls', '<cmd>lua vim.lsp.buf.formatting_seq_sync()<CR>', opts)
   buf_set_keymap('n', '<space>le', '<cmd>EslintFixAll<CR>', opts)
 
   buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
@@ -689,6 +690,7 @@ local servers = {
   "diagnostics",
   "stylelint_lsp",
   "sumneko_lua",
+  "jdtls"
 }
 
 for _, name in pairs(servers) do
