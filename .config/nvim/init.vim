@@ -232,6 +232,9 @@ Plug 'wellle/targets.vim'
 " code outline
 Plug 'simrat39/symbols-outline.nvim'
 
+" tmux navigation
+Plug 'christoomey/vim-tmux-navigator'
+
 " Plugins for web development 
 Plug 'norcalli/nvim-colorizer.lua', { 'branch': 'color-editor' }
 Plug 'AndrewRadev/tagalong.vim'
@@ -393,7 +396,7 @@ hop.setup({
   inclusive_jump = true
 })
 EOF
-map S <cmd>HopChar1<CR>
+map <c-s> <cmd>HopChar1<CR>
 " }}}
 
 " Plug 'kevinhwang91/nvim-hlslens' {{{
@@ -433,6 +436,11 @@ toggleterm.setup({
 EOF
 " }}}
 
+" Plug sudormrfbin/cheatsheet.mvim {{{
+lua << EOF
+require('cheatsheet').setup()
+EOF
+" }}}
 " }}}
 
 " nvim-telescope/telescope.nvim {{{
@@ -506,7 +514,7 @@ nnoremap <leader>3 :lua require("harpoon.ui").nav_file(3)<CR>
 nnoremap <leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
 " }}}
 
-" Plug kyazdani42/nvim-tree.lua {{{
+" Plug kyazdani43/nvim-tree.lua {{{
 lua << EOF
 local status_ok, nvim_tree = pcall(require, "nvim-tree")
 if not status_ok then
