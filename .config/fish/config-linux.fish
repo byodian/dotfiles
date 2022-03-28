@@ -14,6 +14,9 @@ alias apt-get "sudo apt-get"
 # update on one command
 alias update "sudo apt-get update && sudo apt-get upgrade"
 
+# alacritty
+alias ala "alacritty.exe --config-file ~/.config/alacritty/alacritty.yml -e 'wsl.exe ~'"
+
 # set the default node version for new shells use
 # https://github.com/jorgebucaran/nvm.fish#quickstart
 set --universal nvm_default_version (cat ~/.nvmrc)
