@@ -233,7 +233,7 @@ Plug 'wellle/targets.vim'
 Plug 'simrat39/symbols-outline.nvim'
 
 " tmux navigation
-Plug 'christoomey/vim-tmux-navigator'
+" Plug 'christoomey/vim-tmux-navigator'
 
 " Plugins for web development 
 Plug 'norcalli/nvim-colorizer.lua', { 'branch': 'color-editor' }
@@ -254,9 +254,10 @@ Plug 'phaazon/hop.nvim'
 Plug 'kevinhwang91/nvim-hlslens'
 Plug 'akinsho/nvim-bufferline.lua'
 Plug 'akinsho/toggleterm.nvim'
+Plug 'folke/which-key.nvim'
 call plug#end()
 
-" Settings up for normal plugins {{{
+" Settings up for normal plugins {{{ 
 " Plug Colors {{{
 if (has("termguicolors"))
   set termguicolors " enable true colors support
@@ -438,10 +439,28 @@ EOF
 
 " Plug sudormrfbin/cheatsheet.mvim {{{
 lua << EOF
-require('cheatsheet').setup()
+local status_ok, cheatsheet = pcall(require, "cheatsheet")
+if not status_ok then
+  print('Note: Please install "cheatsheet" plugin')
+  return
+end
+
+cheatsheet.setup()
 EOF
 " }}}
+
+" Plug folke/which-key.nvim {{{
+lua << EOF
+local status_ok, whick_key= pcall(require, "which_key")
+if not status_ok then
+  print('Note: Please install "whick_key" plugin')
+  return
+end
+
+whick_key.setup()
+EOF
 " }}}
+" --------------- end of plugins --------------- }}}
 
 " nvim-telescope/telescope.nvim {{{
 lua << EOF
@@ -630,7 +649,7 @@ local default_on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>gr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<space>gl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+  -- buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
   buf_set_keymap('n', '<space>lf', '<cmd>lua vim.lsp.buf.formatting_sync()<CR>', opts)
   buf_set_keymap('n', '<space>ls', '<cmd>lua vim.lsp.buf.formatting_seq_sync()<CR>', opts)
   buf_set_keymap('n', '<space>le', '<cmd>EslintFixAll<CR>', opts)
@@ -639,8 +658,9 @@ local default_on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>vll', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
 
   -- Lspsage keymapings
-  buf_set_keymap('n', '[d', '<cmd>Lspsaga diagnostic_jump_next<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>Lspsaga diagnostic_jump_prev<CR>', opts)
+  buf_set_keymap('n', ']d', '<cmd>Lspsaga diagnostic_jump_next<CR>', opts)
+  buf_set_keymap('n', '[d', '<cmd>Lspsaga diagnostic_jump_prev<CR>', opts)
+  buf_set_keymap('n', '<space>e', '<cmd>Lspsaga show_cursor_diagnostics<CR>', opts)
   -- buf_set_keymap('n', 'K', '<cmd>Lspsaga hover_doc<cr>', opts)
   buf_set_keymap('n', '<space>ca', '<cmd>Lspsaga code_action<cr>', opts)
   buf_set_keymap('n', '<space>rn', '<cmd>Lspsaga rename<cr>', opts)
@@ -660,17 +680,6 @@ local default_on_attach = function(client, bufnr)
   else 
     client.resolved_capabilities.document_formatting = true 
   end
-
-  -- See `:help vim.lsp.buf.formatting_seq_sync()` for documentation on any of the below functions 
-  if client.resolved_capabilities.document_formatting then
-    vim.api.nvim_command [[augroup Format]]
-    vim.api.nvim_command [[autocmd! * <buffer>]]
-    -- vim.api.nvim_command [[autocmd BufWritePre <buffer> EslintFixAll]]
-    -- vim.api.nvim_command [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
-    -- vim.api.nvim_command [[autocmd BufWritePre *.js,*,vue,*.ts,*.tsx EslintFixAll]]
-    vim.api.nvim_command [[augroup END]]
-  end
-
 end
 
 local status_ok, lsp_installer = pcall(require, "nvim-lsp-installer")
@@ -917,16 +926,6 @@ local sources = {
 
 null_ls.setup({ 
   sources = sources,
-  on_attach = function(client)
-    if client.resolved_capabilities.document_formatting then
-        -- vim.cmd([[
-        -- augroup LspFormatting
-        --     autocmd! * <buffer>
-        --     autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()
-        -- augroup END
-        -- ]])
-    end
-  end,
 })
 EOF
 " }}}}
