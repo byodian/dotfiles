@@ -24,7 +24,8 @@ set clipboard+=unnamedplus
 set encoding=UTF-8
 set sidescrolloff=8
 set scrolloff=10      " Do not let cursor scroll below or above N number of lines when scrolling.
-set nowrap            " don't wrap lines
+set nowrap            " Do not wrap lines
+set noignorecase      " Do not ignore case when searching
 set mouse=a           " Enable the use of the mouse
 set splitright        " Splitting a window will put the new window right of the current one.
 set splitbelow
@@ -165,7 +166,10 @@ autocmd FileType * call FoldByFileType()
 "--------------------------------------------------------------------------
 call plug#begin('~/.vim/plugged')
 " Themes
+Plug 'arcticicestudio/nord-vim'
+Plug 'projekt0n/github-nvim-theme'
 Plug 'navarasu/onedark.nvim'
+Plug 'morhetz/gruvbox'
 
 " File Management
 Plug 'nvim-lua/popup.nvim'
