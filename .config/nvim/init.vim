@@ -170,6 +170,12 @@ Plug 'arcticicestudio/nord-vim'
 Plug 'projekt0n/github-nvim-theme'
 Plug 'navarasu/onedark.nvim'
 Plug 'morhetz/gruvbox'
+Plug 'sainnhe/gruvbox-material'
+Plug 'sainnhe/everforest'
+Plug 'EdenEast/nightfox.nvim'
+Plug 'savq/melange'
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+Plug 'sainnhe/sonokai'
 
 " File Management
 Plug 'nvim-lua/popup.nvim'
