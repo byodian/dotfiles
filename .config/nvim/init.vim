@@ -25,7 +25,7 @@ set encoding=UTF-8
 set sidescrolloff=8
 set scrolloff=10      " Do not let cursor scroll below or above N number of lines when scrolling.
 set nowrap            " Do not wrap lines
-set noignorecase      " Do not ignore case when searching
+set ignorecase        " Ignore case when searching
 set mouse=a           " Enable the use of the mouse
 set splitright        " Splitting a window will put the new window right of the current one.
 set splitbelow
@@ -166,16 +166,11 @@ autocmd FileType * call FoldByFileType()
 "--------------------------------------------------------------------------
 call plug#begin('~/.vim/plugged')
 " Themes
-Plug 'arcticicestudio/nord-vim'
 Plug 'projekt0n/github-nvim-theme'
 Plug 'navarasu/onedark.nvim'
 Plug 'morhetz/gruvbox'
-Plug 'sainnhe/gruvbox-material'
-Plug 'sainnhe/everforest'
 Plug 'EdenEast/nightfox.nvim'
-Plug 'savq/melange'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
-Plug 'sainnhe/sonokai'
 
 " File Management
 Plug 'nvim-lua/popup.nvim'
@@ -284,16 +279,46 @@ highlight ColorColumn guibg=#181818
 
 " onedark theme {{{
 lua << EOF
-local status_ok, onedark = pcall(require, "onedark")
-if not status_ok then
-  print('Note: Please install "onedark" plugin')
-  return
-end
+-- local status_ok, onedark = pcall(require, "onedark")
+-- if not status_ok then
+--   print('Note: Please install "onedark" plugin')
+--   return
+-- end
+-- 
+-- require'onedark'.setup {
+--   style = 'cool',
+-- }
+-- require('onedark').load()
+EOF
+" }}}
 
-require'onedark'.setup {
-  style = 'cool',
-}
-require('onedark').load()
+" tokyonight theme {{{
+lua << EOF
+-- vim.g.tokyonight_style = "storm"    
+-- Change the "hint" color to the "orange" color, and make the "error" color bright red    
+-- vim.g.tokyonight_colors = { hint = "orange", error = "#ff0000" }    
+-- Load the colorscheme    
+-- vim.cmd[[colorscheme tokyonight]]
+EOF
+"}}}
+
+" nightfox theme {{{
+lua << EOF
+require('nightfox').setup({
+  options = {
+    styles = {
+      commnets = "italic",
+      keywords = "bold",
+      types = "italic,bold",
+      functions = "italic,bold",
+      numbers = 'bold',
+      strings = 'italic',
+    }
+  }
+})
+
+-- Load the colorscheme    
+vim.cmd[[colorscheme nightfox]]
 EOF
 " }}}
 
@@ -470,7 +495,7 @@ end
 whick_key.setup()
 EOF
 " }}}
-" --------------- end of plugins --------------- }}}
+" --------------- end of normal plugins --------------- }}}
 
 " nvim-telescope/telescope.nvim {{{
 lua << EOF
@@ -617,7 +642,7 @@ if enable.lualine then
   require('plenary.reload').reload_module('lualine', true)
   require('lualine').setup({
     options = {
-      theme = 'material',
+      -- theme = 'material',
       -- theme = 'nord',
       -- theme = 'dracula',
       -- theme = 'iceberg_dark',
@@ -1257,7 +1282,7 @@ end
 bufferline.setup{
   highlights = {
     fill = {
-      guibg = "#282828"
+      guibg = "#192330"
     },
     separator_selected = {
       guifg = "#282828"
