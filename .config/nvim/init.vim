@@ -245,7 +245,6 @@ Plug 'norcalli/nvim-colorizer.lua', { 'branch': 'color-editor' }
 Plug 'AndrewRadev/tagalong.vim'
 Plug 'folke/zen-mode.nvim'
 Plug 'windwp/nvim-autopairs'
-Plug 'vim-utils/vim-man'
 Plug 'machakann/vim-highlightedyank'
 Plug 'lukas-reineke/indent-blankline.nvim'
 
@@ -307,12 +306,12 @@ lua << EOF
 require('nightfox').setup({
   options = {
     styles = {
-      commnets = "italic",
-      keywords = "bold",
-      types = "italic,bold",
-      functions = "italic,bold",
+      -- keywords = "bold",
+      -- types = "italic,bold",
+      -- strings = 'italic',
+      comments= "italic",
+      -- functions = "bold",
       numbers = 'bold',
-      strings = 'italic',
     }
   }
 })
@@ -592,7 +591,6 @@ if not status_ok then
 end
 
 nvim_tree.setup {
-  auto_close = true,
   git_hl = 1,
   indent_markers = 1,
   highlight_opened_files = 1,
