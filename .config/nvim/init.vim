@@ -259,6 +259,7 @@ Plug 'kevinhwang91/nvim-hlslens'
 Plug 'akinsho/nvim-bufferline.lua'
 Plug 'akinsho/toggleterm.nvim'
 Plug 'folke/which-key.nvim'
+Plug 'christoomey/vim-sort-motion'
 call plug#end()
 
 " Settings up for normal plugins {{{ 
@@ -485,6 +486,11 @@ EOF
 
 " Plug folke/which-key.nvim {{{
 lua << EOF
+local enable = false
+if not enable then
+  return
+end
+
 local status_ok, whick_key= pcall(require, "which-key")
 if not status_ok then
   print('Note: Please install "whick_key" plugin')
@@ -812,7 +818,7 @@ local enhance_server_opts = {
 
       -- no default maps, so you may want to define some here
       local opts = { silent = true }
-      vim.api.nvim_buf_set_keymap(bufnr, "n", "gs", ":TSLspOrganize<CR>", opts)
+      vim.api.nvim_buf_set_keymap(bufnr, "n", "gz", ":TSLspOrganize<CR>", opts)
       vim.api.nvim_buf_set_keymap(bufnr, "n", "gr", ":TSLspRenameFile<CR>", opts)
       vim.api.nvim_buf_set_keymap(bufnr, "n", "gi", ":TSLspImportAll<CR>", opts)
     end
