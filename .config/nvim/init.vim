@@ -4,34 +4,25 @@
 set title
 set hidden
 set number
-set showmatch         " Show matching words during a search
-set hlsearch          " Highlight search results
-set showmode          " always show what mode we're currently editing in
-set incsearch         " Makes search act like search in modern browsers
-" Override the ignorecase option if searching for capital letters.
-" This will allow you to search specifically for capital letters.
-set smartcase
-set ignorecase        " Ignore case when searching set number            " Show line number
-set ruler             " Always show current position
-set bg=dark		        " 显示不同的底色色调
-set showmode
-set signcolumn=yes
+
+set signcolumn=yes    " always show left sign column
 set tabstop=2         " a tab is two spaces
 set shiftwidth=2      " number of spaces to use for autoindenting 
 set expandtab         " expand tabs by default. see :help expandtab 
-set nojoinspaces      " don't autoinsert two spaces after '.', '?', '!' for join command
-set clipboard+=unnamedplus
-set encoding=UTF-8
-set sidescrolloff=8
-set scrolloff=10      " Do not let cursor scroll below or above N number of lines when scrolling.
+set clipboard=unnamedplus
+
 set nowrap            " Do not wrap lines
+set sidescrolloff=8   " Do not let cursor scroll left or right N number of lines when scrolling
+set scrolloff=10      " Do not let cursor scroll below or above N number of lines when scrolling.
+
+set smartcase         " Override the ignorecase option if searching for capital letters.
 set ignorecase        " Ignore case when searching
 set mouse=a           " Enable the use of the mouse
 set splitright        " Splitting a window will put the new window right of the current one.
-set splitbelow
+set splitbelow        " Splitting a window will put the new window below of the current one.
 set path+=**
-set confirm
-set undofile
+set confirm           " Certain operations fail when unsaved changes to a buffer, e.g. :q and :e
+set undofile 
 set undodir=~/.vim/undodir
 set list
 set listchars=tab:▸\ ,trail:·
@@ -39,15 +30,13 @@ set listchars=tab:▸\ ,trail:·
 
 set updatetime=300    " Reduce time for highlighting other references
 set redrawtime=10000  " Allow more time for loading syntax on large files
+set lazyredraw
 set shortmess+=c      " Don't pass messages to |ins-completion-menu|.
-set cursorline
+set cursorline        " Highlight the current line
+
 syntax on
 filetype on           " Vim will be able to try to detect the type of file in use.
 filetype plugin indent on    " Enable plugins and load plugin for the detected file type
-
-" attempt to speed-up vim
-set ttyfast
-set lazyredraw
 
 " To move to a misspelled word, use ]s and [s
 " Once the cursor is on the word, use z=, and Vim will suggest a list of alternatives that it thinks may be correct.
