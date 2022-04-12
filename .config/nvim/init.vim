@@ -44,7 +44,6 @@ filetype plugin indent on    " Enable plugins and load plugin for the detected f
 " You can also mark words as incorrect using zw.
 set spelllang=en,cjk            " turn spell checking on only in the local buffer
 set spellsuggest=best,9         " show nine spell checking candidates at most.
-set wildmenu                    " Enable auto completion menu after pressing TAB.
 set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx,*/node_modules/**
 
 "-------------------------------------------------------------------------
@@ -169,7 +168,6 @@ Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-telescope/telescope-file-browser.nvim'
 Plug 'sudormrfbin/cheatsheet.nvim'
 Plug 'kyazdani42/nvim-tree.lua'
-Plug 'ThePrimeagen/harpoon'
 
 " Language Server Protocol
 Plug 'neovim/nvim-lspconfig'
@@ -504,6 +502,121 @@ whick_key.setup({
 
 EOF
 " }}}
+
+" Plug lukas-reineke/indent-blankline.nvim {{{
+lua << EOF
+vim.opt.list = false 
+vim.opt.listchars:append("space:⋅")
+vim.opt.listchars:append("eol:↴")
+
+local status_ok, indent_blankline = pcall(require, "indent_blankline")
+if not status_ok then
+  print('Note: Please install "indent_blankline" plugin')
+  return
+end
+
+
+indent_blankline.setup {
+  space_char_blankline = " ",
+  show_current_context = true,
+}
+EOF
+" }}}
+
+" Plug simrat39/symbols-outline.nvim {{{
+lua << EOF
+vim.g.symbols_outline = {
+  width = 50,
+  position = 'left',
+  auto_preview = false
+}
+EOF
+
+" mapping setting
+nnoremap <leader>sb <cmd>SymbolsOutline<cr>
+" }}}
+
+" Plug github/copilot.nvim {{{
+imap <silent><script><expr> <c-j> copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true
+highlight CopilotSuggestion guifg=#555555 ctermfg=8
+" }}}
+
+" Plug 'akinsho/nvim-bufferline.lua' {{{
+set termguicolors
+lua << EOF
+local enabled = true 
+if not enabled then
+  return
+end
+
+local status_ok, bufferline = pcall(require, "bufferline")
+if not status_ok then
+  print('Note: Please install "bufferline" plugin')
+  return
+end
+
+bufferline.setup{
+  highlights = {
+    fill = {
+      guibg = "#192330"
+    },
+    separator_selected = {
+      guifg = "#282828"
+    },
+    separator_visible = {
+      guifg = "#282828"
+    },
+    separator = {
+      guifg = "#282828"
+    },
+    indicator_selected = {
+      guifg = "#61afef"
+    },
+    pick_selected = {
+      guifg = "#61afef",
+    },
+  },
+  options = {
+    numbers = "none",
+    modified_icon = "●",
+    left_trunc_marker = "",
+    right_trunc_marker = "",
+    max_name_length = 25,
+    max_prefix_length = 25,
+    enforce_regular_tabs = false,
+    view = "multiwindow",
+    show_buffer_close_icons = true,
+    show_close_icon = false,
+    separator_style = "thin",
+    diagnostics = "nvim_lsp",
+    diagnostics_update_in_insert = false,
+    diagnostics_indicator = function(count, level, diagnostics_dict, context)
+      local s = " "
+      for e, n in pairs(diagnostics_dict) do
+        local sym = e == "error" and " "
+        or (e == "warning" and " " or " " )
+        s = s ..  sym .. n .. ' '
+      end
+      return s
+    end,
+    offsets = {
+      {
+        filetype = "NvimTree",
+        text = "File Explorer",
+        highlight = "Directory",
+        text_align = "center"
+      }
+    }
+  }
+}
+EOF
+
+" mapping settings
+nnoremap <silent> gb :BufferLinePick<CR>
+nnoremap <silent><leader>b :BufferLineCycleNext<CR>
+" }}}
+
 " --------------- end of normal plugins --------------- }}}
 
 " nvim-telescope/telescope.nvim {{{
@@ -568,15 +681,6 @@ nnoremap <leader>fh <cmd>lua require'telescope.builtin'.help_tags()<cr>
 nnoremap <leader>fo <cmd>lua require'telescope.builtin'.oldfiles()<cr>
 "}}}
 
-" Plug ThePrimeagen/harpoon {{{
-nnoremap <leader>a :lua require("harpoon.mark").add_file()<CR>
-nnoremap <leader>, :lua require("harpoon.ui").toggle_quick_menu()<CR>
-nnoremap <leader>1 :lua require("harpoon.ui").nav_file(1)<CR>
-nnoremap <leader>2 :lua require("harpoon.ui").nav_file(2)<CR>
-nnoremap <leader>3 :lua require("harpoon.ui").nav_file(3)<CR>
-nnoremap <leader>4 :lua require("harpoon.ui").nav_file(4)<CR>
-" }}}
-
 " Plug kyazdani43/nvim-tree.lua {{{
 lua << EOF
 local status_ok, nvim_tree = pcall(require, "nvim-tree")
@@ -636,36 +740,35 @@ nnoremap <leader>r :NvimTreeRefresh<CR>
 
 " Plug 'hoob3rt/lualine.nvim' {{{
 lua << EOF
-local enable = {
-  lualine = true 
-}
-
-if enable.lualine then 
-  local status_ok, lualine = pcall(require, "lualine")
-  if not status_ok then
-    print('Note: Please install "lualine" plugin')
-    return
-  end
-
-  require('plenary.reload').reload_module('lualine', true)
-  require('lualine').setup({
-    options = {
-      -- theme = 'material',
-      -- theme = 'nord',
-      -- theme = 'dracula',
-      -- theme = 'iceberg_dark',
-      -- theme = 'gruvbox_dark',
-      -- theme = 'onedark',
-      -- disabled_filetypes = { 'NvimTree' },
-      component_separators = { left = "", right = "", },
-      section_separators = { left = "", right = "", },
-    },
-    sections = {
-      lualine_b = {'branch', 'diff', 'diagnostics'},
-      lualine_x = {'encoding', 'filetype'},
-    }
-  })
+local enable = true
+if not enable then 
+  return
 end
+
+local status_ok, lualine = pcall(require, "lualine")
+if not status_ok then
+  print('Note: Please install "lualine" plugin')
+  return
+end
+
+require('plenary.reload').reload_module('lualine', true)
+require('lualine').setup({
+  options = {
+    -- theme = 'material',
+    -- theme = 'nord',
+    -- theme = 'dracula',
+    -- theme = 'iceberg_dark',
+    -- theme = 'gruvbox_dark',
+    -- theme = 'onedark',
+    -- disabled_filetypes = { 'NvimTree' },
+    component_separators = { left = "", right = "", },
+    section_separators = { left = "", right = "", },
+  },
+  sections = {
+    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_x = {'encoding', 'filetype'},
+  }
+})
 EOF
 " }}}
 
@@ -1272,83 +1375,6 @@ cmp.setup.cmdline('/', {
 EOF
 " }}} 
 
-" Plug 'akinsho/nvim-bufferline.lua' {{{
-set termguicolors
-lua << EOF
-local enabled = true 
-
-if not enabled then
-  return
-end
-
-local status_ok, bufferline = pcall(require, "bufferline")
-if not status_ok then
-  print('Note: Please install "bufferline" plugin')
-  return
-end
-
-bufferline.setup{
-  highlights = {
-    fill = {
-      guibg = "#192330"
-    },
-    separator_selected = {
-      guifg = "#282828"
-    },
-    separator_visible = {
-      guifg = "#282828"
-    },
-    separator = {
-      guifg = "#282828"
-    },
-    indicator_selected = {
-      guifg = "#61afef"
-    },
-    pick_selected = {
-      guifg = "#61afef",
-    },
-  },
-  options = {
-    numbers = "none",
-    modified_icon = "●",
-    left_trunc_marker = "",
-    right_trunc_marker = "",
-    max_name_length = 25,
-    max_prefix_length = 25,
-    enforce_regular_tabs = false,
-    view = "multiwindow",
-    show_buffer_close_icons = true,
-    show_close_icon = false,
-    separator_style = "thin",
-    diagnostics = "nvim_lsp",
-    diagnostics_update_in_insert = false,
-    diagnostics_indicator = function(count, level, diagnostics_dict, context)
-      local s = " "
-      for e, n in pairs(diagnostics_dict) do
-        local sym = e == "error" and " "
-        or (e == "warning" and " " or " " )
-        s = s ..  sym .. n .. ' '
-      end
-      return s
-    end,
-    offsets = {
-      {
-        filetype = "NvimTree",
-        text = "File Explorer",
-        highlight = "Directory",
-        text_align = "center"
-      }
-    }
-  }
-}
-EOF
-
-" mapping settings
-nnoremap <silent> gb :BufferLinePick<CR>
-nnoremap <silent> gx :BufferLinePickClose<CR>
-nnoremap <silent><leader>b :BufferLineCycleNext<CR>
-" }}}
-
 " Plug tami5/lspsaga.nvim {{{
 lua << EOF
 local status_ok, lspsaga = pcall(require, "lspsaga")
@@ -1361,43 +1387,4 @@ lspsaga.setup{
   rename_prompt_prefix = "",
 }
 EOF
-" }}}
-
-" Plug lukas-reineke/indent-blankline.nvim {{{
-lua << EOF
-vim.opt.list = false 
-vim.opt.listchars:append("space:⋅")
-vim.opt.listchars:append("eol:↴")
-
-local status_ok, indent_blankline = pcall(require, "indent_blankline")
-if not status_ok then
-  print('Note: Please install "indent_blankline" plugin')
-  return
-end
-
-
-indent_blankline.setup {
-  space_char_blankline = " ",
-  show_current_context = true,
-}
-EOF
-" }}}
-
-" Plug simrat39/symbols-outline.nvim {{{
-lua << EOF
-vim.g.symbols_outline = {
-  width = 50,
-  position = 'left',
-  auto_preview = false
-}
-EOF
-
-" mapping setting
-nnoremap <leader>sb <cmd>SymbolsOutline<cr>
-" }}}
-
-" Plug github/copilot.nvim {{{
-imap <silent><script><expr> <c-j> copilot#Accept("\<CR>")
-let g:copilot_no_tab_map = v:true
-highlight CopilotSuggestion guifg=#555555 ctermfg=8
 " }}}
