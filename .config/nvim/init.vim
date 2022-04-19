@@ -306,11 +306,7 @@ if not status_ok then
   return
 end
 
-zen_mode.setup {
--- your configuration comes here
--- or leave it empty to use the default settings
--- refer to the configuration section below
-}
+zen_mode.setup {}
 EOF
 nnoremap <leader>z :Zen<CR>
 " }}}
@@ -729,11 +725,6 @@ end
 require('plenary.reload').reload_module('lualine', true)
 require('lualine').setup({
   options = {
-    -- theme = 'material',
-    -- theme = 'nord',
-    -- theme = 'dracula',
-    -- theme = 'iceberg_dark',
-    -- theme = 'gruvbox_dark',
     -- theme = 'onedark',
     -- disabled_filetypes = { 'NvimTree' },
     component_separators = { left = "", right = "", },
