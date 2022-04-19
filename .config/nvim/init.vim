@@ -264,31 +264,6 @@ set colorcolumn=+1
 set colorcolumn=80
 highlight ColorColumn guibg=#181818
 
-" onedark theme {{{
-lua << EOF
--- local status_ok, onedark = pcall(require, "onedark")
--- if not status_ok then
---   print('Note: Please install "onedark" plugin')
---   return
--- end
--- 
--- require'onedark'.setup {
---   style = 'cool',
--- }
--- require('onedark').load()
-EOF
-" }}}
-
-" tokyonight theme {{{
-lua << EOF
--- vim.g.tokyonight_style = "storm"    
--- Change the "hint" color to the "orange" color, and make the "error" color bright red    
--- vim.g.tokyonight_colors = { hint = "orange", error = "#ff0000" }    
--- Load the colorscheme    
--- vim.cmd[[colorscheme tokyonight]]
-EOF
-"}}}
-
 " nightfox theme {{{
 lua << EOF
 require('nightfox').setup({
