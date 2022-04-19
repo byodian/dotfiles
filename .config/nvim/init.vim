@@ -1281,14 +1281,6 @@ cmp.setup({
     { name = 'emoji' },
     { name = 'nvim_lua' }
   }),
-  completion = { 
-    border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" }, 
-    scrollbar = "║" 
-  },
-  documentation = {
-    border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-    scrollbar = "║",
-  },
   formatting = {
     -- fields = { 'abbr', 'kind' , 'menu' },
     format = function(entry, vim_item)
@@ -1309,6 +1301,7 @@ cmp.setup({
 })
 
 cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(),
   sources = cmp.config.sources({
     { name = 'path' },
     { name = 'cmdline' },
@@ -1325,6 +1318,7 @@ cmp.setup.cmdline(':', {
 })
 
 cmp.setup.cmdline('/', {
+  mapping = cmp.mapping.preset.cmdline(),
   sources = {
     { name = 'buffer' }
   },
