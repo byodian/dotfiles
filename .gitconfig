@@ -1,0 +1,8 @@
+[merge]
+	tool = vimdiff
+[mergetool "vimdiff"]
+	path = nvim
+[core]
+	editor = nvim
+[pull]
+	rebase = false
