@@ -134,6 +134,8 @@ if has("autocmd")
     \| exe "normal! g'\"" | endif
 endif
 
+au BufNewFile,BufRead *.ejs set filetype=html
+
 " Folding by filetype
 " https://yianwillis.github.io/vimcdoc/doc/usr_41.html#41.7
 " https://forum.ubuntu.com.cn/viewtopic.php?t=367858
@@ -794,14 +796,6 @@ local default_on_attach = function(client, bufnr)
   end
 end
 
-local status_ok, lsp_installer = pcall(require, "nvim-lsp-installer")
-if not status_ok then
-  print('Note: Please install "nvim-lsp-installer" plugin')
-  return
-end
-
-local util = require "lspconfig/util"
-
 -- Include the servers you want to have installed by default below
 local servers = {
   "bashls",
@@ -810,7 +804,6 @@ local servers = {
   "vuels",
   "svelte",
   "jsonls",
-  "emmet_ls",
   "cssls",
   "vimls",
   "tailwindcss",
@@ -821,6 +814,12 @@ local servers = {
   "sumneko_lua",
   "jdtls"
 }
+
+local status_ok, lsp_installer = pcall(require, "nvim-lsp-installer")
+if not status_ok then
+  print('Note: Please install "nvim-lsp-installer" plugin')
+  return
+end
 
 for _, name in pairs(servers) do
   local server_is_found, server = lsp_installer.get_server(name)
@@ -855,8 +854,8 @@ local enhance_server_opts = {
   ["tsserver"] = function(opts) 
     opts.settings = {
       init_options = ts_utils.init_options,
-      filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx", "vue" },
-      root_dir = util.root_pattern(".git", "tsconfig.json", "jsconfig.json"),
+      -- filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx", "vue" },
+      root_dir = require("lspconfig/util").root_pattern(".git", "tsconfig.json", "jsconfig.json"),
     }
 
     opts.on_attach = function(client, bufnr)
@@ -934,6 +933,48 @@ local capabilities = cmp_nvim_lsp.update_capabilities(
   vim.lsp.protocol.make_client_capabilities()
 )
 
+local lspconfig = require'lspconfig'
+local configs = require'lspconfig.configs'
+
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+-- npm install -g ls_emmet
+if not configs.ls_emmet then
+  configs.ls_emmet = {
+    default_config = {
+      cmd = { 'ls_emmet', '--stdio' };
+      filetypes = {
+        'html',
+        'css',
+        'scss',
+        'javascript',
+        'javascriptreact',
+        'typescript',
+        'typescriptreact',
+        'haml',
+        'xml',
+        'xsl',
+        'pug',
+        'slim',
+        'sass',
+        'stylus',
+        'less',
+        'sss',
+        'hbs',
+        'handlebars',
+        'vue',
+        'php'
+      };
+      root_dir = function(fname)
+        return vim.loop.cwd()
+      end;
+      settings = {};
+    };
+  }
+end
+
+lspconfig.ls_emmet.setup { capabilities = capabilities }
+
 lsp_installer.on_server_ready(function(server)
   local opts = {
     on_attach = default_on_attach,
@@ -945,12 +986,12 @@ lsp_installer.on_server_ready(function(server)
     enhance_server_opts[server.name](opts)
   end 
 
-  if server.name == 'emmet_ls' then
-    local emmet_ls_opts = {
-      filetypes = { "html", "css", "typescriptreact", "javascriptreact", "javascript" },
-    }
-    opts = vim.tbl_deep_extend("force", emmet_ls_opts, opts)
-  end
+  -- if server.name == 'emmet_ls' then
+  --   local emmet_ls_opts = {
+  --     filetypes = { "html", "css", "typescriptreact", "javascriptreact", "javascript" },
+  --   }
+  --   opts = vim.tbl_deep_extend("force", emmet_ls_opts, opts)
+  -- end
 
   if server.name == 'stylelint_lsp' then 
     local stylelint_opts = {
