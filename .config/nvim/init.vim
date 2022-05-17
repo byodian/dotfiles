@@ -663,13 +663,13 @@ if not status_ok then
 end
 
 nvim_tree.setup {
-  git_hl = 1,
-  indent_markers = 1,
-  highlight_opened_files = 1,
-  group_empty = 1,
+  -- git_hl = true,
+  -- indent_markers = 1,
+  -- highlight_opened_files = 1,
+  -- group_empty = 1,
   actions = {
     open_file = {
-      quit_on_open = 1, 
+      quit_on_open = true, 
     }
   },
   ignore_ft_on_setup  = { 'startify', 'dashboard' },
@@ -1198,6 +1198,7 @@ if not status_ok then
   return
 end
 require('luasnip.loaders.from_vscode').lazy_load()
+require('luasnip.loaders.from_snipmate').lazy_load({paths="./snippets"})
 
 local status_ok, tabnine = pcall(require, "cmp_tabnine.config")
 if not status_ok then
