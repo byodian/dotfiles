@@ -3,6 +3,8 @@ if type -q exa
   alias lla "ll -a"
 end
 
+alias npx "sudo npx"
+
 set -gx PATH /opt/homebrew/bin $PATH
 
 # set up proxy
