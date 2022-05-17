@@ -1,0 +1,45 @@
+# React HTML boilerplate
+snippet html5r Defines a HTML template for a React example
+        <!DOCTYPE html>
+        <html lang="$1en">
+          <head>
+            <title>$2React Example</title>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+            <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+            <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+          </head>
+          <body>
+            <div id="root">$3</div>
+            <script type="text/babel">
+              const root = ReactDOM.createRoot(document.getElementById('root'));
+              root.render(<h1>Hello, world!</h1>);
+            </script> 
+          </body>
+        </html>
+
+snippet html5v Defines a HTML template for a Vue example
+        <!DOCTYPE html>
+        <html lang="$1en">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <script src="https://cdn.jsdelivr.net/npm/vue@3.2.33/dist/vue.global.min.js"></script>
+            <title>$2Vue Example</title>
+          </head>
+
+          <body>
+            <div id="root">
+              $3{{ message }}
+            </div>
+          
+            <script>
+              Vue.createApp({
+                data: {
+                  message: 'Hello, world!'
+                }
+              }).mount('#root')
+            </script>
+          </body>
+        </html>
