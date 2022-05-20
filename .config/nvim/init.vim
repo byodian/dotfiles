@@ -766,7 +766,7 @@ local default_on_attach = function(client, bufnr)
   -- buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
   buf_set_keymap('n', '<space>lf', '<cmd>lua vim.lsp.buf.formatting_sync()<CR>', opts)
   buf_set_keymap('n', '<space>ls', '<cmd>lua vim.lsp.buf.formatting_seq_sync()<CR>', opts)
-  buf_set_keymap('n', '<space>le', '<cmd>EslintFixAll<CR>', opts)
+  -- buf_set_keymap('n', '<space>le', '<cmd>EslintFixAll<CR>', opts)
 
   buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
   buf_set_keymap('n', '<space>vll', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
@@ -787,7 +787,7 @@ local default_on_attach = function(client, bufnr)
     client.name == 'tsserver' or 
     client.name == 'vimls' or 
     client.name == 'emmet_ls' or 
-    client.name == 'eslint' or
+    -- client.name == 'eslint' or
     client.name == 'tailwindcss' or 
     client.name == 'vuels' then
     client.resolved_capabilities.document_formatting = false
@@ -808,7 +808,7 @@ local servers = {
   "vimls",
   "tailwindcss",
   "tsserver",
-  "eslint",
+  -- "eslint",
   "diagnostics",
   "stylelint_lsp",
   "sumneko_lua",
@@ -1064,21 +1064,44 @@ if not status_ok then
   return
 end
 
-local formatting = null_ls.builtins.formatting
+local builtins = null_ls.builtins
 
 local sources = {
-  formatting.prettier.with {
+  builtins.formatting.prettier.with {
     -- extra_filetypes = { "toml", "solidity" },
-    extra_args = { "--no-semi", "--single-quote", "--jsx-single-quote" },
+    extra_args = { 
+      "--single-quote", 
+      "--tab-width 2",
+      "--print-width 80",
+      "--trailing-comma es5",
+      "--bracket-spacing",
+      "--arrow-parens always",
+      -- "--no-semi",
+      -- "--bracket-same-line",
+    },
   },
-  formatting.black.with { extra_args = { "--fast" } },
-  formatting.stylua,
-  null_ls.builtins.diagnostics.write_good,
-  null_ls.builtins.code_actions.gitsigns,     
+  builtins.formatting.black.with { extra_args = { "--fast" } },
+  builtins.formatting.stylua,
+  builtins.diagnostics.write_good,
+  builtins.diagnostics.eslint,
+  builtins.code_actions.eslint_d,
+  builtins.code_actions.gitsigns,     
  }
 
 null_ls.setup({ 
   sources = sources,
+  on_attach = function(client, bufnr) 
+    if client.supports_method("textDocument/formatting") then 
+      vim.api.nvim_clear_autocmds({group = augroup, buffer = bufnr})
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        group = augroup,
+        buffer = bufnr,
+        callback = function()
+          -- vim.lsp.buf.formatting_seq_sync()
+        end,
+      })
+    end
+  end,
 })
 EOF
 " }}}}
