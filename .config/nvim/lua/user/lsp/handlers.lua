@@ -2,12 +2,6 @@ local M = {}
 
 M.setup = function() end
 
-local lsp_status_ok, ts_utils = pcall(require, "nvim-lsp-ts-utils")
-if not lsp_status_ok then
-	print('Note: Please install "nvim-lsp-ts-utils" plugin')
-	return
-end
-
 local cmp_status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
 if not cmp_status_ok then
 	print('Note: Please install "cmp_nvim_lsp" plugin')
@@ -82,78 +76,5 @@ end
 M.default_on_attach = function(client, bufnr)
 	lsp_keymaps(client, bufnr)
 end
-
-M.enhance_server_opts = {
-	-- Provide settings that should only apply to the "eslintls" server
-	["tsserver"] = function(opts)
-		opts.settings = {
-			init_options = ts_utils.init_options,
-			-- filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx", "vue" },
-			root_dir = require("lspconfig/util").root_pattern(".git", "tsconfig.json", "jsconfig.json"),
-		}
-
-		opts.on_attach = function(client, bufnr)
-			M.default_on_attach(client, bufnr)
-
-			ts_utils.setup({
-				enable_import_on_completion = true,
-
-				-- update imports on file move
-				update_imports_on_move = true,
-				require_confirmation_on_move = true,
-				watch_dir = nil,
-			})
-
-			-- required to fix code action ranges and filter diagnostics
-			ts_utils.setup_client(client)
-
-			-- no default maps, so you may want to define some here
-			local ts_options = { silent = true }
-			vim.api.nvim_buf_set_keymap(bufnr, "n", "gz", ":TSLspOrganize<CR>", ts_options)
-			vim.api.nvim_buf_set_keymap(bufnr, "n", "gr", ":TSLspRenameFile<CR>", ts_options)
-			vim.api.nvim_buf_set_keymap(bufnr, "n", "gi", ":TSLspImportAll<CR>", ts_options)
-		end
-	end,
-	["vuels"] = function(opts)
-		opts.settings = {
-			vetur = {
-				completion = {
-					autoImport = true,
-					tagCasing = "initial",
-					useScaffoldSnippets = true,
-				},
-				languageFeatures = {
-					updateImportOnFileMove = true,
-				},
-				validation = {
-					style = true,
-					script = true,
-					template = true,
-				},
-			},
-		}
-	end,
-	["tailwindcss"] = function(opts)
-		opts.settings = {
-			tailwindCSS = {
-				rootFontSize = 10,
-			},
-		}
-	end,
-	["sumneko_lua"] = function(opts)
-		opts.settings = {
-			Lua = {
-				diagnostics = {
-					-- Get the language server to recognize the `vim` global
-					globals = { "vim" },
-				},
-				workspace = {
-					-- Make the server aware of Neovim runtime files
-					library = vim.api.nvim_get_runtime_file("", true),
-				},
-			},
-		}
-	end,
-}
 
 return M
