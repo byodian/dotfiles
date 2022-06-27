@@ -14,11 +14,14 @@ set -g theme_hide_hostname no
 set -g theme_hostname always
 
 # aliases
-alias la "ls -A"
-alias ll "ls -l"
 alias c "clear"
-alias start "explorer.exe ."
 alias h "history"
+
+if type -q exa
+  alias ls "exa"
+  alias ll "exa -l -g --icons"
+  alias lla "ll -a"
+end
 
 # confirmations
 alias mv "mv -i"

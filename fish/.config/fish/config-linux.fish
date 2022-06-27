@@ -1,8 +1,3 @@
-if type -q exa
-  alias ll "exa -l -g --icons"
-  alias lla "ll -a"
-end
-
 # alias settings
 alias fd "fdfind"
 alias copy "pwd | clip.exe"

@@ -1,8 +1,3 @@
-if type -q exa
-  alias ll "exa -l -g --icons"
-  alias lla "ll -a"
-end
-
 alias npx "sudo npx"
 
 set -gx PATH /opt/homebrew/bin $PATH
