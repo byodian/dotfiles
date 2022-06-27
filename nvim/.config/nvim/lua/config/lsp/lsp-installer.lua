@@ -9,7 +9,7 @@ local servers = {
 	"bashls",
 	"pyright",
 	"html",
-	"vuels",
+	-- "vuels",
 	"svelte",
 	"jsonls",
 	"cssls",
@@ -22,6 +22,8 @@ local servers = {
 	"sumneko_lua",
 	"jdtls",
 	-- "ansiblels",
+	"volar",
+	"remark_ls"
 }
 
 local settings = {
@@ -76,7 +78,7 @@ for _, server in pairs(servers) do
 
 	if server == "tsserver" then
 		local tsserver_opts = require("config.lsp.settings.tsserver")
-		opts = vim.tbl_deep_extend("force", tsserver_opts, opts)
+		opts = vim.tbl_deep_extend("keep", tsserver_opts, opts)
 	end
 
 	if server == "sumneko_lua" then

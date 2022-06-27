@@ -1,8 +1,3 @@
-local enable = false
-if not enable then
-	return
-end
-
 local status_ok, whick_key = pcall(require, "which-key")
 if not status_ok then
 	print('Note: Please install "whick_key" plugin')

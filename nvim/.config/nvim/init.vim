@@ -1,8 +1,9 @@
-lua << EOF
-require 'options'
-require 'keymaps'
-require "autocmds"
-EOF
+lua require 'options'
+lua require 'keymaps'
+lua require "autocmds"
+
+" Automatic installation of plugin manager 
+lua require 'utils'
 
 "--------------------------------------------------------------------------
 " Plugins settings
@@ -105,17 +106,15 @@ Plug 'folke/which-key.nvim'
 Plug 'christoomey/vim-sort-motion'
 call plug#end()
 
-lua << EOF
-require "config.lsp"
-require "config.stable"
-require "config.null-ls"
-require "config.nvim-treesitter"
-require "config.lualine"
-require "config.nvim-tree"
-require "config.telescope"
--- https://github.com/neovim/nvim-lspconfig/wiki/Autocompletion
-require "config.cmp"
-require "which-key"
-require "config.gitsigns"
-require "config.nvim-bufferline"
-EOF
+lua require "config.lsp"
+lua require "config.stable"
+lua require "config.null-ls"
+lua require "config.nvim-treesitter"
+lua require "config.lualine"
+lua require "config.nvim-tree"
+lua require "config.telescope"
+" https://github.com/neovim/nvim-lspconfig/wiki/Autocompletion
+lua require "config.cmp"
+lua require "which-key"
+lua require "config.gitsigns"
+lua require "config.nvim-bufferline"

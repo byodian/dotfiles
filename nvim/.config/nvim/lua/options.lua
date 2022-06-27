@@ -14,6 +14,7 @@ local options = {
   splitbelow = true,
   confirm = true,
   undofile = true,
+  relativenumber = true,
   undodir = os.getenv( "HOME" ) .. '/.vim/undodir', -- https://github.com/neovim/neovim/issues/15720
   completeopt = { "menu", "menuone", "noselect", "preview" },
   termguicolors = true,       -- enable true colors support

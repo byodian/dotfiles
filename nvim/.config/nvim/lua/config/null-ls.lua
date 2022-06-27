@@ -21,8 +21,10 @@ local sources = {
 		},
 	}),
 	builtins.formatting.black.with({ extra_args = { "--fast" } }),
-	builtins.formatting.stylua,
-	builtins.diagnostics.write_good,
+	builtins.formatting.stylua.with({
+		extra_args = { "--config-path", vim.fn.expand("~/.config/nvim/.stylua.toml") },
+	}),
+	-- builtins.diagnostics.write_good,
 	-- builtins.diagnostics.eslint,
 	builtins.code_actions.eslint_d,
 	builtins.code_actions.gitsigns,

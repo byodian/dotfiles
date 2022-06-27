@@ -5,10 +5,6 @@ if not status_ok then
 end
 
 nvim_tree.setup({
-	-- git_hl = true,
-	-- indent_markers = 1,
-	-- highlight_opened_files = 1,
-	-- group_empty = 1,
 	actions = {
 		open_file = {
 			quit_on_open = true,
@@ -17,9 +13,10 @@ nvim_tree.setup({
 	ignore_ft_on_setup = { "startify", "dashboard" },
 	view = {
 		side = "right",
-		width = 50,
+		width = '100%',
+		centralize_selection = true,
 		hide_root_folder = false,
-		number = true,
+		number = false,
 		auto_resize = true,
 	},
 	diagnostics = {
@@ -30,6 +27,10 @@ nvim_tree.setup({
 			warning = "",
 			error = "",
 		},
+	},
+	hijack_directories = {
+		enable = true,
+		auto_open = true,
 	},
 	update_focused_file = {
 		enable = true,

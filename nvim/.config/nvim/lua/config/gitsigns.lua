@@ -24,13 +24,7 @@ gitsigns.setup({
 		vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>hS", '<cmd>lua require"gitsigns".stage_hunk()<CR>', opts)
 		vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>hR", '<cmd>lua require"gitsigns".reset_hunk()<CR>', opts)
 		vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>hp", '<cmd>lua require"gitsigns".preview_hunk()<CR>', opts)
-		vim.api.nvim_buf_set_keymap(
-			bufnr,
-			"n",
-			"tb",
-			'<cmd>lua require"gitsigns".toggle_current_line_blame()<CR>',
-			opts
-		)
+		vim.api.nvim_buf_set_keymap(bufnr, "n", "tb", '<cmd>lua require"gitsigns".toggle_current_line_blame()<CR>', opts)
 	end,
 })
 
