@@ -1,0 +1,8 @@
+# brew installation
+alias brew-update='brew update && brew upgrade && brew cleanup'
+alias brew-install='brew install'
+
+# Proxy configuration
+# export https_proxy=http://127.0.0.1:7890 
+# export http_proxy=http://128.0.0.1:7890 
+# export all_proxy=socks5://127.0.0.1:7890

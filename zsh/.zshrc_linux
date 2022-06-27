@@ -1,0 +1,24 @@
+alias open="explorer.exe"
+alias copy="pwd | clip.exe"
+alias c="clear"
+alias goto='googleSearch() {chrome "https://www.google.com.hk/search?q="$1""};googleSearch'
+alias history='h'
+
+# install with apt-get
+alias apt-get="sudo apt-get"
+
+# fd-find
+alias fd=fdfind
+
+# update on one command
+alias apt-update='sudo apt-get update && sudo apt-get upgrade'
+
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 
+export PATH=$PATH:$HOME/.local/bin
+
+# Proxy configuration
+HTTPIP=$(cat /etc/resolv.conf | grep "nameserver" | cut -f 2 -d " ")
+PROXY_HTTP="http://$HTTPIP:7890"
+
+export https_proxy="$PROXY_HTTP"
+export http_proxy="$PROXY_HTTP"

@@ -56,3 +56,6 @@ switch (uname)
   case '*'
     source (dirname (status --current-filename))/config-windows.fish
 end
+
+# bind keys
+bind \cp '~/.local/bin/tmux-sessionizer'
