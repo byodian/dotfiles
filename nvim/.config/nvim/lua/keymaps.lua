@@ -74,3 +74,6 @@ keymap("n", "<leader>r", ":NvimTreeRefresh<CR>", opts)
 
 keymap("n", "gb", ":BufferLinePick<CR>", opts)
 keymap("n", "<leader>b", ":BufferLineCycleNext<CR>", opts)
+
+-- Fzf
+keymap("n", "<C-p>", ":GFiles<CR>", opts)
