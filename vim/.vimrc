@@ -117,8 +117,77 @@ vnoremap <M-k> :m '<-2<CR>gv=gv
 "--------------------------------------------------------------------------
 " Plugins settings
 "--------------------------------------------------------------------------
-call plug#begin('~/.vim/plugged')
+" Automatic installation
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
-" Themes
+call plug#begin('~/.vim/plugged')
 Plug 'morhetz/gruvbox'
+Plug 'dracula/vim', { 'as': 'dracula'  }
+Plug 'arcticicestudio/nord-vim'
+Plug 'dracula/vim', { 'as': 'dracula'  }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'mattn/emmet-vim'
+Plug 'tpope/vim-surround'
+Plug 'jiangmiao/auto-pairs'
+Plug 'AndrewRadev/tagalong.vim'
+Plug 'sheerun/vim-polyglot'
+Plug 'yggdroot/indentline'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'preservim/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'ryanoasis/vim-devicons'
+Plug 'suy/vim-context-commentstring'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-commentary'
 call plug#end()
+
+"--------------------------------------------------------------------------
+" Plugins settings 
+"--------------------------------------------------------------------------
+
+colorscheme dracula
+
+" Uncomment the following to have Vim jump to the last position when                                                       
+" reopening a file
+" https://stackoverflow.com/questions/774560/in-vim-how-do-i-get-a-file-to-open-at-the-same-line-number-i-closed-it-at-last
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+    \| exe "normal! g'\"" | endif
+endif
+
+let g:user_emmet_mode = 'n' 			" only enable normal mode function
+let g:user_emmet_leader_key = ',' " Redefine trigger key
+
+let g:indentLine_char = '┊'       " vim indentline settings
+let g:indentLine_color_term = 239
+
+" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1
+
+" Enable trimming of trailing whitespace when uncommenting
+let g:NERDTrimTrailingWhitespace = 1
+
+" Center the cursor vertically when moving to the next word during a search.
+nnoremap n nzz
+nnoremap N Nzz
+
+" Yank from cursor to the end of line.
+nnoremap Y y$
+
+" Search files with junegunn/fzf.vim plugin
+" It is one of the best FZF command that is excluding anything that is in
+" .gitignore.
+nnoremap <C-p> :GFiles<CR>
+nnoremap <leader>b :Buffers<CR>
+nnoremap <leader>h :History<CR>
+
+map <leader>n :NERDTreeToggle<CR>
+map <leader>r :NERDTreeFind<cr>
+
