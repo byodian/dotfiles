@@ -45,6 +45,9 @@ _fzf_compgen_dir() {
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export CLICOLOR=YES
+export DOTFILES=$HOME/.dotfiles
+export XDG_CONFIG_HOME=$HOME/.config
+export STOW_FOLDERS="bin,fish,nvim,tmux,zsh,powershell,bash"
 #--------------------------------------------------------------#
 ##          Alias                                             ##
 #--------------------------------------------------------------#

@@ -4,7 +4,25 @@ end
 
 set fish_greeting ""
 
+# Global variables
 set -gx TERM xterm-256color
+set -gx EDITOR nvim
+set -gx PATH bin $PATH
+set -gx PATH ~/bin $PATH
+set -gx PATH ~/.local/bin $PATH
+set -gx PATH ~/.cargo/bin $PATH
+set -gx DOTFILES $HOME/.dotfiles
+set -gx XDG_CONFIG_HOME $HOME/.config
+set -gx STOW_FOLDERS "bin,fish,nvim,tmux,zsh,powershell,bash"
+
+switch (uname)
+  case Darwin
+    source (dirname (status --current-filename))/config-osx.fish
+  case Linux
+    source (dirname (status --current-filename))/config-linux.fish
+  case '*'
+    source (dirname (status --current-filename))/config-windows.fish
+end
 
 # theme
 set -g theme_color_scheme terminal-dark
@@ -33,12 +51,6 @@ alias mkdir "mkdir -pv"
 # fzf preview
 alias fzfpreview 'fzf --layout=reverse --multi --preview "bat --style=numbers --color=always --theme=Dracula --line-range :500 {}"'
 
-set -gx EDITOR nvim
-set -gx PATH bin $PATH
-set -gx PATH ~/bin $PATH
-set -gx PATH ~/.local/bin $PATH
-set -gx PATH ~/.cargo/bin $PATH
-
 # set up fzf
 # fish plugin variables
 set -U FZF_DEFAULT_OPTS '--height 40% --layout=reverse --border --multi'
@@ -50,15 +62,6 @@ set FZF_DEFAULT_COMMAND "fd --type f --hidden --follow --exclude .git . \$dir"
 set -U FZF_FIND_FILE_COMMAND $FZF_DEFAULT_COMMAND
 set -U FZF_CD_COMMAND "fd --type d --hidden --follow --exclude .git . \$dir"
 set -U FZF_OPEN_COMMAND $FZF_DEFAULT_COMMAND
-
-switch (uname)
-  case Darwin
-    source (dirname (status --current-filename))/config-osx.fish
-  case Linux
-    source (dirname (status --current-filename))/config-linux.fish
-  case '*'
-    source (dirname (status --current-filename))/config-windows.fish
-end
 
 # bind keys
 bind \cp '~/.local/bin/tmux-sessionizer'
