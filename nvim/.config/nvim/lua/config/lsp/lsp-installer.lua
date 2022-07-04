@@ -21,9 +21,11 @@ local servers = {
 	"stylelint_lsp",
 	"sumneko_lua",
 	"jdtls",
-	-- "ansiblels",
+	"ansiblels",
+	"dockerls",
+	"yamlls",
 	"volar",
-	"remark_ls"
+	-- "remark_ls"
 }
 
 local settings = {

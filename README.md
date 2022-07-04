@@ -29,7 +29,7 @@
 - [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim) - Help easily manage multiple terminal windows
 - [neoscroll.nvim](https://github.com/karb94/neoscroll.nvim) - A smooth scrolling neovim plugin written in lua
 
-## Shell setup(macOs & Linux)
+## Fish Shell setup(macOs & Linux)
 - [nerd-fonts](https://github.com/ryanoasis/nerd-fonts)
 - [Fish shell](https://fishshell.com/)
 - [fisher](https://github.com/jorgebucaran/fisher) - A plugin manager for Fish
@@ -48,6 +48,30 @@
 - [PSReadLine](https://docs.microsoft.com/en-us/powershell/module/psreadline/?view=powershell-7.2) - Cmdlets for customizing the editing environment, used for autocompletion
 - [z for powershell](https://www.powershellgallery.com/packages/z/1.1.13) - Directory jumper
 - [PSFzf](https://github.com/kelleyma49/PSFzf) - Fuzzy finder
+
+## Command-line
+### Basic Usage
+- find
+- grep
+- ack
+- sed
+- xargs
+- sort
+- tr
+- du
+- df
+- curl
+
+### Advanced Usage
+- [fd](https://github.com/sharkdp/fd)
+- [fzf](https://github.com/junegunn/fzf)
+- [exa](https://github.com/ogham/exa)
+- [bat](https://github.com/sharkdp/bat)
+- [htop](https://github.com/htop-dev/htop)
+- [tldr](https://github.com/tldr-pages/tldr)
+- [tmux](https://github.com/tmux/tmux)
+- [stow](https://github.com/aspiers/stow)
+- [tig](https://github.com/jonas/tig)
 
 ## How to use 
 - [How to (neo)vim](./doc/vim-settings.md)

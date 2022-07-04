@@ -17,7 +17,6 @@ nvim_tree.setup({
 		centralize_selection = true,
 		hide_root_folder = false,
 		number = false,
-		auto_resize = true,
 	},
 	diagnostics = {
 		enable = false,
@@ -34,7 +33,6 @@ nvim_tree.setup({
 	},
 	update_focused_file = {
 		enable = true,
-		update_cwd = false,
 		ignore_list = {},
 	},
 	git = {

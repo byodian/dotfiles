@@ -12,6 +12,7 @@ fi
 #--------------------------------------------------------------#
 
 # export MANPATH="/usr/local/man:$MANPATH"
+export PATH=j
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
@@ -81,7 +82,7 @@ alias fzfpreview='fzf --preview "bat --style=numbers --color=always --theme=Drac
 #--------------------------------------------------------------#
 ##         Key Bindings                                       ##
 #--------------------------------------------------------------#
-bindkey -s ^f "tmux-sessionizer\n"
+bindkey -s ^p "tmux-sessionizer\n"
 
 #--------------------------------------------------------------#
 ##         Plugin                                             ##
