@@ -47,6 +47,9 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export CLICOLOR=YES
 export DOTFILES=$HOME/.dotfiles
+export PATH=~/.local/.npm-global/bin:$PATH
+export PATH=~/.local/n/bin:$PATH
+export N_PREFIX="$HOME/.local/n"
 export XDG_CONFIG_HOME=$HOME/.config
 export STOW_FOLDERS="bin,fish,nvim,tmux,zsh,powershell,bash"
 #--------------------------------------------------------------#

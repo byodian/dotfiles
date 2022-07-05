@@ -167,4 +167,12 @@ function parse_git_dirty {
 }
 
 export PS1="🎉 \[\033[1;34m\]\w\[\033[0m\]\`parse_git_branch\` $ "
-export DISPLAY="`grep nameserver /etc/resolv.conf | sed 's/nameserver //'`:0"
+
+HTTPIP=$(cat /etc/resolv.conf | grep "nameserver" | cut -f 2 -d " ")
+PROXY_HTTP="http://$HTTPIP:7890"
+export https_proxy="$PROXY_HTTP"
+export http_proxy="$PROXY_HTTP"
+
+export PATH=~/.local/.npm-global/bin:$PATH
+export N_PREFIX="$HOME/.local/n"
+export PATH=~/.local/n/bin:$PATH

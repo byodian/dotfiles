@@ -11,6 +11,9 @@ set -gx PATH bin $PATH
 set -gx PATH ~/bin $PATH
 set -gx PATH ~/.local/bin $PATH
 set -gx PATH ~/.cargo/bin $PATH
+set -gx PATH ~/.local/.npm-global/bin $PATH
+set -gx PATH ~/.local/n/bin $PATH
+set -gx N_PREFIX $HOME/.local/n
 set -gx DOTFILES $HOME/.dotfiles
 set -gx XDG_CONFIG_HOME $HOME/.config
 set -gx STOW_FOLDERS "bin,fish,nvim,tmux,zsh,powershell,bash"
