@@ -9,7 +9,7 @@ local servers = {
 	"bashls",
 	"pyright",
 	"html",
-	"vuels",
+	-- "vuels",
 	"svelte",
 	"jsonls",
 	"cssls",
@@ -24,7 +24,7 @@ local servers = {
 	"ansiblels",
 	"dockerls",
 	"yamlls",
-	-- "volar",
+	"volar",
 	-- "remark_ls"
 }
 

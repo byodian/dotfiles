@@ -68,9 +68,9 @@ local function lsp_keymaps(client, bufnr)
 		or client.name == "tailwindcss"
 		or client.name == "vuels"
 	then
-		client.server_capabilities.documentFormattingProvider = false
+		client.resolved_capabilities.document_formatting = false
 	else
-		client.server_capabilities.documentFormattingProvider = true
+		client.resolved_capabilities.document_formatting = true
 	end
 end
 
