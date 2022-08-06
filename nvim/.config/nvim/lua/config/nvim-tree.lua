@@ -13,7 +13,7 @@ nvim_tree.setup({
 	ignore_ft_on_setup = { "startify", "dashboard" },
 	view = {
 		side = "right",
-		width = '100%',
+		width = '30%',
 		centralize_selection = true,
 		hide_root_folder = false,
 		number = false,

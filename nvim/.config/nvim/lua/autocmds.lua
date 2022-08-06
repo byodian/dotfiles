@@ -31,3 +31,6 @@ end
 cmd({ "BufReadPost" }, {
   callback = find_last_position,
 })
+
+
+vim.cmd([[autocmd BufWritePre *.tsx,*.ts,*.jsx,*.js,*.json,*.yaml,*.yml EslintFixAll]])
