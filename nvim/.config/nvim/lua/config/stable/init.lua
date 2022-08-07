@@ -26,7 +26,6 @@ require("lspsaga").setup({ rename_prompt_prefix = "" })
 
 require("nvim-autopairs").setup({})
 require("zen-mode").setup({})
-require("neoscroll").setup()
 
 -- hop plugin
 require("hop").setup({
