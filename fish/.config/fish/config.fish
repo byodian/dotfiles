@@ -68,3 +68,7 @@ set -U FZF_OPEN_COMMAND $FZF_DEFAULT_COMMAND
 
 # bind keys
 bind \cp '~/.local/bin/tmux-sessionizer'
+
+# tabtab source for packages
+# uninstall by removing these lines
+[ -f ~/.config/tabtab/fish/__tabtab.fish ]; and . ~/.config/tabtab/fish/__tabtab.fish; or true
