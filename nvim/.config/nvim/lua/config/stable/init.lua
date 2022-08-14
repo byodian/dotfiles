@@ -20,7 +20,7 @@ require("nightfox").setup({
   },
 })
 
-vim.cmd([[colorscheme nightfox]])
+vim.cmd([[colorscheme dracula]])
 
 require("lspsaga").setup({ rename_prompt_prefix = "" })
 

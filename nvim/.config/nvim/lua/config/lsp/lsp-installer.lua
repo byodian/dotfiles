@@ -1,6 +1,13 @@
-local status_ok, lsp_installer = pcall(require, "nvim-lsp-installer")
-if not status_ok then
-	print('Note: Please install "nvim-lsp-installer" plugin')
+local installer_status_ok, mason = pcall(require, "mason")
+local lspconfig_status_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
+
+if not installer_status_ok then
+	print('Note: Please install "mason" plugin')
+	return
+end
+
+if not lspconfig_status_ok then
+	print('Note: Please install "mason-lspconfig" plugin')
 	return
 end
 
@@ -28,31 +35,34 @@ local servers = {
 	-- "remark_ls"
 }
 
-local settings = {
-	ensure_installed = servers,
-	-- automatic_installation = fase,
+mason.setup({
+	border = "rounded",
 	ui = {
 		icons = {
-			server_installed = "✓",
-			server_pending = "➜",
-			server_uninstalled = "✗",
+			package_installed = "✓",
+			package_pending = "➜",
+			package_uninstalled = "✗",
 		},
 	},
-}
+	max_concurrent_installers = 4,
+	log_level = vim.log.levels.INFO,
+})
 
--- Register a handler that will be called for all installed servers.
--- Alternatively, you may also register handlers on specific server instances instead (see example below).
-lsp_installer.setup(settings)
+mason_lspconfig.setup({
+	ensure_installed = servers,
+	automatic_installation = true,
+})
 
-local capabilities = require("config.lsp.handlers").capabilities
-
+-- Set up lspcofig servers
 local lspconfig_static_ok, lspconfig = pcall(require, "lspconfig")
 if not lspconfig_static_ok then
 	print('Note: Please install "lspconfig" plugin')
 	return
 end
-
 local configs = require("lspconfig.configs")
+local capabilities = require("config.lsp.handlers").capabilities
+
+-- npm install -g ls_emmet
 if not configs.ls_emmet then
 	configs.ls_emmet = {
 		default_config = require("config.lsp.settings.ls_emmet"),
@@ -61,7 +71,6 @@ end
 lspconfig.ls_emmet.setup({ capabilities = capabilities })
 
 local opts = {}
-
 for _, server in pairs(servers) do
 	opts = {
 		on_attach = require("config.lsp.handlers").default_on_attach,

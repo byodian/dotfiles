@@ -15,6 +15,7 @@ Plug 'navarasu/onedark.nvim'
 Plug 'morhetz/gruvbox'
 Plug 'EdenEast/nightfox.nvim'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+Plug 'dracula/vim', { 'name': 'dracula' }
 
 " File Management
 Plug 'nvim-lua/popup.nvim'
@@ -29,7 +30,9 @@ Plug 'junegunn/fzf.vim'
 
 " Language Server Protocol
 Plug 'neovim/nvim-lspconfig'
-Plug 'williamboman/nvim-lsp-installer'
+" Plug 'williamboman/nvim-lsp-installer'
+Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'folke/trouble.nvim'
 Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
 Plug 'jose-elias-alvarez/null-ls.nvim' " for formatters and linters
@@ -56,7 +59,7 @@ Plug 'rafamadriz/friendly-snippets'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 Plug 'p00f/nvim-ts-rainbow'
-Plug 'tami5/lspsaga.nvim', { 'branch' : 'nvim6.0' } 
+Plug 'tami5/lspsaga.nvim', { 'branch' : 'main' }
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 
 " Status Line

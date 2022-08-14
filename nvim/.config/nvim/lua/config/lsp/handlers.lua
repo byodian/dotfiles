@@ -58,20 +58,6 @@ local function lsp_keymaps(client, bufnr)
 	buf_set_keymap("n", "go", "<cmd>Lspsaga show_line_diagnostics<cr>", opts)
 	buf_set_keymap("n", "gp", "<cmd>Lspsaga preview_definition<cr>", opts)
 	buf_set_keymap("n", "gh", "<cmd>Lspsaga lsp_finder<cr>", opts)
-
-	-- formatting
-	if
-		client.name == "tsserver"
-		or client.name == "vimls"
-		or client.name == "emmet_ls"
-		or client.name == "eslint"
-		or client.name == "tailwindcss"
-		or client.name == "vuels"
-	then
-		client.server_capabilities.documentFormattingProvider = false
-	else
-		client.server_capabilities.documentFormattingProvider = true
-	end
 end
 
 M.default_on_attach = function(client, bufnr)
