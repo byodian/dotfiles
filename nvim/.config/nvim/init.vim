@@ -1,9 +1,9 @@
-lua require 'options'
-lua require 'keymaps'
-lua require "autocmds"
+lua require 'byodian.options'
+lua require 'byodian.keymaps'
+lua require "byodian.autocmds"
 
 " Automatic installation of plugin manager 
-lua require 'utils'
+lua require 'byodian.utils'
 
 "--------------------------------------------------------------------------
 " Plugins settings
@@ -110,14 +110,4 @@ Plug 'folke/which-key.nvim'
 Plug 'christoomey/vim-sort-motion'
 call plug#end()
 
-lua require "config.lsp"
-lua require "config.stable"
-lua require "config.null-ls"
-lua require "config.nvim-treesitter"
-lua require "config.lualine"
-lua require "config.nvim-tree"
-lua require "config.telescope"
-" https://github.com/neovim/nvim-lspconfig/wiki/Autocompletion
-lua require "config.cmp"
-lua require "which-key"
-lua require "config.gitsigns"
+lua require "byodian.config"

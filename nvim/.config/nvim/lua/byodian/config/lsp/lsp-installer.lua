@@ -60,12 +60,12 @@ if not lspconfig_static_ok then
 	return
 end
 local configs = require("lspconfig.configs")
-local capabilities = require("config.lsp.handlers").capabilities
+local capabilities = require("byodian.config.lsp.handlers").capabilities
 
 -- npm install -g ls_emmet
 if not configs.ls_emmet then
 	configs.ls_emmet = {
-		default_config = require("config.lsp.settings.ls_emmet"),
+		default_config = require("byodian.config.lsp.settings.ls_emmet"),
 	}
 end
 lspconfig.ls_emmet.setup({ capabilities = capabilities })
@@ -73,42 +73,42 @@ lspconfig.ls_emmet.setup({ capabilities = capabilities })
 local opts = {}
 for _, server in pairs(servers) do
 	opts = {
-		on_attach = require("config.lsp.handlers").default_on_attach,
+		on_attach = require("byodian.config.lsp.handlers").default_on_attach,
 		capabilities = capabilities,
 	}
 
 	if server == "jsonls" then
-		local jsonls_opts = require("config.lsp.settings.jsonls")
+		local jsonls_opts = require("byodian.config.lsp.settings.jsonls")
 		opts = vim.tbl_deep_extend("force", jsonls_opts, opts)
 	end
 
 	if server == "stylelint_lsp" then
-		local stylelintplus_opts = require("config.lsp.settings.stylelintplus_lsp")
+		local stylelintplus_opts = require("byodian.config.lsp.settings.stylelintplus_lsp")
 		opts = vim.tbl_deep_extend("force", stylelintplus_opts, opts)
 	end
 
 	if server == "tsserver" then
-		local tsserver_opts = require("config.lsp.settings.tsserver")
+		local tsserver_opts = require("byodian.config.lsp.settings.tsserver")
 		opts = vim.tbl_deep_extend("keep", tsserver_opts, opts)
 	end
 
 	if server == "sumneko_lua" then
-		local sumneko_lua_opts = require("config.lsp.settings.sumneko_lua")
+		local sumneko_lua_opts = require("byodian.config.lsp.settings.sumneko_lua")
 		opts = vim.tbl_deep_extend("force", sumneko_lua_opts, opts)
 	end
 
 	if server == "vuels" then
-		local vuels_opts = require("config.lsp.settings.vuels")
+		local vuels_opts = require("byodian.config.lsp.settings.vuels")
 		opts = vim.tbl_deep_extend("force", vuels_opts, opts)
 	end
 
 	if server == "tailwindcss" then
-		local tailwindcss_opts = require("config.lsp.settings.tailwindcss")
+		local tailwindcss_opts = require("byodian.config.lsp.settings.tailwindcss")
 		opts = vim.tbl_deep_extend("force", tailwindcss_opts, opts)
 	end
 
 	if server == 'eslint' then
-		local eslint_opts = require("config.lsp.settings.eslint")
+		local eslint_opts = require("byodian.config.lsp.settings.eslint")
 		opts = vim.tbl_deep_extend("force", eslint_opts, opts)
 	end
 
