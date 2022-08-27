@@ -20,13 +20,12 @@ require("nightfox").setup({
   },
 })
 
-vim.cmd([[colorscheme nightfox]])
+require("dracula").setup()
 
-require("lspsaga").setup({ rename_prompt_prefix = "" })
+vim.cmd([[colorscheme dracula]])
 
 require("nvim-autopairs").setup({})
 require("zen-mode").setup({})
-require("neoscroll").setup()
 
 -- hop plugin
 require("hop").setup({
@@ -63,10 +62,6 @@ vim.g.symbols_outline = {
 
 vim.cmd([[
   nnoremap <leader>sb <cmd>SymbolsOutline<cr>
-
-  imap <silent><script><expr> <c-j> copilot#Accept("\<CR>")
-  let g:copilot_no_tab_map = v:true
-  highlight CopilotSuggestion guifg=#555555 ctermfg=8
 ]])
 
 -- trouble plugin

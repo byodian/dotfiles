@@ -6,6 +6,7 @@ return require("packer").startup(function()
   use("navarasu/onedark.nvim")
   use('EdenEast/nightfox.nvim')
   use({ "projekt0n/github-nvim-theme" })
+  use('Mofiqul/dracula.nvim')
 
   -- Base plugins
   use("nvim-lua/popup.nvim")
@@ -23,7 +24,8 @@ return require("packer").startup(function()
 
   -- Language Server Protocol
   use("neovim/nvim-lspconfig")
-  use("williamboman/nvim-lsp-installer")
+  use('williamboman/mason.nvim')
+  use('williamboman/mason-lspconfig.nvim')
   use("folke/trouble.nvim")
   use("jose-elias-alvarez/nvim-lsp-ts-utils")
   use("jose-elias-alvarez/null-ls.nvim")
@@ -53,7 +55,7 @@ return require("packer").startup(function()
   use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
   use("JoosepAlviste/nvim-ts-context-commentstring")
   use("p00f/nvim-ts-rainbow")
-  use({ "tami5/lspsaga.nvim", branch = "nvim6.0" })
+  -- use({ "tami5/lspsaga.nvim", branch = "nvim6.0" })
   use("nvim-treesitter/nvim-treesitter-textobjects")
 
   -- Status Line
@@ -99,7 +101,7 @@ return require("packer").startup(function()
     ft = { "markdown" },
   })
   use("lewis6991/gitsigns.nvim")
-  use("github/copilot.vim")
+  -- use("github/copilot.vim")
   use("phaazon/hop.nvim")
   use("kevinhwang91/nvim-hlslens")
   use("akinsho/nvim-bufferline.lua")

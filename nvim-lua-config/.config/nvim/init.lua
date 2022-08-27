@@ -1,5 +1,1 @@
-require("options")
-require("keymaps")
-require("plugins")
-require("autocmds")
-require("config")
+require("byodian")

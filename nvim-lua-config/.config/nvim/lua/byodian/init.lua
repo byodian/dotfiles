@@ -1,0 +1,5 @@
+require("byodian.options")
+require("byodian.keymaps")
+require("byodian.plugins")
+require("byodian.autocmds")
+require("byodian.config")

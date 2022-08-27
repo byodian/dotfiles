@@ -1,6 +1,6 @@
 lua require 'byodian.options'
 lua require 'byodian.keymaps'
-lua require "byodian.autocmds"
+lua require 'byodian.autocmds'
 
 " Automatic installation of plugin manager 
 lua require 'byodian.utils'
@@ -59,7 +59,7 @@ Plug 'rafamadriz/friendly-snippets'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 Plug 'p00f/nvim-ts-rainbow'
-Plug 'tami5/lspsaga.nvim', { 'branch' : 'main' }
+" Plug 'tami5/lspsaga.nvim', { 'branch' : 'main' }
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 
 " Status Line
@@ -101,7 +101,6 @@ Plug 'itchyny/vim-cursorword'
 Plug 'dstein64/vim-startuptime'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'lewis6991/gitsigns.nvim'
-Plug 'github/copilot.vim'
 Plug 'phaazon/hop.nvim'
 Plug 'kevinhwang91/nvim-hlslens'
 Plug 'akinsho/nvim-bufferline.lua'
@@ -110,4 +109,4 @@ Plug 'folke/which-key.nvim'
 Plug 'christoomey/vim-sort-motion'
 call plug#end()
 
-lua require "byodian.config"
+lua require 'byodian.config'
