@@ -8,8 +8,8 @@ keymap("", "<Space>", "<Nop>", opts)
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-keymap("n", "<leader>ve", ":edit ~/.config/nvim/init.vim<cr>", opts)
-keymap("n", "<leader>vr", ":source ~/.config/nvim/init.vim<cr>", { noremap = true })
+keymap("n", "<leader>ve", ":edit ~/.config/nvim/init.lua<cr>", opts)
+keymap("n", "<leader>vr", ":source ~/.config/nvim/init.lua<cr>", { noremap = true })
 
 -- toggle relativenumber
 keymap("n", "<leader>tn", ":set relativenumber!<cr>", opts)

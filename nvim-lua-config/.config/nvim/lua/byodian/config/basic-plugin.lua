@@ -21,8 +21,9 @@ require("nightfox").setup({
 })
 
 require("dracula").setup()
-
 vim.cmd([[colorscheme dracula]])
+
+require("lspsaga").init_lsp_saga()
 
 require("nvim-autopairs").setup({})
 require("zen-mode").setup({})
