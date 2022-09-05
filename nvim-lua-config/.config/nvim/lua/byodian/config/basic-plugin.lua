@@ -35,14 +35,6 @@ require("hop").setup({
 vim.cmd([[
   nnoremap <leader>z :Zen<CR>
   map <c-s> <cmd>HopChar1<CR>
-  noremap <silent> n <Cmd>execute('normal! ' . v:count1 . 'n')<CR>
-              \<Cmd>lua require('hlslens').start()<CR>
-  noremap <silent> N <Cmd>execute('normal! ' . v:count1 . 'N')<CR>
-              \<Cmd>lua require('hlslens').start()<CR>
-  noremap * *<Cmd>lua require('hlslens').start()<CR>
-  noremap # #<Cmd>lua require('hlslens').start()<CR>
-  noremap g* g*<Cmd>lua require('hlslens').start()<CR>
-  noremap g# g#<Cmd>lua require('hlslens').start()<CR>
 ]])
 
 ---------------------------
@@ -53,17 +45,6 @@ require("toggleterm").setup({
 })
 
 require("cheatsheet").setup()
-
--- symbols_outline plugin
-vim.g.symbols_outline = {
-  width = 50,
-  position = "left",
-  auto_preview = false,
-}
-
-vim.cmd([[
-  nnoremap <leader>sb <cmd>SymbolsOutline<cr>
-]])
 
 -- trouble plugin
 require("trouble").setup({})

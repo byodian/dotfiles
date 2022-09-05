@@ -79,9 +79,6 @@ return require("packer").startup(function()
   use("whatyouhide/vim-textobj-xmlattr") -- ix, ax
   use("wellle/targets.vim")
 
-  -- code outline
-  use("simrat39/symbols-outline.nvim")
-
   -- Plugins for web development
   use({ "norcalli/nvim-colorizer.lua", branch = "color-editor" })
   use("AndrewRadev/tagalong.vim")
@@ -104,7 +101,6 @@ return require("packer").startup(function()
   use("lewis6991/gitsigns.nvim")
   -- use("github/copilot.vim")
   use("phaazon/hop.nvim")
-  use("kevinhwang91/nvim-hlslens")
   use("akinsho/nvim-bufferline.lua")
   use({ "akinsho/toggleterm.nvim", tag = "v2.*" })
   use("folke/which-key.nvim")
