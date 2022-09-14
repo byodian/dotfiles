@@ -59,7 +59,7 @@ Plug 'rafamadriz/friendly-snippets'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'JoosepAlviste/nvim-ts-context-commentstring'
 Plug 'p00f/nvim-ts-rainbow'
-" Plug 'tami5/lspsaga.nvim', { 'branch' : 'main' }
+Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 
 " Status Line
@@ -83,9 +83,6 @@ Plug 'michaeljsmith/vim-indent-object' "ii, ai, iI, aI
 Plug 'whatyouhide/vim-textobj-xmlattr' " ix, ax
 Plug 'wellle/targets.vim'
 
-" code outline
-Plug 'simrat39/symbols-outline.nvim'
-
 " tmux navigation
 " Plug 'christoomey/vim-tmux-navigator'
 
@@ -102,10 +99,7 @@ Plug 'dstein64/vim-startuptime'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'phaazon/hop.nvim'
-Plug 'kevinhwang91/nvim-hlslens'
-Plug 'akinsho/nvim-bufferline.lua'
 Plug 'akinsho/toggleterm.nvim'
-Plug 'folke/which-key.nvim'
 Plug 'christoomey/vim-sort-motion'
 call plug#end()
 

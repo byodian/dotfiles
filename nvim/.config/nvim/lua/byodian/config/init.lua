@@ -7,5 +7,4 @@ require("byodian.config.nvim-tree")
 require("byodian.config.telescope")
 -- https:byodian.//github.com/neovim/nvim-lspconfig/wiki/Autocompletion
 require("byodian.config.cmp")
-require("byodian.config.which-key")
 require("byodian.config.gitsigns")
