@@ -23,18 +23,14 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'nvim-telescope/telescope-file-browser.nvim'
-Plug 'sudormrfbin/cheatsheet.nvim'
-Plug 'kyazdani42/nvim-tree.lua'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 " Language Server Protocol
 Plug 'neovim/nvim-lspconfig'
-" Plug 'williamboman/nvim-lsp-installer'
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'folke/trouble.nvim'
-Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
 Plug 'jose-elias-alvarez/null-ls.nvim' " for formatters and linters
 
 " Completion
@@ -58,12 +54,9 @@ Plug 'rafamadriz/friendly-snippets'
 " " https://github.com/nvim-treesitter/nvim-treesitter/issues/1111
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'JoosepAlviste/nvim-ts-context-commentstring'
-Plug 'p00f/nvim-ts-rainbow'
 Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 
-" Status Line
-Plug 'hoob3rt/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 
 " tpope plugins
@@ -71,17 +64,12 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-unimpaired' " helpful shorthand like [b ]b
-Plug 'tpope/vim-sleuth'
 
 " text objects
 Plug 'kana/vim-textobj-user'
-Plug 'glts/vim-textobj-comment' " ic ac
 Plug 'sgur/vim-textobj-parameter' " i, a,
 Plug 'michaeljsmith/vim-indent-object' "ii, ai, iI, aI
 Plug 'whatyouhide/vim-textobj-xmlattr' " ix, ax
-Plug 'wellle/targets.vim'
 
 " tmux navigation
 " Plug 'christoomey/vim-tmux-navigator'
@@ -89,18 +77,14 @@ Plug 'wellle/targets.vim'
 " Plugins for web development 
 Plug 'norcalli/nvim-colorizer.lua', { 'branch': 'color-editor' }
 Plug 'AndrewRadev/tagalong.vim'
-Plug 'folke/zen-mode.nvim'
 Plug 'windwp/nvim-autopairs'
 Plug 'machakann/vim-highlightedyank'
 Plug 'lukas-reineke/indent-blankline.nvim'
 
-Plug 'itchyny/vim-cursorword'
 Plug 'dstein64/vim-startuptime'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'lewis6991/gitsigns.nvim'
-Plug 'phaazon/hop.nvim'
 Plug 'akinsho/toggleterm.nvim'
-Plug 'christoomey/vim-sort-motion'
 call plug#end()
 
 lua require 'byodian.config'
