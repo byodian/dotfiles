@@ -1,10 +1,3 @@
-lua require 'byodian.options'
-lua require 'byodian.keymaps'
-lua require 'byodian.autocmds'
-
-" Automatic installation of plugin manager 
-lua require 'byodian.utils'
-
 "--------------------------------------------------------------------------
 " Plugins settings
 "--------------------------------------------------------------------------
@@ -62,7 +55,6 @@ Plug 'kyazdani42/nvim-web-devicons'
 " tpope plugins
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 
 " text objects
@@ -85,6 +77,8 @@ Plug 'dstein64/vim-startuptime'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'akinsho/toggleterm.nvim'
+
+Plug 'TimUntersberger/neogit'
 call plug#end()
 
-lua require 'byodian.config'
+lua require 'byodian'
