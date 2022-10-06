@@ -1,10 +1,7 @@
-# Prompt 
 Import-Module posh-git
-Import-Module oh-my-posh
 Import-Module Terminal-Icons
 Import-Module z
-
-Set-PoshPrompt powerlevel10k_lean
+oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\robbyrussel.omp.json" | Invoke-Expression
 
 # PSReadLine
 Import-Module PSReadLine
@@ -12,9 +9,8 @@ Set-PSReadLineOption -EditMode Emacs
 Set-PSReadLineOption -PredictionSource HistoryAndPlugin
 Set-PSReadLineOption -PredictionViewStyle ListView
 
-# Fzf
+# fzf
 Import-Module PSFzf
-Set-PsFzfOption -PSReadLineChordProvider 'Ctrl+f' -PSReadLineChordReverseHistory 'Ctrl+r'
 
 # Alias
 Set-Alias vim nvim
