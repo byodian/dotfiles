@@ -107,7 +107,7 @@ for _, server in pairs(servers) do
 		opts = vim.tbl_deep_extend("force", tailwindcss_opts, opts)
 	end
 
-	if server == 'eslint' then
+	if server == "eslint" then
 		local eslint_opts = require("byodian.config.lsp.settings.eslint")
 		opts = vim.tbl_deep_extend("force", eslint_opts, opts)
 	end

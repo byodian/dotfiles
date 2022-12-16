@@ -26,16 +26,6 @@ vim.cmd([[colorscheme dracula]])
 require("lspsaga").init_lsp_saga()
 
 require("nvim-autopairs").setup({})
-require("zen-mode").setup({})
-
--- hop plugin
-require("hop").setup({
-  inclusive_jump = true,
-})
-vim.cmd([[
-  nnoremap <leader>z :Zen<CR>
-  map <c-s> <cmd>HopChar1<CR>
-]])
 
 ---------------------------
 require("colorizer").setup()
@@ -43,8 +33,6 @@ require("colorizer").setup()
 require("toggleterm").setup({
   open_mapping = [[<c-\>]],
 })
-
-require("cheatsheet").setup()
 
 -- trouble plugin
 require("trouble").setup({})

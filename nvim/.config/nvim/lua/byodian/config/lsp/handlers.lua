@@ -8,18 +8,18 @@ if not cmp_status_ok then
 	return
 end
 
-local saga = require('lspsaga')
+local saga = require("lspsaga")
 saga.init_lsp_saga({
 	code_action_lightbulb = {
-		enable = false
-	}
+		enable = false,
+	},
 })
 
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
-M.capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
+M.capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
 
 local function lsp_keymaps(_, bufnr)
 	local function buf_set_keymap(...)

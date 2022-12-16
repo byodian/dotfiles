@@ -68,12 +68,7 @@ keymap("n", "<leader>q", ":lopen", opts)
 -- Esc terminates insert mode
 keymap("t", "<Esc>", "<C-\\><C-n>", opts)
 
--- Plugins settings
-keymap("n", "<C-n>", ":NvimTreeFindFileToggle<CR>", opts)
-keymap("n", "<leader>r", ":NvimTreeRefresh<CR>", opts)
-
-keymap("n", "gb", ":BufferLinePick<CR>", opts)
-keymap("n", "<leader>b", ":BufferLineCycleNext<CR>", opts)
+keymap("n", "<C-n>", ":Ex<CR>", opts)
 
 -- Fzf
 keymap("n", "<C-p>", ":GFiles<CR>", opts)

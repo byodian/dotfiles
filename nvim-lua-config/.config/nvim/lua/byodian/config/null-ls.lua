@@ -16,7 +16,7 @@ local sources = {
 			"--trailing-comma es5",
 			"--bracket-spacing",
 			"--arrow-parens always",
-			-- "--no-semi",
+			"--semi",
 			-- "--bracket-same-line",
 		},
 	}),
