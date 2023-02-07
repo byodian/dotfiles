@@ -16,10 +16,9 @@ local servers = {
 	"bashls",
 	"pyright",
 	"html",
-	"vuels",
+	-- "vuels",
 	"svelte",
 	"jsonls",
-	"cssls",
 	"vimls",
 	"tailwindcss",
 	"tsserver",
@@ -31,7 +30,7 @@ local servers = {
 	"ansiblels",
 	"dockerls",
 	"yamlls",
-	-- "volar",
+  "volar",
 	-- "remark_ls"
 }
 
@@ -97,9 +96,9 @@ for _, server in pairs(servers) do
 		opts = vim.tbl_deep_extend("force", sumneko_lua_opts, opts)
 	end
 
-	if server == "vuels" then
-		local vuels_opts = require("byodian.config.lsp.settings.vuels")
-		opts = vim.tbl_deep_extend("force", vuels_opts, opts)
+	if server == "volar" then
+		local volar_opts = require("byodian.config.lsp.settings.volar")
+		opts = vim.tbl_deep_extend("force", volar_opts, opts)
 	end
 
 	if server == "tailwindcss" then
