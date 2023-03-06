@@ -1,7 +1,9 @@
 Import-Module posh-git
 Import-Module Terminal-Icons
 Import-Module z
-oh-my-posh init pwsh --config "$(brew --prefix oh-my-posh)/themes/robbyrussel.omp.json" | Invoke-Expression
+
+# oh-my-posh init pwsh --config "$(brew --prefix oh-my-posh)/themes/robbyrussel.omp.json" | Invoke-Expression
+oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\robbyrussel.omp.json" | Invoke-Expression
 
 # PSReadLine
 Import-Module PSReadLine
@@ -11,7 +13,6 @@ Set-PSReadLineOption -PredictionViewStyle ListView
 
 # fzf
 Import-Module PSFzf
-Set-PsFzfOption -PSReadLineChordProvider 'Ctrl+f' -PSReadLineChordReverseHistory 'Ctrl+r'
 
 # Alias
 Set-Alias ll ls
