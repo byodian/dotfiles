@@ -17,8 +17,6 @@ return require("packer").startup(function()
   use("nvim-telescope/telescope.nvim")
   use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
   use("nvim-telescope/telescope-file-browser.nvim")
-  use("sudormrfbin/cheatsheet.nvim")
-  use("kyazdani42/nvim-tree.lua")
   use({ "junegunn/fzf", run = "./install --bin" })
   use("junegunn/fzf.vim")
 
@@ -27,7 +25,6 @@ return require("packer").startup(function()
   use("williamboman/mason.nvim")
   use("williamboman/mason-lspconfig.nvim")
   use("folke/trouble.nvim")
-  use("jose-elias-alvarez/nvim-lsp-ts-utils")
   use("jose-elias-alvarez/null-ls.nvim")
 
   -- Completion
@@ -52,43 +49,38 @@ return require("packer").startup(function()
   use("rafamadriz/friendly-snippets")
 
   -- https://github.com/nvim-treesitter/nvim-treesitter/issues/1111
-  use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
+  use({
+    "nvim-treesitter/nvim-treesitter",
+    run = function()
+      local ts_update = require("nvim-treesitter.install").update({ with_sync = true })
+      ts_update()
+    end,
+  })
   use("JoosepAlviste/nvim-ts-context-commentstring")
-  use("p00f/nvim-ts-rainbow")
-  -- use({ "tami5/lspsaga.nvim", branch = "nvim6.0" })
   use({ "glepnir/lspsaga.nvim", branch = "main" })
   use("nvim-treesitter/nvim-treesitter-textobjects")
-
-  -- Status Line
-  use("hoob3rt/lualine.nvim")
 
   -- tpope plugins
   use("tpope/vim-surround")
   use("tpope/vim-commentary")
-  use("tpope/vim-fugitive")
   use("tpope/vim-repeat")
-  use("tpope/vim-eunuch")
-  use("tpope/vim-unimpaired") -- helpful shorthand like [b ]b
-  use("tpope/vim-sleuth")
+
+  -- neogit
+  use("TimUntersberger/neogit")
 
   -- text objects
   use("kana/vim-textobj-user")
-  use("glts/vim-textobj-comment") -- ic ac
   use("sgur/vim-textobj-parameter") -- i, a,
   use("michaeljsmith/vim-indent-object") --ii, ai, iI, aI
   use("whatyouhide/vim-textobj-xmlattr") -- ix, ax
-  use("wellle/targets.vim")
 
   -- Plugins for web development
   use({ "norcalli/nvim-colorizer.lua", branch = "color-editor" })
   use("AndrewRadev/tagalong.vim")
-  use("folke/zen-mode.nvim")
   use("windwp/nvim-autopairs")
   use("machakann/vim-highlightedyank")
   use("lukas-reineke/indent-blankline.nvim")
 
-  use("itchyny/vim-cursorword")
-  use("karb94/neoscroll.nvim")
   use("dstein64/vim-startuptime")
   use({
     "iamcco/markdown-preview.nvim",
@@ -100,7 +92,5 @@ return require("packer").startup(function()
   })
   use("lewis6991/gitsigns.nvim")
   -- use("github/copilot.vim")
-  use("phaazon/hop.nvim")
   use({ "akinsho/toggleterm.nvim", tag = "v2.*" })
-  use("christoomey/vim-sort-motion")
 end)

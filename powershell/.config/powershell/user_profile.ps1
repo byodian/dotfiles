@@ -1,6 +1,8 @@
 Import-Module posh-git
 Import-Module Terminal-Icons
 Import-Module z
+
+# oh-my-posh init pwsh --config "$(brew --prefix oh-my-posh)/themes/robbyrussel.omp.json" | Invoke-Expression
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\robbyrussel.omp.json" | Invoke-Expression
 
 # PSReadLine
@@ -13,7 +15,6 @@ Set-PSReadLineOption -PredictionViewStyle ListView
 Import-Module PSFzf
 
 # Alias
-Set-Alias vim nvim
 Set-Alias ll ls
 Set-Alias c clear
 Set-Alias less 'C:\Program Files\Git\usr\bin\less.exe'

@@ -16,7 +16,12 @@ set -gx PATH ~/.local/n/bin $PATH
 set -gx N_PREFIX $HOME/.local/n
 set -gx DOTFILES $HOME/.dotfiles
 set -gx XDG_CONFIG_HOME $HOME/.config
-set -gx STOW_FOLDERS "bin,fish,nvim,tmux,zsh,powershell,bash"
+set -gx STOW_FOLDERS "bin,fish,nvim,tmux,zsh,powershell,bash,alacritty"
+
+
+# pnpm
+set -gx PNPM_HOME "~/.local/.pnpm-global"
+set -gx PATH "$PNPM_HOME" $PATH
 
 switch (uname)
   case Darwin
