@@ -1,0 +1,38 @@
+# focus window
+alt - h : yabai -m window --focus west
+alt - j : yabai -m window --focus south
+alt - k : yabai -m window --focus north
+alt - l : yabai -m window --focus east
+
+# swap managed window
+shift + alt - h : yabai -m window --swap west
+shift + alt - j : yabai -m window --swap south
+shift + alt - k : yabai -m window --swap north
+shift + alt - l : yabai -m window --swap east
+
+# move managed window
+shift + alt + ctrl - h : yabai -m window --wap west
+shift + alt + ctrl - j : yabai -m window --wap south
+shift + alt + ctrl - k : yabai -m window --wap north
+shift + alt + ctrl - l : yabai -m window --wap east
+
+# rotate tree
+alt - r : yabai -m space --rotate 90
+
+# toggle window fullscreen zoom
+alt - z : yabai -m window --toggle zoom-fullscreen
+
+# alt - s : yabai -m window --toggle
+alt - s : yabai -m window --toggle sticky;\
+          yabai -m window --toggle topmost;\
+          yabai -m window --toggle pip
+
+# toggle padding and gap
+alt - g : yabai -m space --toggle padding; yabai -m space --toggle gap
+
+# float / unfloat window and center on screen
+alt - t : yabai -m window --toggle float;\
+         yabai -m window --grid 4:4:1:1:2:2
+
+# toggle window split type
+alt - e : yabai -m window --toggle split

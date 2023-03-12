@@ -25,7 +25,7 @@ local servers = {
 	"eslint",
 	-- "diagnostics",
 	"stylelint_lsp",
-	"sumneko_lua",
+	"lua_ls",
 	"jdtls",
 	"ansiblels",
 	"dockerls",
@@ -91,9 +91,9 @@ for _, server in pairs(servers) do
 		opts = vim.tbl_deep_extend("keep", tsserver_opts, opts)
 	end
 
-	if server == "sumneko_lua" then
-		local sumneko_lua_opts = require("byodian.config.lsp.settings.sumneko_lua")
-		opts = vim.tbl_deep_extend("force", sumneko_lua_opts, opts)
+	if server == "lua_ls" then
+		local lua_opts = require("byodian.config.lsp.settings.lua_ls")
+		opts = vim.tbl_deep_extend("force", lua_opts, opts)
 	end
 
 	if server == "volar" then
