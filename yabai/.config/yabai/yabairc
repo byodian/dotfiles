@@ -44,14 +44,19 @@ yabai -m rule --add app="${DISABLED_APPS}" manage=off
 
 # Web browsers
 yabai -m rule --add app="^Google Chrome|Firefox$" space=1
+
 # Text editors
 yabai -m rule --add app="^(Code|RStudio)$" space=2
+
 # Jetbrains apps
 IDE_APPS="^(IntelliJ IDEA|WebStorm|RubyMine|PyCharm|DataGrip)$"
 yabai -m rule --add app="${IDE_APPS}" space=3  manage=off
+
+# Social
+yabai -m rule --add app="^(Slack|WhatsApp|Microsoft Teams|Telegram)$" space=4
+
 # Terminal
-yabai -m rule --add app="^(Alacritty)$" space=4
+yabai -m rule --add app="^(Alacritty)$" space=6
+
 # Music
 yabai -m rule --add app="^(Spotify|Youtube Music)$" space=5
-# Social
-yabai -m rule --add app="^(Slack|WhatsApp|Microsoft Teams|Telegram)$" space=6
