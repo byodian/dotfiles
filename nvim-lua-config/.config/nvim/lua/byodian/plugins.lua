@@ -82,14 +82,6 @@ return require("packer").startup(function()
   use("lukas-reineke/indent-blankline.nvim")
 
   use("dstein64/vim-startuptime")
-  use({
-    "iamcco/markdown-preview.nvim",
-    run = "cd app && yarn install",
-    setup = function()
-      vim.g.mkdp_filetypes = { "markdown" }
-    end,
-    ft = { "markdown" },
-  })
   use("lewis6991/gitsigns.nvim")
   -- use("github/copilot.vim")
   use({ "akinsho/toggleterm.nvim", tag = "v2.*" })
