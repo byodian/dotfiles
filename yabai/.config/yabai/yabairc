@@ -24,7 +24,7 @@ yabai -m mouse_drop_action swap
 # Window modifications
 yabai -m config window_topmost on
 yabai -m config window_shadow float
-yabai -m config window_opacity on
+yabai -m config window_opacity off
 yabai -m config active_window_opacity 1.0
 yabai -m config normal_window_opacity 0.9
 
@@ -42,8 +42,7 @@ yabai -m config external_bar all:0:$SPACEBAR_HEIGHT
 DISABLED_APPS="^(System Settings|Calculator|Karabiner-Elements|balenaEtcher|Alfred Preferences|Archive Utility|Preview)$"
 yabai -m rule --add app="${DISABLED_APPS}" manage=off
 
-# Web browsers
-yabai -m rule --add app="^Google Chrome|Firefox$" space=1
+yabai -m rule --add app="^Google Chrome$" space=1
 
 # Text editors
 yabai -m rule --add app="^(Code|RStudio)$" space=2
@@ -52,11 +51,8 @@ yabai -m rule --add app="^(Code|RStudio)$" space=2
 IDE_APPS="^(IntelliJ IDEA|WebStorm|RubyMine|PyCharm|DataGrip)$"
 yabai -m rule --add app="${IDE_APPS}" space=3  manage=off
 
-# Social
-yabai -m rule --add app="^(Slack|WhatsApp|Microsoft Teams|Telegram)$" space=4
-
 # Terminal
-yabai -m rule --add app="^(Alacritty)$" space=6
+yabai -m rule --add app="^(Alacritty|Firefox)$" space=4
 
-# Music
-yabai -m rule --add app="^(Spotify|Youtube Music)$" space=5
+# Social & Music
+yabai -m rule --add app="^(Slack|WhatsApp|Microsoft Teams|Telegram|Spotify|Youtube Music)$" space=5
