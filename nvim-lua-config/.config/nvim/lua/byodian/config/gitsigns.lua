@@ -1,8 +1,4 @@
-local status_ok, gitsigns = pcall(require, "gitsigns")
-if not status_ok then
-	print('Note: Please install "gitsigns" plugin')
-	return
-end
+local gitsigns = require("gitsigns")
 
 gitsigns.setup({
 	current_line_blame = false,

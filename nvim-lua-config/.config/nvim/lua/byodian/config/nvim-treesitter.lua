@@ -1,8 +1,4 @@
-local status_ok, nvim_treesitter = pcall(require, "nvim-treesitter.configs")
-if not status_ok then
-	print('Note: Please install "nvim-treesitter" plugin')
-	return
-end
+local nvim_treesitter = require("nvim-treesitter.configs")
 
 nvim_treesitter.setup({
 	-- One of "all", "maintained" (parsers with maintainers), or a list of languages

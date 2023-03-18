@@ -4,19 +4,11 @@ local has_words_before = function()
 end
 
 -- nvim-cmp setup
-local status_ok, luasnip = pcall(require, "luasnip")
-if not status_ok then
-	print('Note: Please install "luasnip" plugin')
-	return
-end
+local luasnip = require("luasnip")
 require("luasnip.loaders.from_vscode").lazy_load()
 require("luasnip.loaders.from_snipmate").lazy_load({ paths = "./snippets" })
 
-local tabnine_status_ok, tabnine = pcall(require, "cmp_tabnine.config")
-if not tabnine_status_ok then
-	print('Note: Please install "cmp_tabnine" plugin')
-	return
-end
+local tabnine = require("cmp_tabnine.config")
 
 tabnine:setup({
 	max_lines = 1000,
@@ -56,23 +48,9 @@ local kind_icons = {
 }
 
 -- Setup nvim-cmp.
-local cmp_status_ok, cmp = pcall(require, "cmp")
-if not cmp_status_ok then
-	print('Note: Please install "cmp" plugin')
-	return
-end
-
-local git_status_ok, cmp_git = pcall(require, "cmp_git")
-if not git_status_ok then
-	print('Note: Please install "cmp_git" plugin')
-	return
-end
-
-local npm_status_ok, cmp_npm = pcall(require, "cmp-npm")
-if not npm_status_ok then
-	print('Note: Please install "cmp-npm" plugin')
-	return
-end
+local cmp = require("cmp")
+local cmp_git = require("cmp_git")
+local cmp_npm = require("cmp-npm")
 
 cmp_git.setup()
 cmp_npm.setup()

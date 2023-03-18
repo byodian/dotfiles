@@ -1,9 +1,4 @@
-local status_ok, telescope = pcall(require, "telescope")
-if not status_ok then
-  print('Note: Please install "telescope" plugin')
-  return
-end
-
+local telescope = require("telescope")
 local actions = require("telescope.actions")
 telescope.load_extension("fzf")
 telescope.load_extension("file_browser")

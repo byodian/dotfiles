@@ -1,15 +1,5 @@
-local installer_status_ok, mason = pcall(require, "mason")
-local lspconfig_status_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
-
-if not installer_status_ok then
-	print('Note: Please install "mason" plugin')
-	return
-end
-
-if not lspconfig_status_ok then
-	print('Note: Please install "mason-lspconfig" plugin')
-	return
-end
+local mason = require("mason")
+local mason_lspconfig = require("mason-lspconfig")
 
 -- Include the servers you want to have installed by default below
 local servers = {
@@ -53,11 +43,7 @@ mason_lspconfig.setup({
 })
 
 -- Set up lspcofig servers
-local lspconfig_static_ok, lspconfig = pcall(require, "lspconfig")
-if not lspconfig_static_ok then
-	print('Note: Please install "lspconfig" plugin')
-	return
-end
+local lspconfig = require("lspconfig")
 local configs = require("lspconfig.configs")
 local capabilities = require("byodian.config.lsp.handlers").capabilities
 
