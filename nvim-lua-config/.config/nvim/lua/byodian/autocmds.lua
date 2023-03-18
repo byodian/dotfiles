@@ -34,7 +34,7 @@ autocmd({ 'BufReadPost' }, {
 autocmd({ 'BufWritePre' }, {
   group = Byodian,
   pattern = '*.tsx,*.ts,*.jsx,*.js,*.json,*.yaml,*.yml,*.vue',
-  command = 'EslintFixAll'
+  command = ':silent! EslintFixAll'
 })
 
 autocmd({ 'TextYankPost' }, {

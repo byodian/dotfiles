@@ -176,3 +176,7 @@ export http_proxy="$PROXY_HTTP"
 export PATH=~/.local/.npm-global/bin:$PATH
 export N_PREFIX="$HOME/.local/n"
 export PATH=~/.local/n/bin:$PATH
+
+# tabtab source for packages
+# uninstall by removing these lines
+[ -f ~/.config/tabtab/bash/__tabtab.bash ] && . ~/.config/tabtab/bash/__tabtab.bash || true

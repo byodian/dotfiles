@@ -2,11 +2,7 @@ local M = {}
 
 M.setup = function() end
 
-local cmp_status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-if not cmp_status_ok then
-	print('Note: Please install "cmp_nvim_lsp" plugin')
-	return
-end
+local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
 -- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
 local capabilities = vim.lsp.protocol.make_client_capabilities()
