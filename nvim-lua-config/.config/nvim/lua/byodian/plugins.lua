@@ -83,6 +83,6 @@ return require("packer").startup(function()
 
   use("dstein64/vim-startuptime")
   use("lewis6991/gitsigns.nvim")
-  -- use("github/copilot.vim")
+  use("github/copilot.vim")
   use({ "akinsho/toggleterm.nvim", tag = "v2.*" })
 end)
