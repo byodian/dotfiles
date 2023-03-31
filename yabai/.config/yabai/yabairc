@@ -39,20 +39,22 @@ yabai -m config external_bar all:0:$SPACEBAR_HEIGHT
 # yabai -m config external_bar all:20:20
 
 # Disable specific apps from being managed with yabai
-DISABLED_APPS="^(System Settings|Calculator|Karabiner-Elements|balenaEtcher|Alfred Preferences|Archive Utility|Preview)$"
+DISABLED_APPS="^(Finder|System Settings|Calculator|Karabiner-Elements|balenaEtcher|Alfred Preferences|Archive Utility|Preview)$"
 yabai -m rule --add app="${DISABLED_APPS}" manage=off
 
 yabai -m rule --add app="^Google Chrome$" space=1
 
-# Text editors
-yabai -m rule --add app="^(Code|RStudio)$" space=2
-
 # Jetbrains apps
-IDE_APPS="^(IntelliJ IDEA|WebStorm|RubyMine|PyCharm|DataGrip)$"
-yabai -m rule --add app="${IDE_APPS}" space=3  manage=off
+IDE_APPS="^(IntelliJ IDEA CE|WebStorm|RubyMine|PyCharm|DataGrip)$"
+yabai -m rule --add app="${IDE_APPS}" space=2
+
+# Text editors
+yabai -m rule --add app="^(Code)$" space=3
 
 # Terminal
-yabai -m rule --add app="^(Alacritty|Firefox)$" space=4
+yabai -m rule --add app="^(Alacritty)$" space=4
+
+yabai -m rule --add app="^(Firefox)$" space=5
 
 # Social & Music
-yabai -m rule --add app="^(Slack|WhatsApp|Microsoft Teams|Telegram|Spotify|Youtube Music)$" space=5
+yabai -m rule --add app="^(Slack|WhatsApp|Microsoft Teams|Telegram|Spotify|Youtube Music)$" space=6
