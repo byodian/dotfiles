@@ -64,9 +64,7 @@ return require("packer").startup(function()
   use("tpope/vim-surround")
   use("tpope/vim-commentary")
   use("tpope/vim-repeat")
-
-  -- neogit
-  use("TimUntersberger/neogit")
+  use("tpope/vim-fugitive")
 
   -- text objects
   use("kana/vim-textobj-user")
