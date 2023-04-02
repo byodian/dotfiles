@@ -4,6 +4,7 @@ require("byodian.config.null-ls")
 require("byodian.config.nvim-treesitter")
 require("byodian.config.telescope")
 require("byodian.config.undotree")
+require("byodian.config.fugitive")
 -- https:byodian.//github.com/neovim/nvim-lspconfig/wiki/Autocompletion
 require("byodian.config.cmp")
 require("byodian.config.gitsigns")
