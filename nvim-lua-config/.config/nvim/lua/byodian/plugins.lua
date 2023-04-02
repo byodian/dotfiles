@@ -74,7 +74,6 @@ return require("packer").startup(function()
   use({ "norcalli/nvim-colorizer.lua", branch = "color-editor" })
   use("AndrewRadev/tagalong.vim")
   use("windwp/nvim-autopairs")
-  use("machakann/vim-highlightedyank")
   use("lukas-reineke/indent-blankline.nvim")
 
   use("dstein64/vim-startuptime")
