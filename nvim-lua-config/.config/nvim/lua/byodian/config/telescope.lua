@@ -45,7 +45,7 @@ telescope.setup({
 -- nnoremap <leader>ff <cmd>lua require'telescope.builtin'.find_files{ hidden = true }<cr>
 
 vim.cmd([[
-  nnoremap <leader>ff <cmd>lua require'telescope.builtin'.find_files()<cr>
+  nnoremap <C-p> <cmd>lua require'telescope.builtin'.find_files()<cr>
   nnoremap <leader>ft <cmd>lua require'telescope.builtin'.git_files{ hidden = true }<cr>
   nnoremap <leader>ps <cmd>lua require'telescope.builtin'.grep_string( { search = vim.fn.input("Grep for > ") } )<cr>
   nnoremap <leader>fb <cmd>lua require'telescope.builtin'.buffers()<cr>

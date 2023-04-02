@@ -69,6 +69,3 @@ keymap("n", "<leader>q", ":lopen", opts)
 keymap("t", "<Esc>", "<C-\\><C-n>", opts)
 
 keymap("n", "<C-n>", ":Ex<CR>", opts)
-
--- Fzf
-keymap("n", "<C-p>", ":GFiles<CR>", opts)
