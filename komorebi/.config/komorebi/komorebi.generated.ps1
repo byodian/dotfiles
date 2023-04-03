@@ -1,3 +1,124 @@
+###########################
+# Favoriate applications
+###########################
+
+# ShadowsocksR.exe
+komorebic.exe float-rule exe "ShadowsocksR.exe"
+
+# Telegram
+komorebic.exe identify-border-overflow-application exe "Telegram.exe"
+# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
+komorebic.exe identify-tray-application exe "Telegram.exe"
+
+# Flow Launcher
+komorebic.exe identify-border-overflow-application exe "Flow.Launcher.exe"
+
+# WindowsTerminal
+komorebic.exe float-rule exe "WindowsTerminal.exe"
+
+# Google Chrome
+# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
+komorebic.exe identify-tray-application exe "chrome.exe"
+
+# Mozilla Firefox
+komorebic.exe identify-object-name-change-application exe "firefox.exe"
+# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
+komorebic.exe identify-tray-application exe "firefox.exe"
+# Targets invisible windows spawned by Firefox to show tab previews in the taskbar
+komorebic.exe float-rule class "MozillaTaskbarPreviewClass"
+
+# AutoHotkey
+# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
+komorebic.exe identify-tray-application exe "AutoHotkeyU64.exe"
+komorebic.exe float-rule title "Window Spy"
+
+# OBS Studio (32-bit)
+# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
+komorebic.exe identify-tray-application exe "obs32.exe"
+
+# OBS Studio (64-bit)
+# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
+komorebic.exe identify-tray-application exe "obs64.exe"
+
+# PowerToys
+# Target color picker dialog
+komorebic.exe float-rule exe "PowerToys.ColorPickerUI.exe"
+# Target image resizer dialog
+komorebic.exe float-rule exe "PowerToys.ImageResizer.exe"
+komorebic.exe float-rule exe "PowerToys.Settings.exe"
+
+# Slack
+komorebic.exe identify-border-overflow-application exe "Slack.exe"
+komorebic.exe manage-rule exe "Slack.exe"
+# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
+komorebic.exe identify-tray-application exe "Slack.exe"
+
+# Slack
+komorebic.exe identify-border-overflow-application exe "slack.exe"
+komorebic.exe manage-rule exe "slack.exe"
+# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
+komorebic.exe identify-tray-application exe "slack.exe"
+
+# Spotify
+komorebic.exe identify-border-overflow-application exe "Spotify.exe"
+# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
+komorebic.exe identify-tray-application exe "Spotify.exe"
+
+##########################################################
+# JetBranins
+#########################################################
+
+# IntelliJ IDEA
+# komorebic.exe identify-object-name-change-application exe "idea64.exe"
+# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
+# komorebic.exe identify-tray-application exe "idea64.exe"
+komorebic.exe float-rule exe "idea64.exe"
+
+# PyCharm
+komorebic.exe identify-object-name-change-application exe "pycharm64.exe"
+# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
+komorebic.exe identify-tray-application exe "pycharm64.exe"
+
+##########################################################
+# Microsoft
+#########################################################
+
+# Microsoft Excel
+komorebic.exe identify-border-overflow-application exe "EXCEL.EXE"
+komorebic.exe identify-layered-application exe "EXCEL.EXE"
+# Targets a hidden window spawned by Microsoft Office applications
+komorebic.exe float-rule class "_WwB"
+
+# Microsoft Outlook
+komorebic.exe identify-border-overflow-application exe "OUTLOOK.EXE"
+komorebic.exe identify-layered-application exe "OUTLOOK.EXE"
+# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
+komorebic.exe identify-tray-application exe "OUTLOOK.EXE"
+
+# Microsoft PC Manager
+komorebic.exe float-rule exe "MSPCManager.exe"
+
+# Microsoft PowerPoint
+komorebic.exe identify-border-overflow-application exe "POWERPNT.EXE"
+komorebic.exe identify-layered-application exe "POWERPNT.EXE"
+
+# Microsoft Teams
+komorebic.exe identify-border-overflow-application exe "Teams.exe"
+# Target Teams pop-up notification windows
+komorebic.exe float-rule title "Microsoft Teams Notification"
+# Target Teams call in progress windows
+komorebic.exe float-rule title "Microsoft Teams Call"
+
+# Microsoft Word
+komorebic.exe identify-border-overflow-application exe "WINWORD.EXE"
+komorebic.exe identify-layered-application exe "WINWORD.EXE"
+
+# Visual Studio
+komorebic.exe identify-object-name-change-application exe "devenv.exe"
+
+# Visual Studio Code
+komorebic.exe identify-border-overflow-application exe "Code.exe"
+
 # Generated by komorebic.exe
 
 # 1Password
@@ -16,15 +137,9 @@ komorebic.exe identify-tray-application class "CreativeCloudDesktopWindowClass"
 # Adobe Photoshop
 komorebic.exe identify-border-overflow-application class "Photoshop"
 
-# ArmCord
-komorebic.exe identify-border-overflow-application exe "ArmCord.exe"
+# ArmCord komorebic.exe identify-border-overflow-application exe "ArmCord.exe"
 # If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
 komorebic.exe identify-tray-application exe "ArmCord.exe"
-
-# AutoHotkey
-# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
-komorebic.exe identify-tray-application exe "AutoHotkeyU64.exe"
-komorebic.exe float-rule title "Window Spy"
 
 # Beeper
 komorebic.exe identify-border-overflow-application exe "Beeper.exe"
@@ -35,10 +150,7 @@ komorebic.exe identify-tray-application exe "Beeper.exe"
 # If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
 komorebic.exe identify-tray-application exe "Bitwarden.exe"
 
-# Bloxstrap
-komorebic.exe float-rule exe "Bloxstrap.exe"
-
-# Calculator
+# Bloxstrap komorebic.exe float-rule exe "Bloxstrap.exe" # Calculator
 komorebic.exe float-rule title "Calculator"
 
 # Credential Manager UI Host
@@ -102,9 +214,6 @@ komorebic.exe identify-border-overflow-application exe "EpicGamesLauncher.exe"
 # If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
 komorebic.exe identify-tray-application exe "EpicGamesLauncher.exe"
 
-# Flow Launcher
-komorebic.exe identify-border-overflow-application exe "Flow.Launcher.exe"
-
 # GOG Galaxy
 komorebic.exe identify-border-overflow-application exe "GalaxyClient.exe"
 komorebic.exe manage-rule exe "GalaxyClient.exe"
@@ -122,10 +231,6 @@ komorebic.exe identify-border-overflow-application exe "GodotManager.exe"
 komorebic.exe manage-rule exe "GodotManager.exe"
 komorebic.exe identify-object-name-change-application exe "GodotManager.exe"
 
-# Google Chrome
-# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
-komorebic.exe identify-tray-application exe "chrome.exe"
-
 # Google Drive
 # If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
 komorebic.exe identify-tray-application exe "GoogleDriveFS.exe"
@@ -133,10 +238,6 @@ komorebic.exe identify-tray-application exe "GoogleDriveFS.exe"
 # Houdoku
 komorebic.exe identify-border-overflow-application exe "Houdoku.exe"
 
-# IntelliJ IDEA
-komorebic.exe identify-object-name-change-application exe "idea64.exe"
-# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
-komorebic.exe identify-tray-application exe "idea64.exe"
 # Targets JetBrains IDE popups and floating windows
 komorebic.exe float-rule class "SunAwtDialog"
 
@@ -186,48 +287,9 @@ komorebic.exe identify-border-overflow-application exe "ManyCam.exe"
 # If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
 komorebic.exe identify-tray-application exe "ManyCam.exe"
 
-# Mica For Everyone
-
-# Microsoft Excel
-komorebic.exe identify-border-overflow-application exe "EXCEL.EXE"
-komorebic.exe identify-layered-application exe "EXCEL.EXE"
-# Targets a hidden window spawned by Microsoft Office applications
-komorebic.exe float-rule class "_WwB"
-
-# Microsoft Outlook
-komorebic.exe identify-border-overflow-application exe "OUTLOOK.EXE"
-komorebic.exe identify-layered-application exe "OUTLOOK.EXE"
-# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
-komorebic.exe identify-tray-application exe "OUTLOOK.EXE"
-
-# Microsoft PC Manager
-komorebic.exe float-rule exe "MSPCManager.exe"
-
-# Microsoft PowerPoint
-komorebic.exe identify-border-overflow-application exe "POWERPNT.EXE"
-komorebic.exe identify-layered-application exe "POWERPNT.EXE"
-
-# Microsoft Teams
-komorebic.exe identify-border-overflow-application exe "Teams.exe"
-# Target Teams pop-up notification windows
-komorebic.exe float-rule title "Microsoft Teams Notification"
-# Target Teams call in progress windows
-komorebic.exe float-rule title "Microsoft Teams Call"
-
-# Microsoft Word
-komorebic.exe identify-border-overflow-application exe "WINWORD.EXE"
-komorebic.exe identify-layered-application exe "WINWORD.EXE"
-
 # Modern Flyouts
 # If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
 komorebic.exe identify-tray-application exe "ModernFlyoutsHost.exe"
-
-# Mozilla Firefox
-komorebic.exe identify-object-name-change-application exe "firefox.exe"
-# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
-komorebic.exe identify-tray-application exe "firefox.exe"
-# Targets invisible windows spawned by Firefox to show tab previews in the taskbar
-komorebic.exe float-rule class "MozillaTaskbarPreviewClass"
 
 # NVIDIA GeForce Experience
 komorebic.exe identify-border-overflow-application exe "NVIDIA GeForce Experience.exe"
@@ -243,14 +305,6 @@ komorebic.exe float-rule exe "NohBoard.exe"
 komorebic.exe identify-border-overflow-application exe "Notion Enhanced.exe"
 # If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
 komorebic.exe identify-tray-application exe "Notion Enhanced.exe"
-
-# OBS Studio (32-bit)
-# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
-komorebic.exe identify-tray-application exe "obs32.exe"
-
-# OBS Studio (64-bit)
-# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
-komorebic.exe identify-tray-application exe "obs64.exe"
 
 # ONLYOFFICE Editors
 komorebic.exe identify-border-overflow-application class "DocEditorsWindowClass"
@@ -271,12 +325,6 @@ komorebic.exe float-rule exe "Paradox Launcher.exe"
 # Plexamp
 komorebic.exe identify-border-overflow-application exe "Plexamp.exe"
 
-# PowerToys
-# Target color picker dialog
-komorebic.exe float-rule exe "PowerToys.ColorPickerUI.exe"
-# Target image resizer dialog
-komorebic.exe float-rule exe "PowerToys.ImageResizer.exe"
-
 # Process Hacker
 # If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
 komorebic.exe identify-tray-application exe "ProcessHacker.exe"
@@ -286,11 +334,6 @@ komorebic.exe float-rule exe "ProcessHacker.exe"
 komorebic.exe identify-border-overflow-application exe "ProtonVPN.exe"
 # If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
 komorebic.exe identify-tray-application exe "ProtonVPN.exe"
-
-# PyCharm
-komorebic.exe identify-object-name-change-application exe "pycharm64.exe"
-# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
-komorebic.exe identify-tray-application exe "pycharm64.exe"
 
 # QtScrcpy
 # If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
@@ -335,18 +378,6 @@ komorebic.exe identify-tray-application exe "signal.exe"
 # If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
 komorebic.exe identify-tray-application exe "sirikali.exe"
 
-# Slack
-komorebic.exe identify-border-overflow-application exe "Slack.exe"
-komorebic.exe manage-rule exe "Slack.exe"
-# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
-komorebic.exe identify-tray-application exe "Slack.exe"
-
-# Slack
-komorebic.exe identify-border-overflow-application exe "slack.exe"
-komorebic.exe manage-rule exe "slack.exe"
-# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
-komorebic.exe identify-tray-application exe "slack.exe"
-
 # Smart Install Maker
 # Target hidden window spawned by installer
 komorebic.exe float-rule class "obj_App"
@@ -356,11 +387,6 @@ komorebic.exe float-rule class "obj_Form"
 # SoulseekQt
 # If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
 komorebic.exe identify-tray-application exe "SoulseekQt.exe"
-
-# Spotify
-komorebic.exe identify-border-overflow-application exe "Spotify.exe"
-# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
-komorebic.exe identify-tray-application exe "Spotify.exe"
 
 # Steam
 komorebic.exe identify-border-overflow-application class "vguiPopupWindow"
@@ -379,11 +405,6 @@ komorebic.exe float-rule class "Shell_Dialog"
 
 # Task Manager
 komorebic.exe float-rule class "TaskManagerWindow"
-
-# Telegram
-komorebic.exe identify-border-overflow-application exe "Telegram.exe"
-# If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
-komorebic.exe identify-tray-application exe "Telegram.exe"
 
 # TouchCursor
 # If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
@@ -405,12 +426,6 @@ komorebic.exe identify-tray-application exe "UnrealEditor.exe"
 # VRCX
 # If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
 komorebic.exe identify-tray-application exe "VRCX.exe"
-
-# Visual Studio
-komorebic.exe identify-object-name-change-application exe "devenv.exe"
-
-# Visual Studio Code
-komorebic.exe identify-border-overflow-application exe "Code.exe"
 
 # Voice.ai
 komorebic.exe identify-border-overflow-application exe "VoiceAI.exe"
@@ -468,3 +483,4 @@ komorebic.exe identify-tray-application exe "qbittorrent.exe"
 # If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
 komorebic.exe identify-tray-application exe "ueli.exe"
 komorebic.exe float-rule exe "ueli.exe"
+omorebic.exe float-rule exe "ueli.exe"
