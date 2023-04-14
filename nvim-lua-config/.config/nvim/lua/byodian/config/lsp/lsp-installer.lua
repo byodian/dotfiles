@@ -19,7 +19,7 @@ local servers = {
 	"jdtls",
 	"ansiblels",
 	"dockerls",
-	"yamlls",
+	-- "yamlls",
   "volar",
 	-- "remark_ls"
 }
