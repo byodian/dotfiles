@@ -10,22 +10,35 @@ shift + alt - j : yabai -m window --swap south
 shift + alt - k : yabai -m window --swap north
 shift + alt - l : yabai -m window --swap east
 
-# move managed window
-shift + alt + ctrl - h : yabai -m window --wap west
-shift + alt + ctrl - j : yabai -m window --wap south
-shift + alt + ctrl - k : yabai -m window --wap north
-shift + alt + ctrl - l : yabai -m window --wap east
+# fast focus desktop
+cmd + alt - 1 : yabai -m space --focus 1
+cmd + alt - 2 : yabai -m space --focus 2
+cmd + alt - 3 : yabai -m space --focus 3
+
+# focus monitor
+ctrl + alt - 1 : yabai -m display --focus 1
+ctrl + alt - 2 : yabai -m display --focus 2
+
+# send window to desktop and follow focus
+shift + cmd - z : yabai -m window --space next; yabai -m space --focus next
+shift + cmd - 1 : yabai -m window --space  1; yabai -m space --focus 1
+shift + cmd - 2 : yabai -m window --space  2; yabai -m space --focus 2
+shift + cmd - 3 : yabai -m window --space  3; yabai -m space --focus 3
+
+# send window to monitor and follow focus
+ctrl + cmd - c  : yabai -m window --display next; yabai -m display --focus next
+ctrl + cmd - 1  : yabai -m window --display 1; yabai -m display --focus 1
+ctrl + cmd - 2  : yabai -m window --display 2; yabai -m display --focus 2
+
+# balance size of windows
+shift + alt - 0 : yabai -m space --balance
 
 # rotate tree
 alt - r : yabai -m space --rotate 90
 
 # toggle window fullscreen zoom
+alt - d : yabai -m window --toggle zoom-parent
 alt - z : yabai -m window --toggle zoom-fullscreen
-
-# alt - s : yabai -m window --toggle
-alt - s : yabai -m window --toggle sticky;\
-          yabai -m window --toggle topmost;\
-          yabai -m window --toggle pip
 
 # toggle padding and gap
 alt - g : yabai -m space --toggle padding; yabai -m space --toggle gap
