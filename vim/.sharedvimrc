@@ -77,3 +77,46 @@ nnoremap <Leader>ln :set cursorline!<CR>
 inoremap jk <esc>
 inoremap jj <esc>
 
+" Center the cursor vertically when moving to the next word during a search.
+nnoremap n nzz
+nnoremap N Nzz
+
+" Yank from cursor to the end of line.
+nnoremap Y y$
+"--------------------------------------------------------------------------
+" Plugins settings
+"--------------------------------------------------------------------------
+" Automatic installation
+let data_dir = has('ide') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+call plug#begin('~/.vim/plugged')
+Plug 'tpope/vim-surround'
+Plug 'preservim/nerdtree'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'machakann/vim-highlightedyank'
+call plug#end()
+
+" Uncomment the following to have Vim jump to the last position when                                                       
+" reopening a file
+" https://stackoverflow.com/questions/774560/in-vim-how-do-i-get-a-file-to-open-at-the-same-line-number-i-closed-it-at-last
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+    \| exe "normal! g'\"" | endif
+endif
+
+" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1
+
+" Enable trimming of trailing whitespace when uncommenting
+let g:NERDTrimTrailingWhitespace = 1
+
+let g:highlightedyank_highlight_color = "rgba(160, 160, 160, 155)"
+
+map <leader>n :NERDTreeToggle<CR>
+map <leader>r :NERDTreeFind<cr>
