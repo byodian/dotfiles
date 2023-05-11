@@ -9,6 +9,8 @@ alias apt-get "sudo apt-get"
 # update on one command
 alias update "sudo apt-get update && sudo apt-get upgrade"
 
+set -gx PATH ~/.jabba/jdk/amazon-corretto@1.8.292-10.1/bin $PATH
+
 # alacritty
 # alias ala "alacritty.exe --config-file ~/.config/alacritty/alacritty.yml -e 'wsl.exe ~'"
 
