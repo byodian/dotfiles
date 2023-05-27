@@ -18,11 +18,6 @@ set -gx DOTFILES $HOME/.dotfiles
 set -gx XDG_CONFIG_HOME $HOME/.config
 set -gx STOW_FOLDERS "bin,fish,nvim,tmux,zsh,powershell,bash,alacritty"
 
-
-# pnpm
-set -gx PNPM_HOME "~/.local/.pnpm-global"
-set -gx PATH "$PNPM_HOME" $PATH
-
 switch (uname)
   case Darwin
     source (dirname (status --current-filename))/config-osx.fish
