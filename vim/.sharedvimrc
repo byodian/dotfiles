@@ -96,7 +96,6 @@ endif
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-surround'
 Plug 'preservim/nerdtree'
-Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'machakann/vim-highlightedyank'

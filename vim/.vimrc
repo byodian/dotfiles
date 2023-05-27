@@ -146,6 +146,8 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'suy/vim-context-commentstring'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-commentary'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'machakann/vim-highlightedyank'
 call plug#end()
 
 "--------------------------------------------------------------------------
