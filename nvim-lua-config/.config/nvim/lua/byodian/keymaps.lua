@@ -69,3 +69,4 @@ keymap("n", "<leader>q", ":lopen", opts)
 keymap("t", "<Esc>", "<C-\\><C-n>", opts)
 
 keymap("n", "<C-n>", ":Ex<CR>", opts)
+keymap("n", "<C-g>", ":Ex<CR>", opts)
