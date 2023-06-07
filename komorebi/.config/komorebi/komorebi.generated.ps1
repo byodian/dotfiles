@@ -69,10 +69,10 @@ komorebic.exe identify-tray-application exe "Spotify.exe"
 #########################################################
 
 # IntelliJ IDEA
-# komorebic.exe identify-object-name-change-application exe "idea64.exe"
+komorebic.exe identify-object-name-change-application exe "idea64.exe"
 # If you have disabled minimize/close to tray for this application, you can delete/comment out the next line
-# komorebic.exe identify-tray-application exe "idea64.exe"
-komorebic.exe float-rule exe "idea64.exe"
+komorebic.exe identify-tray-application exe "idea64.exe"
+#komorebic.exe float-rule exe "idea64.exe"
 
 # PyCharm
 komorebic.exe identify-object-name-change-application exe "pycharm64.exe"
