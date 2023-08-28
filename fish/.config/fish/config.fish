@@ -74,3 +74,8 @@ bind \cp '~/.local/bin/tmux-sessionizer'
 [ -f ~/.config/tabtab/fish/__tabtab.fish ]; and . ~/.config/tabtab/fish/__tabtab.fish; or true
 
 [ -f ~/.jabba/jabba.fish ]; and . ~/.jabba/jabba.fish
+
+# pnpm
+set -gx PNPM_HOME "/Users/byodian/Library/pnpm"
+set -gx PATH "$PNPM_HOME" $PATH
+# pnpm end

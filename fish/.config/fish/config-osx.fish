@@ -1,5 +1,5 @@
 alias npx "sudo npx"
-alias idea "open -na \"IntelliJ IDEA CE\""
+alias idea "open -na \"IntelliJ IDEA\""
 
 set -gx M_HOME ~/Downloads/apache-maven-3.9.0
 set -gx PATH $M_HOME/bin $PATH
