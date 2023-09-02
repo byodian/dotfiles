@@ -14,6 +14,7 @@ env:
   TERM: xterm-256color 
 
 window:
+  opacity: 0.90
   # Window position (changes require restart)
   #
   # Specified in number of pixels.
