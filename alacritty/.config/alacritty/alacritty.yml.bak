@@ -14,7 +14,7 @@ env:
   TERM: xterm-256color 
 
 window:
-  opacity: 0.90
+  opacity: 1.0
   # Window position (changes require restart)
   #
   # Specified in number of pixels.
@@ -77,9 +77,6 @@ font:
     x: 1
     y: 3
 
-# If `true`, bold text is drawn using the bright color variants.
-draw_bold_text_with_bright_colors: true 
-
 colors:
   # Dracula theme for Alacritty
   # https://draculatheme.com/alacritty
@@ -89,17 +86,14 @@ colors:
   #
   # Template
   # https://github.com/alacritty/alacritty/blob/master/alacritty.yml
+  #
+  # If `true`, bold text is drawn using the bright color variants.
+  draw_bold_text_with_bright_colors: true 
 
   primary:
     background: '#282a36'
     foreground: '#f8f8f2'
     bright_foreground: '#ffffff'
-  cursor:
-    text: CellBackground
-    cursor: CellForeground
-  vi_mode_cursor:
-    text: CellBackground
-    cursor: CellForeground
   search:
     matches:
       foreground: '#44475a'
@@ -146,6 +140,12 @@ colors:
   #
   # Allowed values are CellForeground/CellBackground, which reference the
   # affected cell, or hexadecimal colors like #ff00ff.
+  # cursor:
+  #   text: CellBackground
+  #   cursor: CellForeground
+  # vi_mode_cursor:
+  #   text: CellBackground
+  #   cursor: CellForeground
   cursor:
     text: CellBackground
     cursor: '#ffffff' 

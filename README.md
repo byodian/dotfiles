@@ -1,27 +1,29 @@
 ![template](./doc/wsl/template.png)
 # dotfiles
 
-## WSL2 setup
-[wsl2 安装](./doc/wsl-install.md)
+## Install
+Managing my dotfiles with GNU Stow
 
-## Vim setup
+```
+git clone git@github.com:byodian/dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+chmod +x install ubuntu
+./ubuntu
+```
+
+## nvim setup
 要求 Neovim (>= 0.6)
 
-- [vim-plug](https://github.com/junegunn/vim-plug) - A minimalist Vim plugin manager
 - [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) - It provides common configuration for various language servers
 - [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) - About A completion plugin for neovim coded in Lua.
 - [mason.nvim](https://github.com/williamboman/mason.nvim) -  Easily install and manage LSP servers, DAP servers, linters, and formatters.
 - [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) - fuzzy finder
-- [nvim-tree.lua](https://github.com/kyazdani42/nvim-tree.lua) - A file explorer tree
 - [trouble.nvim](https://github.com/folke/trouble.nvim) - A pretty diagnostics
-- [null-ls.nvim](https://github.com/jose-elias-alvarez/null-ls.nvim) - Use Neovim as a language server to inject LSP diagnostics, code actions
 - [LuaSnip](https://github.com/L3MON4D3/LuaSnip) - Snippet Engine
 - [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) - Nvim [Treesitter](https://github.com/tree-sitter/tree-sitter) configurations and abstraction layer
-- [lspsaga.nvim](https://github.com/glepnir/lspsaga.nvim) - A light-weight LSP plugin based on Neovim built-in LSP with highly a performant UI
 - [nvim-web-devicons](https://github.com/kyazdani42/nvim-web-devicons) - A file type icons plugin
 - [vim-repeat](https://github.com/tpope/vim-repeat) - Enable repeating supported plugin maps with "."
 - [vim-textobj-user](https://github.com/kana/vim-textobj-user) - Create your own text objects
-- [hop.nvim](https://github.com/phaazon/hop.nvim) - Neovim motions on speed!
 - [vim-surround](https://github.com/tpope/vim-surround) - Delete/change/add parentheses/quotes/XML-tags/much more with ease
 - [vim-unimpaired](https://github.com/tpope/vim-unimpaired) - Pairs of handy bracket mappings
 - [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim) - Help easily manage multiple terminal windows
@@ -69,6 +71,13 @@
 - [tmux](https://github.com/tmux/tmux)
 - [stow](https://github.com/aspiers/stow)
 - [tig](https://github.com/jonas/tig)
+
+## Alacritty
+Migrate Alacritty Configuration from YAML to TOML for > 0.13.x versions
+
+```
+alacritty migrate
+```
 
 ## How to use 
 - [How to (neo)vim](./doc/vim-settings.md)
