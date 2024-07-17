@@ -4,11 +4,29 @@
 ## Install
 Managing my dotfiles with GNU Stow
 
+### Install stow
+```
+# ubuntu
+apt install stow
+
+# macOS
+brew install stow
+```
+
+### Install dotfiles config
+
 ```
 git clone git@github.com:byodian/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 chmod +x install ubuntu
 ./ubuntu
+```
+
+### Remove dotfiles config
+```
+cd ~/.dotfiles
+chmod +x clean-env
+./clean-env
 ```
 
 ## nvim setup
